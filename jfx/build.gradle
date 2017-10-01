@@ -1,0 +1,14 @@
+apply plugin: 'application'
+mainClassName = 'nefra.jfx.main'
+
+dependencies {
+    compile project(":club")
+    compile project(":db")
+    compile project(":referee")
+}
+
+task(runClient, dependsOn: "classes", type: JavaExec) {
+    main = "nefra.jfx.Main"
+    classpath = sourceSets.main.runtimeClasspath
+}
+

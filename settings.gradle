@@ -1,0 +1,5 @@
+include "club"
+include "db"
+include "game"
+include "jfx"
+include "referee"

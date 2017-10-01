@@ -1,0 +1,22 @@
+# IntelliJ
+.idea/
+out/
+*.iml
+*.iws
+*.idea_modules
+*.ipr
+
+# Java
+*.class
+*.log
+*.jar
+
+# Gradle
+**/build/
+.gradle/
+gradle/wrapper/gradle-wrapper.properties
+!gradle-wrapper.jar
+
+# Build
+NEFRA\ Data/
+*.db

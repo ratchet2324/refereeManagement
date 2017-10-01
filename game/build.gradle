@@ -1,0 +1,4 @@
+dependencies {
+    compile project(":club")
+    compile project(":referee")
+}
