@@ -11,6 +11,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import nefra.db.DBConnect;
+import nefra.settings.Settings;
 
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ public class Main extends Application
     {
         MainMenu mm = new MainMenu();
         DBConnect db = new DBConnect();
+        Settings settings = new Settings();
 
         //Get screen size
         Rectangle2D screen = Screen.getPrimary().getVisualBounds();
@@ -44,6 +46,7 @@ public class Main extends Application
         stage.show();
 
         db.dbConnection();
+        settings.initSettings();
 
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override

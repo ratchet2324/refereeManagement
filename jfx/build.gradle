@@ -5,6 +5,7 @@ dependencies {
     compile project(":club")
     compile project(":db")
     compile project(":referee")
+    compile project(":settings")
 }
 
 task(runClient, dependsOn: "classes", type: JavaExec) {

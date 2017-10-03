@@ -86,6 +86,7 @@ task oneJar( type: Jar , dependsOn: mainProjects.collect{ it+":compileJava"}) {
 build {
     build.doFirst { clean }
     file('/build/libs/NEFRA Data').deleteDir()
+    file('/NEFRA Data').deleteDir()
     file('/src').deleteDir()
     build.finalizedBy(oneJar)
 }
