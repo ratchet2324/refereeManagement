@@ -1,37 +1,41 @@
 package nefra.jfx;
 
-import javafx.application.*;
-import javafx.event.EventHandler;
+import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import nefra.db.DBConnect;
-import nefra.settings.Settings;
-
-import java.util.Optional;
-
+import nefra.db.DBFunctions;
+import org.jetbrains.annotations.Contract;
 
 public class Main extends Application
 {
-    public void start(Stage stage) throws Exception
-    {
+    private static Main instance;
+    private Stage stage = new Stage();
+
+    public Main() {
+        instance = this;
+    }
+
+    @Contract(pure = true)
+    static Main getInstance() {
+        return instance;
+    }
+
+    @Override
+    public void start(Stage s) throws Exception {
         MainMenu mm = new MainMenu();
-        DBConnect db = new DBConnect();
-        Settings settings = new Settings();
+        DBFunctions dbFunctions = new DBFunctions();
+        //Settings settings = new Settings();
 
         //Get screen size
         Rectangle2D screen = Screen.getPrimary().getVisualBounds();
 
-        // Load FXML and set it to the scene
-        BorderPane root = mm.initGUI();
+        BorderPane init = mm.initGUI();
 
-        root.setMaxHeight(screen.getHeight());
-        root.setMaxWidth(screen.getWidth());
+        init.setMaxHeight(screen.getHeight());
+        init.setMaxWidth(screen.getWidth());
 
         //Set stage to screen size
         stage.setX(screen.getMinX());
@@ -42,31 +46,17 @@ public class Main extends Application
 
         //Set title and default scene.
         stage.setTitle("New England Football Referees Association");
-        stage.setScene(new Scene(root));
+        stage.setScene(new Scene(init));
         stage.show();
 
-        db.dbConnection();
-        settings.initSettings();
+        dbFunctions.getTables();
+        dbFunctions.getColumns();
+        nefra.settings.Settings.initSettings();
 
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
+        stage.setOnCloseRequest(e -> nefra.misc.Exit.getInstance().exit(e));
+    }
 
-                // consume event
-                event.consume();
-
-                // show close dialog
-                Alert exit = new Alert(Alert.AlertType.CONFIRMATION);
-                exit.setTitle("Exit");
-                exit.setHeaderText(null);
-                exit.setGraphic(null);
-                exit.setContentText("Are you sure you want to exit?");
-
-                Optional<ButtonType> result = exit.showAndWait();
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    Platform.exit();
-                }
-            }
-        });
+    void changeScene(Scene scene) {
+        stage.setScene(scene);
     }
 }

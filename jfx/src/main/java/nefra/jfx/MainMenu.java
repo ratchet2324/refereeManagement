@@ -1,20 +1,21 @@
 package nefra.jfx;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Modality;
-import javafx.stage.StageStyle;
+import nefra.settings.SettingsGUI;
 
-import java.util.Optional;
+import java.util.ArrayList;
 
 public class MainMenu {
+
+    private ArrayList<BorderPane> panes = new ArrayList<>();
 
     public BorderPane initGUI()
     {
@@ -69,20 +70,22 @@ public class MainMenu {
         welcome.setLayoutY(250);
 
         StackPane centre = new StackPane(welcome);
-        centre.setAlignment(welcome, Pos.CENTER);
+        StackPane.setAlignment(welcome, Pos.CENTER);
         centre.setPrefSize(400,800);
 
-        BorderPane root = new BorderPane(centre, menu, right,null,null);
-        root.setPrefSize(600,768);
-        return root;
+        BorderPane mainMenu = new BorderPane(centre, menu, right, null, null);
+        mainMenu.setPrefSize(600, 768);
+        panes.add(mainMenu);
+        return mainMenu;
     }
 
     private MenuBar loadMenu()
     {
         Menu file = new Menu("File");
         MenuItem settings = new MenuItem("Settings");
+        settings.setOnAction(this::loadSettings);
         MenuItem exit = new MenuItem("Exit");
-        exit.setOnAction(this::exit);
+        exit.setOnAction(e -> nefra.misc.Exit.getInstance().exit(e));
         file.getItems().addAll(settings, new SeparatorMenuItem(),exit);
 
         Menu referee = new Menu("Referee");
@@ -106,23 +109,18 @@ public class MainMenu {
         return new MenuBar(file, referee, club, games);
     }
 
-    private void exit(ActionEvent e)
+    private void loadSettings(ActionEvent e)
     {
-        Alert exit = new Alert(Alert.AlertType.CONFIRMATION);
-        exit.setTitle("Exit");
-        exit.setHeaderText(null);
-        exit.setGraphic(null);
-        exit.setContentText("Are you sure you want to exit?");
         e.consume();
+        SettingsGUI sGUI = new SettingsGUI();
+        panes.add(sGUI.initGUI());
 
-        ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.YES);
-        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-        exit.getDialogPane().getButtonTypes().setAll(yes, no);
-
-        Optional<ButtonType> result = exit.showAndWait();
-        if (result.isPresent() && result.get() == yes) {
-            Platform.exit();
-        }
+        sGUI.back.setOnAction(event -> {
+            MainMenu mm = new MainMenu();
+            event.consume();
+            Main.getInstance().changeScene(new Scene(mm.initGUI()));
+            panes.remove(panes.size() - 1);
+        });
+        Main.getInstance().changeScene(new Scene(sGUI.initGUI()));
     }
 }

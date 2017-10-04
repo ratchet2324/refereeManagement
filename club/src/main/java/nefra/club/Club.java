@@ -38,7 +38,7 @@ public class Club {
 
     public Club(String clubName) { this.clubName = clubName; }
 
-    DecimalFormat df = new DecimalFormat("0.00");
+    private DecimalFormat df = new DecimalFormat("0.00");
 
     public String getClubName() { return clubName; }
 

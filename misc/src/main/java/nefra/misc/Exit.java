@@ -1,0 +1,43 @@
+package nefra.misc;
+
+import javafx.application.Platform;
+import javafx.event.Event;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import org.jetbrains.annotations.Contract;
+
+import java.util.Optional;
+
+public class Exit {
+
+    private static Exit instance = new Exit();
+
+    private Exit() {
+        instance = this;
+    }
+
+    @Contract(pure = true)
+    public static Exit getInstance() {
+        return instance;
+    }
+
+    public void exit(Event e) {
+        Alert exit = new Alert(Alert.AlertType.CONFIRMATION);
+        exit.setTitle("Exit");
+        exit.setHeaderText(null);
+        exit.setGraphic(null);
+        exit.setContentText("Are you sure you want to exit?");
+        e.consume();
+
+        ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        exit.getDialogPane().getButtonTypes().setAll(yes, no);
+
+        Optional<ButtonType> result = exit.showAndWait();
+        if (result.isPresent() && result.get() == yes) {
+            Platform.exit();
+        }
+    }
+}

@@ -1,8 +1,8 @@
 package nefra.referee;
 
-import java.text.DecimalFormat;
-
 import org.apache.commons.lang3.StringUtils;
+
+import java.text.DecimalFormat;
 
 public class Referee {
     private String firstName;
@@ -32,7 +32,7 @@ public class Referee {
         this.lastName = lastName;
     }
 
-    DecimalFormat df = new DecimalFormat("0.00");
+    private DecimalFormat df = new DecimalFormat("0.00");
 
     public String getFirstName() { return firstName; }
 

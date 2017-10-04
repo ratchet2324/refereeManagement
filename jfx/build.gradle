@@ -2,10 +2,7 @@ apply plugin: 'application'
 mainClassName = 'nefra.jfx.main'
 
 dependencies {
-    compile project(":club")
-    compile project(":db")
-    compile project(":referee")
-    compile project(":settings")
+    compile project(":club"), project(":db"), project(":referee"), project(":settings"), project (":misc")
 }
 
 task(runClient, dependsOn: "classes", type: JavaExec) {

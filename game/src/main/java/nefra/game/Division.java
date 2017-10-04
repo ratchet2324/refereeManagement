@@ -1,7 +1,5 @@
 package nefra.game;
 
-import java.util.ArrayList;
-
 public class Division {
     private String divisionName;
     private double mainRefereeFee;

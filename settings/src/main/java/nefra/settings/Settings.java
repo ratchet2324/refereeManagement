@@ -1,6 +1,8 @@
 package nefra.settings;
 
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.Properties;
@@ -8,44 +10,68 @@ import java.util.Properties;
 public class Settings {
     private static Properties settingsPropertyFile = new Properties();
     private static File settingsFile = new File("./NEFRA Data/Settings/settings");
-    private static InputStream input;
-    private static FileOutputStream output;
 
-    public void initSettings()
+    private static Settings instance;
+
+    public Settings() {
+        instance = this;
+    }
+
+    @Contract(pure = true)
+    public static Settings getInstance() {
+        return instance;
+    }
+
+    public static void initSettings()
     {
         try {
             FileUtils.openOutputStream(settingsFile, true);
-            input = new FileInputStream(settingsFile.getAbsoluteFile());
+            InputStream input = new FileInputStream(settingsFile.getAbsoluteFile());
             settingsPropertyFile.load(input);
             input.close();
         }
         catch (IOException IOE) { System.out.println("An IO Error occurred"); }
-        try {
-            output = new FileOutputStream(settingsFile.getAbsoluteFile());
-            settingsPropertyFile.store(output, null);
-            output.close();
-        }
-        catch (FileNotFoundException FNFE) { System.out.println("File Not Found!!");}
-        catch (IOException IOE) { System.out.println("An IO Error occurred"); }
     }
 
-    public static void writeSetting(String propertyName, String propertyValue)
-    {
+    private static void storeSettings() {
         try {
             FileOutputStream output = FileUtils.openOutputStream(settingsFile, false);
-            settingsPropertyFile.setProperty(propertyName, propertyValue);
             settingsPropertyFile.store(output, null);
         }
         catch (IOException e) { e.printStackTrace(); }
     }
 
-    public static void writeSetting(String propertyName, String propertyValue, String comment)
-    {
+    private static void storeSettings(String comment) {
         try {
-            output = FileUtils.openOutputStream(settingsFile, false);
-            settingsPropertyFile.setProperty(propertyName, propertyValue);
+            FileOutputStream output = FileUtils.openOutputStream(settingsFile, false);
             settingsPropertyFile.store(output, comment);
+            output.close();
         }
         catch (IOException e) { e.printStackTrace(); }
+    }
+
+    public static void writeSetting(@NotNull String propertyName, @NotNull String propertyValue) {
+        settingsPropertyFile.setProperty(propertyName, propertyValue);
+        storeSettings();
+    }
+
+    public static void writeSetting(@NotNull String propertyName, @NotNull String propertyValue, String comment) {
+        settingsPropertyFile.setProperty(propertyName, propertyValue);
+        storeSettings(comment);
+    }
+
+    public static String getSetting(@NotNull String propertyName) {
+        Settings.initSettings();
+        return settingsPropertyFile.getProperty(propertyName, "null");
+    }
+
+    public static boolean containsSetting(@NotNull String propertyName) {
+        Settings.initSettings();
+        return settingsPropertyFile.containsKey(propertyName);
+    }
+
+    public static void removeSetting(@NotNull String propertyName) {
+        settingsPropertyFile.remove(propertyName);
+        storeSettings();
     }
 }
