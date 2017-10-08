@@ -14,14 +14,10 @@ public class Main extends Application
     private static Main instance;
     private Stage stage = new Stage();
 
-    public Main() {
-        instance = this;
-    }
+    public Main() { instance = this; }
 
     @Contract(pure = true)
-    static Main getInstance() {
-        return instance;
-    }
+    static Main getInstance() { return instance; }
 
     @Override
     public void start(Stage s) throws Exception {

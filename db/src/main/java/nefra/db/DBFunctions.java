@@ -1,13 +1,14 @@
 package nefra.db;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class DBFunctions {
     private static ResultSet rs;
     private static Statement statement;
-    private Connection connection;
 
     public DBFunctions() {
+        Connection connection;
         DBConnect dbConnect = new DBConnect();
         connection = dbConnect.dbConnection();
         try {
@@ -20,38 +21,6 @@ public class DBFunctions {
                 nefra.settings.Settings.getSetting("DatabaseInstantiation").equals("null")) {
             nefra.settings.Settings.writeSetting("DatabaseInstantiation", "false");
             instantiate();
-        }
-    }
-
-    public static void insertString(String colName, String value) {
-        try {
-            rs.updateString(colName, value);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void insertString(int colIndex, String value) {
-        try {
-            rs.updateString(colIndex, value);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void insertDouble(String colName, Double value) {
-        try {
-            rs.updateDouble(colName, value);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void insertDouble(int colIndex, Double value) {
-        try {
-            rs.updateDouble(colIndex, value);
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -106,13 +75,20 @@ public class DBFunctions {
         }
     }
 
-    public void insertRow(Connection connection) {
+    public void insertReferee(String firstName, String lastName, String email, String phone, double weeklyFee, double totalFee)
+    {
         try {
-            rs = statement.executeQuery("");
+            rs = statement.executeQuery("SELECT * FROM referee");
             rs.moveToInsertRow();
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            rs.updateString("first_name", firstName);
+            rs.updateString("last_name", lastName);
+            rs.updateString("email", email);
+            rs.updateString("phone", phone);
+            rs.updateDouble("weeklyFee", weeklyFee);
+            rs.updateDouble("totalFee", totalFee);
+            rs.insertRow();
         }
+        catch (SQLException sqle) { sqle.printStackTrace(); }
     }
 
     public void getTables() {

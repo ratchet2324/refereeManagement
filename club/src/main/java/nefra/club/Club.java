@@ -3,8 +3,11 @@ package nefra.club;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class Club {
+    public ArrayList<Club> clubList = new ArrayList<>();
+    private int club_id;
     private String clubName;
     private String street;
     private String suburb;
@@ -14,6 +17,17 @@ public class Club {
     private double totalFee;
     private double weeklyFee;
 
+    public Club(int club_id, String clubName, String street, String suburb, String postcode, String presidentName, String presidentContact) {
+        this.club_id = club_id;
+        this.clubName = clubName;
+        this.street = street;
+        this.suburb = suburb;
+        this.postcode = postcode;
+        this.presidentName = presidentName;
+        this.presidentContact = presidentContact;
+        clubList.add(this);
+    }
+
     public Club(String clubName, String street, String suburb, String postcode, String presidentName, String presidentContact) {
         this.clubName = clubName;
         this.street = street;
@@ -21,6 +35,7 @@ public class Club {
         this.postcode = postcode;
         this.presidentName = presidentName;
         this.presidentContact = presidentContact;
+        clubList.add(this);
     }
 
     public Club(String clubName, String street, String suburb, String postcode) {
@@ -28,17 +43,21 @@ public class Club {
         this.street = street;
         this.suburb = suburb;
         this.postcode = postcode;
+        clubList.add(this);
     }
 
     public Club(String clubName, String presidentName, String presidentContact) {
         this.clubName = clubName;
         this.presidentName = presidentName;
         this.presidentContact = presidentContact;
+        clubList.add(this);
     }
 
     public Club(String clubName) { this.clubName = clubName; }
 
     private DecimalFormat df = new DecimalFormat("0.00");
+
+    public int getClubId() { return club_id; }
 
     public String getClubName() { return clubName; }
 
@@ -55,6 +74,8 @@ public class Club {
     public double getTotalFee() { return totalFee; }
 
     public double getWeeklyFee() { return weeklyFee; }
+
+    public void setClub_id(int club_id) { this.club_id = club_id; }
 
     public void setClubName(String clubName) { this.clubName = clubName; }
 
