@@ -104,7 +104,11 @@ public class Referee {
         refereeList.add(this);
     }
 
+    /**
+     * Used for the dollar amount for the fees.
+     */
     private DecimalFormat df = new DecimalFormat("0.00");
+
 
     public int getRefereeId() { return referee_id; }
 
@@ -136,36 +140,42 @@ public class Referee {
 
     public void addToTotalFee(double amount) { this.totalFee += amount; }
 
+
+    /**
+     * Resets the total fee back to $0.00 and adds it to the total fees for the season.
+     */
     public void resetWeeklyFee() { addToTotalFee(weeklyFee); weeklyFee = 0; }
 
+    /**
+     * Resets the total fee back to $0.00, to coincide with the end of the season.
+     */
     public void resetTotalFee() { totalFee = 0; }
 
+    /**
+     * Depending on the information entered, it adjusts the output accordingly. So if only the first and last name are
+     * entered, then only those are displayed.
+     *
+     * @return the string that is printed out.
+     */
     @Override
     public String toString() {
-        if(StringUtils.isNotEmpty(getPhone()) && StringUtils.isNotEmpty(getEmail()))
-        {
+        if(StringUtils.isNotEmpty(getPhone()) && StringUtils.isNotEmpty(getEmail())) {
             return "Name: " + getName() +
                     "\nPhone: " + getPhone() +
                     "\nEmail: " + getEmail() +
                     "\nCurrent week's fees: " + df.format(getWeeklyFee()) +
                     "\nCurrent year to date fees: " + df.format(getTotalFee()) + "\n";
-        }
-        else if(StringUtils.isNotEmpty(getEmail()))
-        {
+        } else if(StringUtils.isNotEmpty(getEmail())) {
             return "Name: " + getName() +
                     "\nEmail: " + getEmail() +
                     "\nCurrent week's fees: " + df.format(getWeeklyFee()) +
                     "\nCurrent year to date fees: " + df.format(getTotalFee()) + "\n";
-        }
-        else if (StringUtils.isNotEmpty(getPhone()))
-        {
+        } else if (StringUtils.isNotEmpty(getPhone())) {
             return "Name: " + getName() +
                     "\nPhone: " + getPhone() +
                     "\nCurrent week's fees: " + df.format(getWeeklyFee()) +
                     "\nCurrent year to date fees: " + df.format(getTotalFee()) + "\n";
-        }
-        else
-        {
+        } else {
             return "Name: " + getName() +
                     "\nCurrent week's fees: " + df.format(getWeeklyFee()) +
                     "\nCurrent year to date fees: " + df.format(getTotalFee()) + "\n";

@@ -9,8 +9,15 @@ public class Division {
     private double mainRefereeFee;
     private double arFee;
 
-    public Division(int division_id, String divisionName, double mainRefereeFee, double arFee)
-    {
+    /**
+     * Full constructor for when the Division is loaded from the database.
+     *
+     * @param division_id    The ID from the database
+     * @param divisionName   The name of the division
+     * @param mainRefereeFee The fee to be paid to the main referee
+     * @param arFee          The fee to be paid to the assistant referees.
+     */
+    public Division(int division_id, String divisionName, double mainRefereeFee, double arFee) {
         this.division_id = division_id;
         this.divisionName = divisionName;
         this.mainRefereeFee = mainRefereeFee;
@@ -18,8 +25,13 @@ public class Division {
         divisionList.add(this);
     }
 
-    public Division(String divisionName, double mainRefereeFee, double arFee)
-    {
+    /**
+     * Full constructor for when the Division is created from the GUI.
+     * @param divisionName The name of the division
+     * @param mainRefereeFee The fee to be paid to the main referee
+     * @param arFee The fee to be paid to the assistant referees.
+     */
+    public Division(String divisionName, double mainRefereeFee, double arFee) {
         this.divisionName = divisionName;
         this.mainRefereeFee = mainRefereeFee;
         this.arFee = arFee;

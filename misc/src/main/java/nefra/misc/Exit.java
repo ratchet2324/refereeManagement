@@ -22,6 +22,11 @@ public class Exit {
         return instance;
     }
 
+    /**
+     * Exit the program with a prompt. This uses Event rather than ActionEvent and WindowEvent, so it is universal.
+     *
+     * @param e the event passed through
+     */
     public void exit(Event e) {
         Alert exit = new Alert(Alert.AlertType.CONFIRMATION);
         exit.setTitle("Exit");

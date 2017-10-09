@@ -13,8 +13,13 @@ import javafx.scene.text.TextAlignment;
 
 public class MainMenu {
 
-    public BorderPane initGUI()
-    {
+    /**
+     * Creates the GUI for the main menu, and sets it up with its own features.
+     * It uses the CommonGUI for the menus and also to allow the back button function.
+     *
+     * @return the root BorderPane
+     */
+    public BorderPane initGUI() {
         //Top
         MenuBar menu = CommonGUI.getInstance().loadMenu();
 

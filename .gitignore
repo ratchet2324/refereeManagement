@@ -20,3 +20,6 @@ gradle/wrapper/gradle-wrapper.properties
 # Build
 NEFRA\ Data/
 *.db
+
+#Docs in Source Code
+Docs/

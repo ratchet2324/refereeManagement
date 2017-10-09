@@ -7,21 +7,35 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.BorderPane;
-import nefra.settings.SettingsGUI;
 
 import java.util.ArrayList;
 
+/**
+ * A simple class to hold all the common gui components such as the menu, back button functionality
+ * and the array of scenes to track the scene to go back to.
+ */
 class CommonGUI {
 
-    private static CommonGUI instance = new CommonGUI();
+    /**
+     * Track scenes to allow changing back to the previous scene.
+     */
     static ArrayList<BorderPane> panes = new ArrayList<>();
+    /**
+     * Allows static and non-static methods to be called statically.
+     */
+    private static CommonGUI instance = new CommonGUI();
 
     private CommonGUI() { instance = this; }
 
     static CommonGUI getInstance() { return instance; }
 
-    MenuBar loadMenu()
-    {
+    /**
+     * Menu bar at the top of the scene, this is so that it remains consistent across the different scenes
+     * so that it remains familiar.
+     *
+     * @return The menubar containing the items.
+     */
+    MenuBar loadMenu() {
         Menu file = new Menu("File");
         MenuItem settings = new MenuItem("Settings");
         settings.setOnAction(this::loadSettings);
@@ -37,9 +51,9 @@ class CommonGUI {
 
         newRef.setOnAction(e -> {
             e.consume();
-            RefereeGUI rGUI = new RefereeGUI();
-            panes.add(rGUI.initGUI());
-            Main.getInstance().changeScene(new Scene(rGUI.initGUI()));
+            CreateRefereeGUI crGUI = new CreateRefereeGUI();
+            panes.add(crGUI.initGUI());
+            Main.getInstance().changeScene(new Scene(crGUI.initGUI()));
         });
 
 
@@ -58,18 +72,22 @@ class CommonGUI {
         return new MenuBar(file, referee, club, games);
     }
 
-    private void loadSettings(ActionEvent e)
-    {
-        e.consume();
+    /**
+     * Load the settings page.
+     *
+     * @param event the event
+     */
+    private void loadSettings(ActionEvent event) {
+        event.consume();
         SettingsGUI sGUI = new SettingsGUI();
-        panes.add(sGUI.initGUI());
-
-        sGUI.back.setOnAction(this::back);
-        Main.getInstance().changeScene(new Scene(sGUI.initGUI()));
+        Main.getInstance().changeScene(sGUI.initGUI());
     }
 
-    void back(ActionEvent event)
-    {
+    /**
+     * functionality for the back button so it can be easily debugged and extended.
+     * @param event the event
+     */
+    void back(ActionEvent event) {
         {
             MainMenu mm = new MainMenu();
             event.consume();

@@ -1,21 +1,26 @@
 package nefra.jfx;
 
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
-import javafx.scene.text.TextAlignment;
 import nefra.referee.GUIFunctions;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-public class RefereeGUI {
+public class CreateRefereeGUI {
     private GUIFunctions guif = new GUIFunctions();
 
-    public BorderPane initGUI()
-    {
+    /**
+     * Creates the GUI for the create referee, and sets it up with its own features.
+     * It uses the CommonGUI for the menus and also to allow the back button function.
+     *
+     * @return the root BorderPane
+     */
+    public BorderPane initGUI() {
         //Top
         MenuBar menu = CommonGUI.getInstance().loadMenu();
 
@@ -30,11 +35,14 @@ public class RefereeGUI {
         TextField lastName = new TextField();
         TextField email = new TextField();
         TextField phone = new TextField();
-        CheckBox isEmail = new CheckBox("Please tick if ONLY email is entered.");
+        //CheckBox isEmail = new CheckBox("Please tick if ONLY email is entered.");
         Button enterButton = new Button("Enter");
 
-        isEmail.setIndeterminate(false);
+        //isEmail.setIndeterminate(false);
 
+        /*
+         * Set the action for the enter button based on what information was entered into the fields.
+         */
         enterButton.setOnAction(e -> {
             System.out.println("FN: "+ firstName.getText());
             System.out.println("LN: "+ lastName.getText());
@@ -58,8 +66,8 @@ public class RefereeGUI {
                 "-fx-font-size: 20px;");
         phoneLabel.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 20px;");
-        isEmail.setStyle("-fx-font-weight: bold;" +
-            "-fx-font-size: 16px;");
+        //isEmail.setStyle("-fx-font-weight: bold;" +
+        //    "-fx-font-size: 16px;");
         enterButton.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 16px;");
         GridPane.setHalignment(firstNameLabel, HPos.RIGHT);
@@ -78,10 +86,10 @@ public class RefereeGUI {
         GridPane.setConstraints(firstName, 4, 3,2, 1);
         GridPane.setConstraints(lastName, 4, 4, 2, 1);
         GridPane.setConstraints(email, 4, 5,2, 1);
-        GridPane.setConstraints(phone, 4, 6,2, 1);
-        GridPane.setConstraints(isEmail, 6, 5, 3, 1);
+        GridPane.setConstraints(phone, 4, 6, 2, 1);
+        //GridPane.setConstraints(isEmail, 6, 5, 3, 1);
         GridPane.setConstraints(enterButton, 6, 7);
-        GridPane.setMargin(isEmail, new Insets(0,0,0,10));
+        //GridPane.setMargin(isEmail, new Insets(0,0,0,10));
 
         final int col = 12 ;
         final int row = 12 ;
@@ -100,7 +108,7 @@ public class RefereeGUI {
             centre.getRowConstraints().add(rowConst);
         }
 
-        centre.getChildren().addAll(isEmail, firstName,firstNameLabel,
+        centre.getChildren().addAll(firstName, firstNameLabel,
                 lastNameLabel, lastName, emailLabel, email,
                 phoneLabel, phone, createRefereeLabel, enterButton);
 

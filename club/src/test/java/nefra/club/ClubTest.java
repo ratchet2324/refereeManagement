@@ -1,6 +1,5 @@
 package nefra.club;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,8 +14,8 @@ public class ClubTest {
     {
         ex1 = new Club("Westside", "XYZ ABC", "0101010101");
         ex2 = new Club("Eastside", "DEF GHI", "0202020202");
-        ex3 = new Club("Norths", "Phil Weaton Oval", "Armidale", "2350");
-        ex4 = new Club("Norths", "Phil Weaton Oval", "Armidale", "2350",
+        ex3 = new Club("Norths", "Phil Weaton Oval", "Armidale", "NSW", "2350");
+        ex4 = new Club("Norths", "Phil Weaton Oval", "Armidale", "NSW", "2350",
                 "JKL MNO", "0303030303");
         ex5 = new Club("Ace FC");
 
@@ -74,6 +73,7 @@ public class ClubTest {
         ex1.setPresidentContact("ace@bdf.com");
         ex1.setStreet("Hallelujah Street");
         ex1.setSuburb("Jamestown");
+        ex1.setState("QLD");
         ex1.setPostcode("9857");
 
         assertEquals("Not set to ACE Football Club", "ACE Football Club", ex1.getClubName());
@@ -81,6 +81,7 @@ public class ClubTest {
         assertEquals("Not set to ace@bdf.com", "ace@bdf.com", ex1.getPresidentContact());
         assertEquals("Not set to Hallelujah Street", "Hallelujah Street", ex1.getStreet());
         assertEquals("Not set to Jamestown", "Jamestown", ex1.getSuburb());
+        assertEquals("Not set to QLD", "QLD", ex1.getState());
         assertEquals("Not set to 9857", "9857", ex1.getPostcode());
     }
 }

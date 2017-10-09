@@ -5,6 +5,10 @@ import nefra.referee.Referee;
 
 import java.util.ArrayList;
 
+/**
+ * Game holds all the information necessary to "play" a game, it also works out the match fees payable to the referees
+ * and adds it both to the clubs and to the referees fees.
+ */
 public class Game {
     public ArrayList<Game> gameList = new ArrayList<>();
     private int game_id;
@@ -18,6 +22,18 @@ public class Game {
     private ArrayList<Referee> extra = new ArrayList<>();
     private double tenPercentFee;
 
+    /**
+     * This constructor is called when the games are loaded from the database.
+     *
+     * @param game_id  the ID assigned by the database
+     * @param home     The home club
+     * @param away     The away club
+     * @param division The division the game is in
+     * @param round    The round the game is played in
+     * @param main     The main referee (centre referee)
+     * @param ar1      The 1st Assistant Referee
+     * @param ar2      The 2nd Assistant Referee
+     */
     public Game(int game_id, Club home, Club away, Division division, int round, Referee main, Referee ar1, Referee ar2) {
         this.game_id = game_id;
         this.home = home;
@@ -30,8 +46,17 @@ public class Game {
         gameList.add(this);
     }
 
+    /**
+     * This constructor is called when the games are entered via the GUI
+     * @param home The home club
+     * @param away The away club
+     * @param division The division the game is in
+     * @param round The round the game is played in
+     * @param main The main referee (centre referee)
+     * @param ar1 The 1st Assistant Referee
+     * @param ar2 The 2nd Assistant Referee
+     */
     public Game(Club home, Club away, Division division, int round, Referee main, Referee ar1, Referee ar2) {
-        this.game_id = game_id;
         this.home = home;
         this.away = away;
         this.division = division;
@@ -80,8 +105,16 @@ public class Game {
 
     public void setAr2(Referee ar2) { this.ar2 = ar2; }
 
-    public void setExtra(ArrayList<Referee> extra) { this.extra = extra; }
+    public void setExtra(ArrayList<Referee> extra) {
+        this.extra = extra;
+    }
 
+    /**
+     * Make the game fees ready to add to the referees afterwards. This function adds the required fees to the clubs
+     * automatically. It also calculates the 10% required.
+     * @param replacementMainReferee True if the centre referee was replaced (i.e. injury)
+     * @return Returns the amount of the game fees.
+     */
     public double makeGameFees(boolean replacementMainReferee) {
         double gameFees;
         double main = this.division.getMainRefereeFee();
@@ -101,14 +134,18 @@ public class Game {
         return gameFees;
     }
 
-    public void payFees(boolean replacementMainReferee, Referee replacement)
-    {
+    /**
+     * Pays the referees for the game (it sets it into the db)
+     *
+     * @param replacementMainReferee True if the centre referee was replaced (i.e. injury)
+     * @param replacement            The replacement referee, so they can be paid. Only used if previous is true
+     */
+    public void payReferee(boolean replacementMainReferee, Referee replacement) {
         this.main.addToWeeklyFee(this.division.getMainRefereeFee());
         this.ar1.addToWeeklyFee(this.division.getArFee());
         this.ar2.addToWeeklyFee(this.division.getArFee());
 
-        if(this.extra.size() > 0)
-        {
+        if(this.extra.size() > 0) {
             for(int i = 0; i < this.extra.size(); i ++)
                 this.extra.get(i).addToWeeklyFee(this.division.getArFee());
         }

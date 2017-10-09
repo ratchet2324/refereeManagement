@@ -1,12 +1,14 @@
 package nefra.db;
 
 import java.sql.*;
-import java.util.ArrayList;
 
 public class DBFunctions {
     private static ResultSet rs;
     private static Statement statement;
 
+    /**
+     * Create the DBFunctions class and gets the db connection and instantiate it if necessary.
+     */
     public DBFunctions() {
         Connection connection;
         DBConnect dbConnect = new DBConnect();
@@ -24,6 +26,9 @@ public class DBFunctions {
         }
     }
 
+    /**
+     * If required, instantiate sets up the tables in the database.
+     */
     private void instantiate() {
         try {
             statement.executeUpdate("CREATE TABLE referee(" +
@@ -75,8 +80,17 @@ public class DBFunctions {
         }
     }
 
-    public void insertReferee(String firstName, String lastName, String email, String phone, double weeklyFee, double totalFee)
-    {
+    /**
+     * Insert a referee into the database
+     *
+     * @param firstName Referee's first name
+     * @param lastName  Referee's last name
+     * @param email     Referee's email
+     * @param phone     Referee's phone
+     * @param weeklyFee Referee's weekly fee
+     * @param totalFee  Referee's total fee
+     */
+    public void insertReferee(String firstName, String lastName, String email, String phone, double weeklyFee, double totalFee) {
         try {
             rs = statement.executeQuery("SELECT * FROM referee");
             rs.moveToInsertRow();
@@ -87,10 +101,13 @@ public class DBFunctions {
             rs.updateDouble("weeklyFee", weeklyFee);
             rs.updateDouble("totalFee", totalFee);
             rs.insertRow();
+        } catch (SQLException sqle) { sqle.printStackTrace();
         }
-        catch (SQLException sqle) { sqle.printStackTrace(); }
     }
 
+    /**
+     * Get the tables in the database to test db connection and creation
+     */
     public void getTables() {
         System.out.println("\nTABLE NAMES");
         try {
@@ -103,8 +120,11 @@ public class DBFunctions {
         }
     }
 
+    /**
+     * Get the columns in the database to test that they have been created properly
+     */
     public void getColumns() {
-        System.out.println("\nCOLUMN NAMES");
+        System.out.println("\nCOLUMN NAMES\n");
         try {
             ResultSetMetaData rsmd;
             int colNum;
@@ -112,12 +132,14 @@ public class DBFunctions {
             rs = statement.executeQuery("SHOW COLUMNS FROM referee;");
             rsmd = rs.getMetaData();
             colNum = rsmd.getColumnCount();
+            System.out.println("REFEREE:");
             while (rs.next()) {
                 for (int i = 1; i <= colNum; i++)
                     System.out.print(rs.getString(i) + " ");
                 System.out.println();
             }
 
+            System.out.println("\nCLUB:");
             rs = statement.executeQuery("SHOW COLUMNS FROM club;");
             rsmd = rs.getMetaData();
             colNum = rsmd.getColumnCount();
@@ -127,6 +149,7 @@ public class DBFunctions {
                 System.out.println();
             }
 
+            System.out.println("\nDIVISION:");
             rs = statement.executeQuery("SHOW COLUMNS FROM division;");
             rsmd = rs.getMetaData();
             colNum = rsmd.getColumnCount();
@@ -136,6 +159,7 @@ public class DBFunctions {
                 System.out.println();
             }
 
+            System.out.println("\nGAME:");
             rs = statement.executeQuery("SHOW COLUMNS FROM game;");
             rsmd = rs.getMetaData();
             colNum = rsmd.getColumnCount();
@@ -144,6 +168,7 @@ public class DBFunctions {
                     System.out.print(rs.getString(i) + " ");
                 System.out.println();
             }
+            System.out.println();
         } catch (SQLException e) {
             e.printStackTrace();
         }

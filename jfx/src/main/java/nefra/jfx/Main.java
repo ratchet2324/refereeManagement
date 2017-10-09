@@ -11,11 +11,22 @@ import org.jetbrains.annotations.Contract;
 
 public class Main extends Application
 {
+    /**
+     * Provide an instance to access non-static parts from a static instance.
+     */
     private static Main instance;
     private Stage stage = new Stage();
 
+    /**
+     * constructor to make the instance
+     */
     public Main() { instance = this; }
 
+    /**
+     * Make an instance to use both static and non-static methods.
+     *
+     * @return a static instance to also access non-static methods.
+     */
     @Contract(pure = true)
     static Main getInstance() { return instance; }
 
@@ -52,7 +63,20 @@ public class Main extends Application
         stage.setOnCloseRequest(e -> nefra.misc.Exit.getInstance().exit(e));
     }
 
+    /**
+     * Change the scene to the called one.
+     * @param scene The scene to change to.
+     */
     void changeScene(Scene scene) {
         stage.setScene(scene);
     }
+
+    /**
+     * Change the scene to the called one via its root BorderPane.
+     *
+     * @param root The BorderPane of the scene to change to.
+     */
+    void changeScene(BorderPane root) {
+        stage.setScene(new Scene(root));}
+
 }
