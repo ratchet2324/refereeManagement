@@ -16,4 +16,4 @@ This project is for my local soccer referee branch but can be modified for other
 This is still a work in progress and will update over the next few weeks/months.
 
 ## Documentation
-The documentation can be found [here](Docs\index.html)
+The documentation can be found [here](Docs/index.html)
