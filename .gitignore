@@ -9,7 +9,6 @@ out/
 # Java
 *.class
 *.log
-*.jar
 
 # Gradle
 **/build/
