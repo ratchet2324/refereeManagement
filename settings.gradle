@@ -1,7 +1,2 @@
-include "club"
-include "db"
-include "game"
+include "container"
 include "jfx"
-include "referee"
-include "settings"
-include "misc"
