@@ -1,25 +1,7 @@
-# IntelliJ
-.idea/
-out/
-*.iml
-*.iws
-*.idea_modules
-*.ipr
-
-# Java
-*.class
-*.log
-
-# Gradle
-**/build/
-.gradle/
-gradle/wrapper/gradle-wrapper.properties
-!gradle-wrapper.jar
-
-# Build
-NEFRA\ Data/
-*.db
-
-# Misc
-*.txt
-*.fxml
+#Only include Docs on this branch.
+!Docs/
+*/
+*.*
+!*.md
+!*.yml
+!.gitignore

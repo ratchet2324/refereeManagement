@@ -1,5 +1,0 @@
-dependencies {
-    compile project(":misc")
-    compile 'commons-io:commons-io:2+'
-    compile 'org.apache.commons:commons-text:+'
-}
