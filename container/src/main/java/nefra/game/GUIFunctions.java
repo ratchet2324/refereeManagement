@@ -38,6 +38,7 @@ public class GUIFunctions {
         e.consume();
         Game game = new Game(home, away, division, round, main, ar1, ar2);
         db.insertGame(game);
+        db.printDatabase();
     }
 
     public void displayError(ActionEvent e)

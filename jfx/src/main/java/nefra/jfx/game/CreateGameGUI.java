@@ -1,25 +1,20 @@
 package nefra.jfx.game;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
-import javafx.util.StringConverter;
 import nefra.club.Club;
 import nefra.game.Division;
+import nefra.game.GUIFunctions;
 import nefra.jfx.CommonGUI;
-import nefra.referee.GUIFunctions;
 import nefra.referee.Referee;
 
-import java.util.Collections;
-import java.util.List;
-
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import java.util.Calendar;
 
 public class CreateGameGUI {
     private GUIFunctions guif = new GUIFunctions();
@@ -50,6 +45,7 @@ public class CreateGameGUI {
         Label awayTeamLabel = new Label("Away: ");
         Label divisionLabel = new Label("Division: ");
         Label roundLabel = new Label("Round: ");
+        Label yearLabel = new Label("Year: ");
         Label mainRefereeLabel = new Label("Main Referee: ");
         Label ar1RefereeLabel = new Label("AR 1: ");
         Label ar2RefereeLabel = new Label("AR 2: ");
@@ -58,6 +54,7 @@ public class CreateGameGUI {
         ChoiceBox awayTeam = new ChoiceBox(FXCollections.observableArrayList(Club.clubList));
         ChoiceBox division = new ChoiceBox(FXCollections.observableArrayList(Division.divisionList));
         TextField round = new TextField();
+        TextField year = new TextField(String.format("%d", Calendar.getInstance().get(Calendar.YEAR)));
         ChoiceBox mainReferee = new ChoiceBox(FXCollections.observableArrayList(Referee.refereeList));
         ChoiceBox ar1Referee = new ChoiceBox(FXCollections.observableArrayList(Referee.refereeList));
         ChoiceBox ar2Referee = new ChoiceBox(FXCollections.observableArrayList(Referee.refereeList));
@@ -81,7 +78,9 @@ public class CreateGameGUI {
             System.out.println("MR: "+ mainReferee.getValue());
             System.out.println("AR: "+ ar1Referee.getValue());
             System.out.println("AR: "+ ar2Referee.getValue());
-
+            guif.makeGame(e, (Club) homeTeam.getValue(), (Club) awayTeam.getValue(), (Division) division.getValue(),
+                    Integer.valueOf(round.getText()), Integer.valueOf(year.getText()), (Referee) mainReferee.getValue(),
+                    (Referee)ar1Referee.getValue(), (Referee) ar2Referee.getValue());
         });
 
         homeTeamLabel.setStyle("-fx-font-weight: bold;" +
@@ -91,6 +90,8 @@ public class CreateGameGUI {
         divisionLabel.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 20px;");
         roundLabel.setStyle("-fx-font-weight: bold;" +
+                "-fx-font-size: 20px;");
+        yearLabel.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 20px;");
         mainRefereeLabel.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 20px;");
@@ -104,6 +105,7 @@ public class CreateGameGUI {
         GridPane.setHalignment(awayTeamLabel, HPos.CENTER);
         GridPane.setHalignment(divisionLabel, HPos.CENTER);
         GridPane.setHalignment(roundLabel, HPos.CENTER);
+        GridPane.setHalignment(yearLabel, HPos.CENTER);
         GridPane.setHalignment(mainRefereeLabel, HPos.CENTER);
         GridPane.setHalignment(ar1RefereeLabel, HPos.CENTER);
         GridPane.setHalignment(ar2RefereeLabel, HPos.CENTER);
@@ -121,6 +123,7 @@ public class CreateGameGUI {
         GridPane.setConstraints(awayTeamLabel,7 , 3);
         GridPane.setConstraints(divisionLabel, 3, 4);
         GridPane.setConstraints(roundLabel, 7, 4);
+        GridPane.setConstraints(yearLabel, 9, 4);
         GridPane.setConstraints(mainRefereeLabel,4 , 6, 2, 1);
         GridPane.setConstraints(ar1RefereeLabel, 3, 7);
         GridPane.setConstraints(ar2RefereeLabel, 7, 7);
@@ -128,6 +131,7 @@ public class CreateGameGUI {
         GridPane.setConstraints(awayTeam, 8, 3, 3, 1);
         GridPane.setConstraints(division, 4, 4, 3, 1);
         GridPane.setConstraints(round, 8, 4);
+        GridPane.setConstraints(year, 10, 4);
         GridPane.setConstraints(mainReferee, 6, 6, 3, 1);
         GridPane.setConstraints(ar1Referee, 4, 7, 3, 1);
         GridPane.setConstraints(ar2Referee, 8, 7, 3, 1);
@@ -136,8 +140,8 @@ public class CreateGameGUI {
         CommonGUI.getInstance().makeRowsAndCols(centre);
 
         centre.getChildren().addAll(homeTeamLabel, awayTeamLabel, divisionLabel, roundLabel,
-                mainRefereeLabel, ar1RefereeLabel, ar2RefereeLabel,
-                homeTeam, awayTeam, division, round, mainReferee,
+                yearLabel, mainRefereeLabel, ar1RefereeLabel, ar2RefereeLabel,
+                homeTeam, awayTeam, division, round, year, mainReferee,
                 ar1Referee, ar2Referee, createGameLabel, enterButton);
 
         //BackButton

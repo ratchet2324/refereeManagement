@@ -86,69 +86,19 @@ public class Main extends Application
     private void loadAll()
     {
         dbf_rewrite dbFunctions = new dbf_rewrite();
-        ArrayList<String> x;
 
+        dbFunctions.printDatabase();
         dbFunctions.loadDatabase();
-        /*
-        nefra.settings.Settings.initSettings();
-        ArrayList<String> z = new ArrayList<>();
-        String[] split;
-        x = dbFunctions.loadDbToFile("referee");
-        for(String i : x) { System.out.println(i); }
-        for (String e : x) {
-            split = e.split("=");
-            z.add(split[1]);
-        }
-        for (int i = 0; i < z.size(); i += 7)
-        {
-            Referee y = new Referee(Integer.valueOf(z.get(i)), z.get(i + 1),
-                    z.get(i + 2), z.get(i + 3), z.get(i + 4),
-                    Double.valueOf(z.get(i+ 5)), Double.valueOf(z.get(i + 6)));
-            System.out.println(y.displayInfo());
-        }
-        z.clear();
-        x = dbFunctions.loadDbToFile("club");
-        for(String j : x) { System.out.println(j); }
-        for (String e : x) {
-            split = e.split("=");
-            z.add(split[1]);
-        }
-        for (int i = 0; i < z.size(); i += 10)
-        {
-            Club y = new Club(Integer.valueOf(z.get(i)), z.get(i + 1),
-                    z.get(i + 2), z.get(i + 3),
-                    z.get(i + 4), z.get(i + 5),
-                    z.get(i + 6), z.get(i + 7),
-                    Double.valueOf(z.get(i+ 8)), Double.valueOf(z.get(i + 9)));
-            System.out.println(y.displayInfo());
-        }
-        z.clear();
-        x = dbFunctions.loadDbToFile("division");
-        for(String k : x) { System.out.println(k); }
-        for (String e : x) {
-            split = e.split("=");
-            z.add(split[1]);
-        }
-        for (int i = 0; i < z.size(); i += 4)
-        {
-            Division y = new Division(Integer.valueOf(z.get(i)), z.get(i + 1),
-                    Double.valueOf(z.get(i+ 2)), Double.valueOf(z.get(i + 3)));
-            System.out.println(y.displayInfo());
-        }
-        z.clear();
-        x = dbFunctions.loadDbToFile("game");
-        for(String l : x) { System.out.println(l); }
-        for (String e : x) {
-            split = e.split("=");
-            z.add(split[1]);
-        }
-        /*for (int i = 0; i < x.size(); i += 7)
-        {
-            Game y = new Game(Integer.valueOf(x.get(i)), x.get(i + 1),
-                    x.get(i + 2), x.get(i + 3), x.get(i + 4),
-                    Double.valueOf(x.get(i+ 5)), Double.valueOf(x.get(i + 6)));
-            System.out.println(y.toString());
-        }*/
+
+        for(Referee r : Referee.refereeList)
+            r.displayInfo();
+        for(Club c : Club.clubList)
+            c.displayInfo();
+        for(Division d : Division.divisionList)
+            d.displayInfo();
+        for(Game g : Game.gameList)
+            System.out.println(g.toString());
+
     }
 
 }

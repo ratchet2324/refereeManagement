@@ -192,7 +192,7 @@ public class Game {
     @Override
     public String toString() {
         return "Division: " + getDivision().getDivisionName() + " " +
-                "Round: " + getRound() + "\n" +
+                "Round: " + getRound() + "Year: " + getYear() + "\n" +
                 getHome().getClubName() + " vs " + getAway().getClubName() + "\n" +
                 "Main Referee: " + getMain().getName() + "\n" +
                 "Assistant Referee 1: " + getAr1().getName() + "\n" +

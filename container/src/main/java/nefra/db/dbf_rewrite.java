@@ -43,7 +43,7 @@ public class dbf_rewrite {
             Settings.writeSetting("DatabaseInstantiation", "false");
 
             //CREATE REFEREE
-            statement.executeUpdate("CREATE TABLE referee(" +
+            statement.executeUpdate("CREATE TABLE REFEREE(" +
                     "REFEREE_ID INTEGER AUTO_INCREMENT PRIMARY KEY," +
                     "FIRST_NAME VARCHAR(50) NOT NULL," +
                     "LAST_NAME VARCHAR(50) NOT NULL," +
@@ -195,14 +195,16 @@ public class dbf_rewrite {
             pstmt.setString(4, referee.getPhone());
             pstmt.setDouble(5, referee.getWeeklyFee());
             pstmt.setDouble(6, referee.getTotalFee());
-            connection.commit();
+            pstmt.executeUpdate();
 
             //Get Referee ID from database
             pstmt = connection.prepareStatement("SELECT REFEREE_ID FROM REFEREE WHERE FIRST_NAME = ? AND LAST_NAME = ?;");
             pstmt.setString(1, referee.getFirstName());
             pstmt.setString(2, referee.getLastName());
             ResultSet rs = pstmt.executeQuery();
+            rs.next();
             referee.setReferee_id(rs.getInt(1));
+            referee.displayInfo();
             connection.close();
         } catch (SQLException sqle) { sqle.printStackTrace(); }
     }
@@ -225,7 +227,7 @@ public class dbf_rewrite {
             pstmt.setString(7, club.getPresidentContact());
             pstmt.setDouble(8, club.getWeeklyFee());
             pstmt.setDouble(9, club.getTotalFee());
-            connection.commit();
+            pstmt.executeUpdate();
 
             //Get allocated club ID from database
             pstmt = connection.prepareStatement("SELECT CLUB_ID FROM CLUB WHERE CLUB_NAME = ?;");
@@ -248,7 +250,7 @@ public class dbf_rewrite {
             pstmt.setString(1, division.getDivisionName());
             pstmt.setDouble(2, division.getMainRefereeFee());
             pstmt.setDouble(3, division.getArFee());
-            connection.commit();
+            pstmt.executeUpdate();
 
             //Get the Division ID from database
             pstmt = connection.prepareStatement("SELECT DIVISION_ID FROM DIVISION WHERE DIVISION_NAME = ?;");
@@ -260,20 +262,6 @@ public class dbf_rewrite {
         } catch (SQLException e) {e.printStackTrace();}
     }
 
-/*
-HOME INT NOT NULL," +
-                    "AWAY INT NOT NULL," +
-                    "DIVISION INT NOT NULL," +
-                    "ROUND INT NOT NULL," +
-                    "YEAR INT NOT NULL," +
-                    "MAIN_REFEREE INT NOT NULL," +
-                    "ASSISTANT_ONE INT NOT NULL," +
-                    "ASSISTANT_TWO INT NOT NULL," +
-                    "TOTAL_GAME_FEE DECIMAL(10,2) NOT NULL," +
-                    "HOME_FEE DECIMAL(10,2) NOT NULL," +
-                    "AWAY_FEE DECIMAL(10,2) NOT NULL," +
-                    "ADMIN_FEE DECIMAL(10,2) NOT NULL," +
-*/
     public void insertGame(Game game)
     {
         Connection connection = getConnection();
@@ -297,7 +285,7 @@ HOME INT NOT NULL," +
             pstmt.setDouble(10, game.getHomeClubFee());
             pstmt.setDouble(11, game.getAwayClubFee());
             pstmt.setDouble(12, game.getAdminFee());
-            connection.commit();
+            pstmt.executeUpdate();
 
             //Set Game ID From Database
             pstmt = connection.prepareStatement("SELECT GAME_ID FROM GAME WHERE HOME = ? AND" +
@@ -314,4 +302,86 @@ HOME INT NOT NULL," +
         } catch (SQLException e) {e.printStackTrace();}
     }
 
+    public void printDatabase()
+    {
+        try
+        {
+            Connection connection = getConnection();
+            Statement stmt = connection.createStatement();
+            ResultSet rs;
+            ResultSetMetaData rsmd;
+
+            //REFEREE
+            printColumns("referee");
+            rs  = stmt.executeQuery("SELECT * FROM REFEREE");
+            rsmd = rs.getMetaData();
+            while(rs.next())
+            {
+                for(int i = 1; i <= rsmd.getColumnCount(); i++)
+                    System.out.print(rs.getString(i) + " ");
+                System.out.println();
+            }
+
+            //CLUB
+            printColumns("club");
+            rs  = stmt.executeQuery("SELECT * FROM CLUB");
+            rsmd = rs.getMetaData();
+            while(rs.next())
+            {
+                for(int i = 1; i <= rsmd.getColumnCount(); i++)
+                    System.out.print(rs.getString(i) + " ");
+                System.out.println();
+            }
+
+            //DIVISION
+            printColumns("division");
+            rs  = stmt.executeQuery("SELECT * FROM DIVISION");
+            rsmd = rs.getMetaData();
+            while(rs.next())
+            {
+                for(int i = 1; i <= rsmd.getColumnCount(); i++)
+                    System.out.print(rs.getString(i) + " ");
+                System.out.println();
+            }
+
+            //GAME
+            printColumns("game");
+            rs  = stmt.executeQuery("SELECT * FROM GAME");
+            rsmd = rs.getMetaData();
+            while(rs.next())
+            {
+                for(int i = 1; i <= rsmd.getColumnCount(); i++)
+                    System.out.print(rs.getString(i) + " ");
+                System.out.println();
+            }
+        }
+        catch (SQLException e) { e.printStackTrace(); }
+    }
+
+    private void printColumns(String table)
+    {
+        try
+        {
+            Connection connection = getConnection();
+            String sql;
+            switch (table.toLowerCase())
+            {
+                case "referee": sql = "SHOW COLUMNS FROM REFEREE"; break;
+                case "club": sql = "SHOW COLUMNS FROM CLUB"; break;
+                case "division": sql = "SHOW COLUMNS FROM DIVISION"; break;
+                case "game": sql = "SHOW COLUMNS FROM GAME"; break;
+                default: sql = null; break;
+            }
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            while(rs.next())
+            {
+                for(int i = 1; i <= rsmd.getColumnCount(); i++)
+                    System.out.print(rs.getString(i) + " ");
+                System.out.println();
+            }
+        }
+        catch (SQLException e) { e.printStackTrace(); }
+    }
 }

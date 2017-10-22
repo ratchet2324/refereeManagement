@@ -21,6 +21,7 @@ public class GUIFunctions {
         e.consume();
         Club club = new Club(clubName);
         db.insertClub(club);
+        db.printDatabase();
     }
 
     /**
@@ -34,6 +35,7 @@ public class GUIFunctions {
         e.consume();
         Club club = new Club(clubName, presidentName, presidentContact);
         db.insertClub(club);
+        db.printDatabase();
     }
 
     /**
@@ -48,6 +50,7 @@ public class GUIFunctions {
         e.consume();
         Club club = new Club(clubName, street, suburb, state, postcode);
         db.insertClub(club);
+        db.printDatabase();
     }
 
     /**
@@ -66,6 +69,7 @@ public class GUIFunctions {
         e.consume();
         Club club = new Club(clubName, street, suburb, state, postcode, presidentName, presidentContact);
         db.insertClub(club);
+        db.printDatabase();
     }
 
     public void displayError(ActionEvent e)

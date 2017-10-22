@@ -21,6 +21,7 @@ public class GUIFunctions {
         e.consume();
         Referee referee = new Referee(firstName, lastName);
         db.insertReferee(referee);
+        db.printDatabase();
     }
 
     /**
@@ -35,6 +36,7 @@ public class GUIFunctions {
         e.consume();
         Referee referee = new Referee(firstName, lastName, contact, isEmail);
         db.insertReferee(referee);
+        db.printDatabase();
     }
 
     /**
@@ -49,5 +51,6 @@ public class GUIFunctions {
         e.consume();
         Referee referee = new Referee(firstName, lastName, email, phone);
         db.insertReferee(referee);
+        db.printDatabase();
     }
 }
