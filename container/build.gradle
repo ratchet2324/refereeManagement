@@ -1,5 +1,5 @@
 dependencies {
-	compile 'org.apache.commons:commons-text:+';
-	compile 'commons-io:commons-io:2+';
-	compile 'com.h2database:h2:1.4.196';
+	compile 'org.apache.commons:commons-text:+'
+	compile 'commons-io:commons-io:2+'
+	compile 'com.h2database:h2:1.4.196'
 }

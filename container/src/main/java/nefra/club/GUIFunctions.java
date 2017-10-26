@@ -3,13 +3,12 @@ package nefra.club;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import nefra.db.DBFunctions;
-import nefra.db.dbf_rewrite;
 
 /**
  * The functions for the Referee GUIs (Create, Edit, View)
  */
 public class GUIFunctions {
-    private dbf_rewrite db = new dbf_rewrite();
+    private DBFunctions db = new DBFunctions();
 
     /**
      * Used if only the club name is entered.

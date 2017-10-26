@@ -3,7 +3,7 @@ package nefra.game;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import nefra.club.Club;
-import nefra.db.dbf_rewrite;
+import nefra.db.DBFunctions;
 import nefra.referee.Referee;
 
 import java.text.DecimalFormat;
@@ -13,7 +13,7 @@ import java.text.ParseException;
  * The functions for the Game and Division GUIs (Create, Edit, View)
  */
 public class GUIFunctions {
-    private dbf_rewrite db = new dbf_rewrite();
+    private DBFunctions db = new DBFunctions();
     private DecimalFormat df = new DecimalFormat("0.00");
 
     public void makeDivision(ActionEvent e, String divisionName, String mainRefFee, String arFee)
@@ -29,6 +29,7 @@ public class GUIFunctions {
             System.out.println("AR: " + ar);
             Division division = new Division(divisionName, main, ar);
             db.insertDivision(division);
+            db.printDatabase();
         } catch (ParseException pe) { pe.printStackTrace(); }
     }
 
@@ -36,7 +37,9 @@ public class GUIFunctions {
                          Referee ar1, Referee ar2)
     {
         e.consume();
-        Game game = new Game(home, away, division, round, main, ar1, ar2);
+        Game game = new Game(home, away, division, round, year, main, ar1, ar2);
+        game.gameFees(false);
+        game.payReferee(false, null);
         db.insertGame(game);
         db.printDatabase();
     }

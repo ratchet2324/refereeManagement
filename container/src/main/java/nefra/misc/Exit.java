@@ -5,6 +5,7 @@ import javafx.event.Event;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import nefra.db.DBConnect;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Optional;
@@ -42,6 +43,7 @@ public class Exit {
 
         Optional<ButtonType> result = exit.showAndWait();
         if (result.isPresent() && result.get() == yes) {
+            DBConnect.closeConnections();
             Platform.exit();
         }
     }

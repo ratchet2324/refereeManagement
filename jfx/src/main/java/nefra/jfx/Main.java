@@ -8,15 +8,12 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import nefra.club.Club;
 import nefra.db.DBFunctions;
-import nefra.db.dbf_rewrite;
 import nefra.game.Division;
 import nefra.game.Game;
 import nefra.jfx.mainmenu.MainMenu;
 import nefra.referee.Referee;
 import nefra.settings.Settings;
 import org.jetbrains.annotations.Contract;
-
-import java.util.ArrayList;
 
 public class Main extends Application
 {
@@ -85,7 +82,7 @@ public class Main extends Application
 
     private void loadAll()
     {
-        dbf_rewrite dbFunctions = new dbf_rewrite();
+        DBFunctions dbFunctions = new DBFunctions();
 
         dbFunctions.printDatabase();
         dbFunctions.loadDatabase();

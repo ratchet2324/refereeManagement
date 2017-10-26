@@ -70,15 +70,17 @@ public class Game {
      * @param away The away club
      * @param division The division the game is in
      * @param round The round the game is played in
+     * @param year The year in which the game has occurred
      * @param main The main referee (centre referee)
      * @param ar1 The 1st Assistant Referee
      * @param ar2 The 2nd Assistant Referee
      */
-    public Game(Club home, Club away, Division division, int round, Referee main, Referee ar1, Referee ar2) {
+    public Game(Club home, Club away, Division division, int round, int year, Referee main, Referee ar1, Referee ar2) {
         this.home = home;
         this.away = away;
         this.division = division;
         this.round = round;
+        this.year = year;
         this.main = main;
         this.ar1 = ar1;
         this.ar2 = ar2;
@@ -151,10 +153,10 @@ public class Game {
      * Make the game fees ready to add to the referees afterwards. This function adds the required fees to the clubs
      * automatically. It also calculates the 10% required.
      * @param replacementMainReferee True if the centre referee was replaced (i.e. injury)
-     * @return Returns the amount of the game fees.
      */
-    public double makeGameFees(boolean replacementMainReferee) {
+    public void gameFees(boolean replacementMainReferee) {
         double gameFees;
+        double fee;
         double main = this.division.getMainRefereeFee();
         double ar = this.division.getArFee();
         double extraReferees = this.extra.size() * this.division.getArFee();
@@ -164,12 +166,13 @@ public class Game {
         else
             gameFees = main + (2 * ar) + extraReferees;
 
+        fee = gameFees / 2;
         this.adminFee = gameFees * 0.10;
-
-        home.addToWeeklyFee(gameFees / 2);
-        away.addToWeeklyFee(gameFees / 2);
-
-        return gameFees;
+        this.homeClubFee = fee;
+        this.awayClubFee = fee;
+        this.home.addToWeeklyFee(fee);
+        this.away.addToWeeklyFee(fee);
+        this.totalFee = gameFees + adminFee;
     }
 
     /**
@@ -192,7 +195,7 @@ public class Game {
     @Override
     public String toString() {
         return "Division: " + getDivision().getDivisionName() + " " +
-                "Round: " + getRound() + "Year: " + getYear() + "\n" +
+                "Round: " + getRound() + " Year: " + getYear() + "\n" +
                 getHome().getClubName() + " vs " + getAway().getClubName() + "\n" +
                 "Main Referee: " + getMain().getName() + "\n" +
                 "Assistant Referee 1: " + getAr1().getName() + "\n" +

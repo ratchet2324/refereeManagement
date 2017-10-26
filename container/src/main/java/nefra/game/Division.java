@@ -59,8 +59,8 @@ public class Division {
     @Override
     public String toString() { return this.getDivisionName(); }
 
-    public String displayInfo() {
-        return String.format("Division Name: %s\nMain Referee Fee: $%.2f\nAssistant Referee Fee: $%.2f\n",
+    public void displayInfo() {
+        System.out.printf("Division Name: %s\nMain Referee Fee: $%.2f\nAssistant Referee Fee: $%.2f\n",
                 getDivisionName(), getMainRefereeFee(), getArFee());
     }
 }
