@@ -13,7 +13,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import nefra.jfx.CommonGUI;
 import nefra.jfx.Main;
+import nefra.jfx.club.ViewClubGUI;
 import nefra.jfx.game.CreateGameGUI;
+import nefra.jfx.referee.ViewRefereeGUI;
 
 public class MainMenu {
 
@@ -37,6 +39,13 @@ public class MainMenu {
         viewRef.setStyle("-fx-font-size: 34.0");
         viewRef.setPrefSize(200,125);
 
+        viewRef.setOnAction(e -> {
+            e.consume();
+            ViewRefereeGUI vGUI = new ViewRefereeGUI();
+            CommonGUI.panes.add(vGUI.initGUI());
+            Main.getInstance().changeScene(new Scene(vGUI.initGUI()));
+        });
+
 
         Button viewClubs = new Button("View Clubs");
         viewClubs.setAlignment(Pos.TOP_CENTER);
@@ -47,6 +56,13 @@ public class MainMenu {
         viewClubs.setStyle("-fx-font-size: 34.0");
         viewClubs.setPrefSize(200,125);
         viewClubs.setLayoutY(125);
+
+        viewClubs.setOnAction(e -> {
+            e.consume();
+            ViewClubGUI vGUI = new ViewClubGUI();
+            CommonGUI.panes.add(vGUI.initGUI());
+            Main.getInstance().changeScene(new Scene(vGUI.initGUI()));
+        });
 
         Button addGame = new Button("Add Game");
         addGame.setAlignment(Pos.TOP_CENTER);
