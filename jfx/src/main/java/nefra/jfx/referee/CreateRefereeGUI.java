@@ -8,6 +8,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import nefra.jfx.CommonGUI;
+import nefra.misc.Debug;
 import nefra.referee.GUIFunctions;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -37,27 +38,18 @@ public class CreateRefereeGUI {
         TextField lastName = new TextField();
         TextField email = new TextField();
         TextField phone = new TextField();
-        //CheckBox isEmail = new CheckBox("Please tick if ONLY email is entered.");
         Button enterButton = new Button("Enter");
-
-        //isEmail.setIndeterminate(false);
 
         /*
          * Set the action for the enter button based on what information was entered into the fields.
          */
         enterButton.setOnAction(e -> {
-            System.out.println("FN: "+ firstName.getText());
-            System.out.println("LN: "+ lastName.getText());
-            System.out.println("EM: "+ email.getText());
-            System.out.println("PH: "+ phone.getText());
-
-            if(isNotEmpty(email.getText()) && isNotEmpty(phone.getText()))
-                guif.makeReferee(e, firstName.getText(), lastName.getText(), email.getText(), phone.getText());
-            else if(isNotEmpty(email.getText()) && isEmpty(phone.getText()))
-                guif.makeReferee(e, firstName.getText(), lastName.getText(), email.getText(), true);
-            else if(isEmpty(email.getText()) && isNotEmpty(phone.getText()))
-                guif.makeReferee(e, firstName.getText(), lastName.getText(), phone.getText(), false);
-            else guif.makeReferee(e, firstName.getText(), lastName.getText());
+            if(Debug.debugMode)
+                System.out.println("FN: "+ firstName.getText() + "\n" +
+                        "LN: "+ lastName.getText() + "\n" +
+                        "EM: "+ email.getText() + "\n" +
+                        "PH: "+ phone.getText());
+            guif.makeReferee(e, firstName.getText(), lastName.getText(), email.getText(), phone.getText());
         });
 
         firstNameLabel.setStyle("-fx-font-weight: bold;" +
@@ -68,8 +60,6 @@ public class CreateRefereeGUI {
                 "-fx-font-size: 20px;");
         phoneLabel.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 20px;");
-        //isEmail.setStyle("-fx-font-weight: bold;" +
-        //    "-fx-font-size: 16px;");
         enterButton.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 16px;");
         GridPane.setHalignment(firstNameLabel, HPos.RIGHT);
@@ -107,11 +97,11 @@ public class CreateRefereeGUI {
                 "-fx-font-size: 16px;");
 
         //Container
-        BorderPane referees = new BorderPane(centre, menu, null, backButton, null);
-        referees.setPrefSize(640,480);
+        BorderPane createReferees = new BorderPane(centre, menu, null, backButton, null);
+        createReferees.setPrefSize(640,480);
 
-        CommonGUI.panes.add(referees);
+        CommonGUI.panes.add(createReferees);
 
-        return referees;
+        return createReferees;
     }
 }

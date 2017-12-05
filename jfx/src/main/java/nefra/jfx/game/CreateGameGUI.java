@@ -50,14 +50,14 @@ public class CreateGameGUI {
         Label ar1RefereeLabel = new Label("AR 1: ");
         Label ar2RefereeLabel = new Label("AR 2: ");
         Label createGameLabel = new Label("CREATE GAME");
-        ChoiceBox homeTeam = new ChoiceBox(FXCollections.observableArrayList(Club.clubList));
-        ChoiceBox awayTeam = new ChoiceBox(FXCollections.observableArrayList(Club.clubList));
-        ChoiceBox division = new ChoiceBox(FXCollections.observableArrayList(Division.divisionList));
+        ChoiceBox<Club> homeTeam = new ChoiceBox<>(FXCollections.observableArrayList(Club.clubList));
+        ChoiceBox<Club> awayTeam = new ChoiceBox<>(FXCollections.observableArrayList(Club.clubList));
+        ChoiceBox<Division> division = new ChoiceBox<>(FXCollections.observableArrayList(Division.divisionList));
         TextField round = new TextField();
         TextField year = new TextField(String.format("%d", Calendar.getInstance().get(Calendar.YEAR)));
-        ChoiceBox mainReferee = new ChoiceBox(FXCollections.observableArrayList(Referee.refereeList));
-        ChoiceBox ar1Referee = new ChoiceBox(FXCollections.observableArrayList(Referee.refereeList));
-        ChoiceBox ar2Referee = new ChoiceBox(FXCollections.observableArrayList(Referee.refereeList));
+        ChoiceBox<Referee> mainReferee = new ChoiceBox<>(FXCollections.observableArrayList(Referee.refereeList));
+        ChoiceBox<Referee> ar1Referee = new ChoiceBox<>(FXCollections.observableArrayList(Referee.refereeList));
+        ChoiceBox<Referee> ar2Referee = new ChoiceBox<>(FXCollections.observableArrayList(Referee.refereeList));
         Button enterButton = new Button("Enter");
 
         //Set size to fill gaps
@@ -70,6 +70,7 @@ public class CreateGameGUI {
         /*
          * Set the action for the enter button based on what information was entered into the fields.
          */
+        //TODO: CLEAR TEXT BOXES (DEFAULT)
         enterButton.setOnAction(e -> {
             System.out.println("HT: "+ homeTeam.getValue());
             System.out.println("AT: "+ awayTeam.getValue());
@@ -78,9 +79,9 @@ public class CreateGameGUI {
             System.out.println("MR: "+ mainReferee.getValue());
             System.out.println("AR: "+ ar1Referee.getValue());
             System.out.println("AR: "+ ar2Referee.getValue());
-            guif.makeGame(e, (Club) homeTeam.getValue(), (Club) awayTeam.getValue(), (Division) division.getValue(),
-                    Integer.valueOf(round.getText()), Integer.valueOf(year.getText()), (Referee) mainReferee.getValue(),
-                    (Referee)ar1Referee.getValue(), (Referee) ar2Referee.getValue());
+            guif.makeGame(e, homeTeam.getValue(), awayTeam.getValue(), division.getValue(),
+                    Integer.valueOf(round.getText()), Integer.valueOf(year.getText()), mainReferee.getValue(),
+                    ar1Referee.getValue(), ar2Referee.getValue());
         });
 
         homeTeamLabel.setStyle("-fx-font-weight: bold;" +
@@ -151,11 +152,11 @@ public class CreateGameGUI {
                 "-fx-font-size: 16px;");
 
         //Container
-        BorderPane games = new BorderPane(centre, menu, null, backButton, null);
-        games.setPrefSize(640,480);
+        BorderPane createGames = new BorderPane(centre, menu, null, backButton, null);
+        createGames.setPrefSize(640,480);
 
-        CommonGUI.panes.add(games);
+        CommonGUI.panes.add(createGames);
 
-        return games;
+        return createGames;
     }
 }

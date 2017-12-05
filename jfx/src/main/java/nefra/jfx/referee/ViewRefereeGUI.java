@@ -1,21 +1,21 @@
 package nefra.jfx.referee;
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import nefra.jfx.CommonGUI;
 import nefra.referee.GUIFunctions;
-
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import nefra.referee.Referee;
 
 public class ViewRefereeGUI {
     private GUIFunctions guif = new GUIFunctions();
+    private TableView<Referee> table = new TableView<>();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
@@ -24,82 +24,42 @@ public class ViewRefereeGUI {
      * @return the root BorderPane
      */
     public BorderPane initGUI() {
+        ObservableList<Referee> referee = FXCollections.observableArrayList(Referee.refereeList);
+
         //Top
         MenuBar menu = CommonGUI.getInstance().loadMenu();
 
         //Centre
         GridPane centre = new GridPane();
-        Label firstNameLabel = new Label("First Name: ");
-        Label lastNameLabel = new Label("Last Name: ");
-        Label emailLabel = new Label("Email: ");
-        Label phoneLabel = new Label("Phone: ");
-        Label createRefereeLabel = new Label("CREATE REFEREE");
-        TextField firstName = new TextField();
-        TextField lastName = new TextField();
-        TextField email = new TextField();
-        TextField phone = new TextField();
-        //CheckBox isEmail = new CheckBox("Please tick if ONLY email is entered.");
-        Button enterButton = new Button("Enter");
-
-        //isEmail.setIndeterminate(false);
+        final Label viewRefereeLabel = new Label("VIEW REFEREES");
+        Button removeButton = new Button("Remove");
 
         /*
          * Set the action for the enter button based on what information was entered into the fields.
          */
-        enterButton.setOnAction(e -> {
-            System.out.println("FN: "+ firstName.getText());
-            System.out.println("LN: "+ lastName.getText());
-            System.out.println("EM: "+ email.getText());
-            System.out.println("PH: "+ phone.getText());
-
-            if(isNotEmpty(email.getText()) && isNotEmpty(phone.getText()))
-                guif.makeReferee(e, firstName.getText(), lastName.getText(), email.getText(), phone.getText());
-            else if(isNotEmpty(email.getText()) && isEmpty(phone.getText()))
-                guif.makeReferee(e, firstName.getText(), lastName.getText(), email.getText(), true);
-            else if(isEmpty(email.getText()) && isNotEmpty(phone.getText()))
-                guif.makeReferee(e, firstName.getText(), lastName.getText(), phone.getText(), false);
-            else guif.makeReferee(e, firstName.getText(), lastName.getText());
+        removeButton.setOnAction(e -> {
+            guif.removeReferee(e, table.getSelectionModel().getSelectedItem());
         });
 
-        firstNameLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
-        lastNameLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
-        emailLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
-        phoneLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
-        //isEmail.setStyle("-fx-font-weight: bold;" +
-        //    "-fx-font-size: 16px;");
-        enterButton.setStyle("-fx-font-weight: bold;" +
+        removeButton.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 16px;");
-        GridPane.setHalignment(firstNameLabel, HPos.RIGHT);
-        GridPane.setHalignment(lastNameLabel, HPos.RIGHT);
-        GridPane.setHalignment(emailLabel, HPos.RIGHT);
-        GridPane.setHalignment(phoneLabel, HPos.RIGHT);
-        GridPane.setHalignment(createRefereeLabel, HPos.CENTER);
-        GridPane.setValignment(createRefereeLabel, VPos.CENTER);
 
-        createRefereeLabel.setStyle("-fx-font-weight: bold;" +
+        GridPane.setHalignment(viewRefereeLabel, HPos.CENTER);
+        GridPane.setValignment(viewRefereeLabel, VPos.CENTER);
+
+        viewRefereeLabel.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 36px;");
 
+        GridPane.setConstraints(viewRefereeLabel, 5, 1, 4, 2);
+        GridPane.setConstraints(table, 5,3,5,6);
+        GridPane.setConstraints(removeButton, 8, 9);
 
-        GridPane.setConstraints(createRefereeLabel, 5, 1, 4, 2);
-        GridPane.setConstraints(firstNameLabel, 4, 3, 2, 1);
-        GridPane.setConstraints(lastNameLabel, 4, 4, 2, 1);
-        GridPane.setConstraints(emailLabel, 5, 5);
-        GridPane.setConstraints(phoneLabel, 5, 6);
-        GridPane.setConstraints(firstName, 6, 3,2, 1);
-        GridPane.setConstraints(lastName, 6, 4, 2, 1);
-        GridPane.setConstraints(email, 6, 5,2, 1);
-        GridPane.setConstraints(phone, 6, 6, 2, 1);
-        GridPane.setConstraints(enterButton, 8, 7);
+        setupTable();
+        table.setItems(referee);
 
         CommonGUI.getInstance().makeRowsAndCols(centre);
 
-        centre.getChildren().addAll(firstName, firstNameLabel,
-                lastNameLabel, lastName, emailLabel, email,
-                phoneLabel, phone, createRefereeLabel, enterButton);
+        centre.getChildren().addAll(table, viewRefereeLabel, removeButton);
 
         //BackButton
         Button backButton = new Button("Back");
@@ -108,11 +68,64 @@ public class ViewRefereeGUI {
                 "-fx-font-size: 16px;");
 
         //Container
-        BorderPane referees = new BorderPane(centre, menu, null, backButton, null);
-        referees.setPrefSize(640,480);
+        BorderPane viewReferees = new BorderPane(centre, menu, null, backButton, null);
+        viewReferees.setPrefSize(640,480);
 
-        CommonGUI.panes.add(referees);
+        CommonGUI.panes.add(viewReferees);
 
-        return referees;
+        return viewReferees;
+    }
+
+    private void setupTable() {
+        table.setEditable(false);
+        final TableColumn<Referee, Integer> idCol = new TableColumn<>("ID");
+        idCol.setMinWidth(40);
+        idCol.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getRefereeId()));
+
+        final TableColumn<Referee, String> nameCol = new TableColumn<>("Name");
+        nameCol.setMinWidth(150);
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("Name"));
+
+        final TableColumn<Referee, String> emailCol = new TableColumn<>("Email");
+        emailCol.setMinWidth(100);
+        emailCol.setCellValueFactory(new PropertyValueFactory<>("Email"));
+
+        final TableColumn<Referee, String> phoneCol = new TableColumn<>("Phone");
+        phoneCol.setMinWidth(50);
+        phoneCol.setCellValueFactory(new PropertyValueFactory<>("Phone"));
+
+        final TableColumn<Referee, Number> weeklyFeeCol = new TableColumn<>("Weekly Fee");
+        weeklyFeeCol.setMinWidth(50);
+        weeklyFeeCol.setCellValueFactory(new PropertyValueFactory<>("WeeklyFee"));
+        weeklyFeeCol.setCellFactory(tc -> setTableCell());
+
+        final TableColumn<Referee, Number> totalFeeCol = new TableColumn<>("Total Fee");
+        totalFeeCol.setMinWidth(50);
+        totalFeeCol.setCellValueFactory(new PropertyValueFactory<>("TotalFee"));
+        totalFeeCol.setCellFactory(tc -> setTableCell());
+
+        table.setPlaceholder(new Label("There are no referees to display"));
+        table.getColumns().clear();
+        table.getColumns().add(idCol);
+        table.getColumns().add(nameCol);
+        table.getColumns().add(emailCol);
+        table.getColumns().add(phoneCol);
+        table.getColumns().add(weeklyFeeCol);
+        table.getColumns().add(totalFeeCol);
+    }
+
+
+    private TableCell<Referee, Number> setTableCell() {
+        return new TableCell<Referee, Number>() {
+            @Override
+            protected void updateItem(Number value, boolean empty) {
+                super.updateItem(value, empty) ;
+                if (empty) {
+                    setText(null);
+                } else {
+                    setText(String.format("$%.2f", value.doubleValue()));
+                }
+            }
+        };
     }
 }

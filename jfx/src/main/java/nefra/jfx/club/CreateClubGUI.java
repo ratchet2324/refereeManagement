@@ -45,11 +45,11 @@ public class CreateClubGUI {
         TextField presidentContact = new TextField();
         Button enterButton = new Button("Enter");
 
-        //isEmail.setIndeterminate(false);
 
         /*
          * Set the action for the enter button based on what information was entered into the fields.
          */
+        //TODO: CLEAR TEXT BOXES (DEFAULT)
         enterButton.setOnAction(e -> {
             System.out.println("CN: "+ clubName.getText());
             System.out.println("AD: "+ street.getText());
@@ -63,19 +63,8 @@ public class CreateClubGUI {
                 guif.displayError(e);
             else
             {
-                if(isEmpty(presidentName.getText()) || isEmpty(presidentContact.getText()))
-                    guif.makeClub(e, clubName.getText(),
-                            street.getText(), suburb.getText(),
-                            state.getText(), postcode.getText());
-                else if (isEmpty(street.getText()) || isEmpty(suburb.getText())
-                        || isEmpty(state.getText()) || isEmpty(postcode.getText()))
-                    guif.makeClub(e, clubName.getText() , presidentName.getText(), presidentContact.getText());
-                else if (isNotEmpty(presidentName.getText()) && isNotEmpty(presidentContact.getText())
-                        && isNotEmpty(street.getText()) && isNotEmpty(suburb.getText())
-                        && isNotEmpty(state.getText()) && isNotEmpty(postcode.getText()))
-                    guif.makeClub(e, clubName.getText(), street.getText(), suburb.getText(), state.getText(),
-                            postcode.getText(), presidentName.getText(), presidentContact.getText());
-                else guif.makeClub(e, clubName.getText());
+                guif.makeClub(e, clubName.getText(), street.getText(), suburb.getText(), state.getText(),
+                        postcode.getText(), presidentName.getText(), presidentContact.getText());
             }
         });
 
@@ -142,11 +131,11 @@ public class CreateClubGUI {
                 "-fx-font-size: 16px;");
 
         //Container
-        BorderPane clubs = new BorderPane(centre, menu, null, backButton, null);
-        clubs.setPrefSize(640,480);
+        BorderPane createClubs = new BorderPane(centre, menu, null, backButton, null);
+        createClubs.setPrefSize(640,480);
 
-        CommonGUI.panes.add(clubs);
+        CommonGUI.panes.add(createClubs);
 
-        return clubs;
+        return createClubs;
     }
 }

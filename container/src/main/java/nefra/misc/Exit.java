@@ -10,6 +10,12 @@ import org.jetbrains.annotations.Contract;
 
 import java.util.Optional;
 
+/**
+ * Class to exit the program from anywhere, GUI, shortcut, X-button
+ * @author Cordel Murphy
+ * @version 1.0
+ * @since 1.0
+ */
 public class Exit {
 
     private static Exit instance = new Exit();
@@ -27,6 +33,7 @@ public class Exit {
      * Exit the program with a prompt. This uses Event rather than ActionEvent and WindowEvent, so it is universal.
      *
      * @param e the event passed through
+     * @since 1.0
      */
     public void exit(Event e) {
         Alert exit = new Alert(Alert.AlertType.CONFIRMATION);

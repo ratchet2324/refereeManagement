@@ -15,15 +15,17 @@ import nefra.jfx.mainmenu.MainMenu;
 import nefra.jfx.referee.CreateRefereeGUI;
 import nefra.jfx.referee.EditRefereeGUI;
 import nefra.jfx.referee.ViewRefereeGUI;
+import nefra.misc.Debug;
 
 import java.util.ArrayList;
 
 /**
- * A simple class to hold all the common gui components such as the menu, back button functionality
+ * A simple class to hold all the common GUI components such as the menu, back button functionality
  * and the array of scenes to track the scene to go back to.
  */
 public class CommonGUI {
 
+    public static boolean singleSetting = false;
     /**
      * Track scenes to allow changing back to the previous scene.
      */
@@ -45,11 +47,15 @@ public class CommonGUI {
      */
     public MenuBar loadMenu() {
         Menu file = new Menu("File");
-        MenuItem settings = new MenuItem("Settings");
-        settings.setOnAction(this::loadSettings);
+        if(Debug.debugMode)
+        {
+            MenuItem settings = new MenuItem("Settings");
+            settings.setOnAction(this::loadSettings);
+            file.getItems().addAll(settings, new SeparatorMenuItem());
+        }
         MenuItem exit = new MenuItem("Exit");
         exit.setOnAction(e -> nefra.misc.Exit.getInstance().exit(e));
-        file.getItems().addAll(settings, new SeparatorMenuItem(),exit);
+        file.getItems().add(exit);
 
         Menu referee = new Menu("Referee");
         MenuItem newRef = new MenuItem("New Referee");
@@ -190,9 +196,13 @@ public class CommonGUI {
      * @param event the event
      */
     private void loadSettings(ActionEvent event) {
-        event.consume();
-        SettingsGUI sGUI = new SettingsGUI();
-        Main.getInstance().changeScene(sGUI.initGUI());
+        if(!singleSetting)
+        {
+            singleSetting = true;
+            event.consume();
+            SettingsGUI sGUI = new SettingsGUI();
+            sGUI.initGUI(Main.getInstance().getStage());
+        }
     }
 
     /**

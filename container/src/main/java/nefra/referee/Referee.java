@@ -5,6 +5,13 @@ import org.apache.commons.lang3.StringUtils;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+/**
+ * Referee class to hold all the information required of a
+ * referee including contact information and the amount they are due
+ * @author Cordel Murphy
+ * @version 1.0
+ * @since 1.0
+ */
 public class Referee {
     public static ArrayList<Referee> refereeList = new ArrayList<>();
     private int referee_id;
@@ -18,10 +25,13 @@ public class Referee {
     /**
      * THIS IS ONLY USED WHEN LOADING FROM THE DATABASE
      * @param referee_id The id assigned by the database upon entry.
-     * @param firstName The referee's first name
-     * @param lastName The referee's last name
-     * @param email The referee's email
-     * @param phone The referee's phone number
+     * @param firstName The referee's first name.
+     * @param lastName The referee's last name.
+     * @param email The referee's email.
+     * @param phone The referee's phone number.
+     * @param totalFee The total fee over the year to be paid to the referee
+     * @param weeklyFee The total current weeks fee to be paid to the referee
+     * @since 1.0
      */
     public Referee(int referee_id, String firstName, String lastName,
                    String email, String phone, double weeklyFee, double totalFee) {
@@ -36,58 +46,12 @@ public class Referee {
     }
 
     /**
-     *
-     * @param referee_id The id assigned by the database upon entry.
-     * @param firstName The referee's first name
-     * @param lastName The referee's last name
-     * @param email The referee's email
-     * @param phone The referee's phone number
-     */
-    public Referee(int referee_id, String firstName, String lastName, String email, String phone) {
-        this.referee_id = referee_id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phone = phone;
-        refereeList.add(this);
-    }
-
-    /**
-     * @param referee_id The id assigned by the database upon entry.
-     * @param firstName The referee's first name
-     * @param lastName The referee's last name
-     * @param contact The contact info for the referee (either email OR phone, NOT both)
-     * @param isEmail Whether the contact info entered is the email; true = email is entered; false = phone is entered.
-     */
-    public Referee(int referee_id, String firstName, String lastName, String contact, boolean isEmail) {
-        this.referee_id = referee_id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        if(isEmail) { this.email = contact; }
-        else { this.phone = contact; }
-        refereeList.add(this);
-    }
-
-    /**
-     *
-     * @param referee_id The id assigned by the database upon entry.
-     * @param firstName The referee's first name
-     * @param lastName The referee's last name
-     */
-    public Referee(int referee_id, String firstName, String lastName)
-    {
-        this.referee_id = referee_id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        refereeList.add(this);
-    }
-
-    /**
-     *
-     * @param firstName The referee's first name
-     * @param lastName The referee's last name
-     * @param email The referee's email
-     * @param phone The referee's phone number
+     * THIS IS USED WHEN CREATING FROM THE GUI
+     * @param firstName The referee's first name.
+     * @param lastName The referee's last name.
+     * @param email The referee's email.
+     * @param phone The referee's phone number.
+     * @since 1.0
      */
     public Referee(String firstName, String lastName, String email, String phone) {
         this.firstName = firstName;
@@ -98,38 +62,10 @@ public class Referee {
     }
 
     /**
-     *
-     * @param firstName The referee's first name
-     * @param lastName The referee's last name
-     * @param contact The contact info for the referee (either email OR phone, NOT both)
-     * @param isEmail Whether the contact info entered is the email; true = email is entered; false = phone is entered.
-     */
-    public Referee(String firstName, String lastName, String contact, boolean isEmail) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        if(isEmail) { this.email = contact; }
-        else { this.phone = contact; }
-        refereeList.add(this);
-    }
-
-    /**
-     *
-     * @param firstName The referee's first name
-     * @param lastName The referee's last name
-     */
-    public Referee(String firstName, String lastName)
-    {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        refereeList.add(this);
-    }
-
-    /**
      * Used for the dollar amount for the fees.
+     * @since 1.0
      */
     private DecimalFormat df = new DecimalFormat("0.00");
-
-    public ArrayList<Referee> getRefereeList() { return refereeList; }
 
     public int getRefereeId() { return referee_id; }
 
@@ -164,13 +100,43 @@ public class Referee {
 
     /**
      * Resets the total fee back to $0.00 and adds it to the total fees for the season.
+     * @since 1.0
      */
     public void resetWeeklyFee() { addToTotalFee(weeklyFee); weeklyFee = 0; }
 
     /**
      * Resets the total fee back to $0.00, to coincide with the end of the season.
+     * @since 1.0
      */
     public void resetTotalFee() { totalFee = 0; }
+
+    void delete()
+    {
+        refereeList.remove(this);
+        referee_id = 0;
+        firstName =  lastName =  email =  phone = null;
+        weeklyFee = totalFee = 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Referee referee = (Referee) o;
+
+        return referee_id == referee.referee_id &&
+                firstName.equals(referee.firstName) &&
+                lastName.equals(referee.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = referee_id;
+        result = 31 * result + firstName.hashCode();
+        result = 31 * result + lastName.hashCode();
+        return result;
+    }
 
     @Override
     public String toString() { return this.getName(); }
@@ -180,6 +146,7 @@ public class Referee {
      * entered, then only those are displayed.
      *
      * @return the string that is printed out.
+     * @since 1.0
      */
     public String displayInfo() {
         if(StringUtils.isNotEmpty(getPhone()) && StringUtils.isNotEmpty(getEmail())) {

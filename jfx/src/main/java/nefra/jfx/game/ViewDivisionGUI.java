@@ -1,5 +1,6 @@
 package nefra.jfx.game;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -12,11 +13,9 @@ import nefra.game.Division;
 import nefra.game.GUIFunctions;
 import nefra.jfx.CommonGUI;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
 public class ViewDivisionGUI {
     private GUIFunctions guif = new GUIFunctions();
-    private TableView<Division> table = new TableView<Division>();
+    private TableView<Division> table = new TableView<>();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
@@ -25,22 +24,24 @@ public class ViewDivisionGUI {
      * @return the root BorderPane
      */
     public BorderPane initGUI() {
+        ObservableList<Division> div = FXCollections.observableArrayList(Division.divisionList);
+
         //Top
         MenuBar menu = CommonGUI.getInstance().loadMenu();
 
         //Centre
         GridPane centre = new GridPane();
         final Label viewDivisionLabel = new Label("VIEW DIVISIONS");
-        Button enterButton = new Button("Enter");
+        Button removeButton = new Button("Remove");
 
         /*
          * Set the action for the enter button based on what information was entered into the fields.
          */
-        enterButton.setOnAction(e -> {
-
+        removeButton.setOnAction(e -> {
+            guif.removeDivision(e, table.getSelectionModel().getSelectedItem());
         });
 
-        enterButton.setStyle("-fx-font-weight: bold;" +
+        removeButton.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 16px;");
 
         GridPane.setHalignment(viewDivisionLabel, HPos.CENTER);
@@ -50,31 +51,15 @@ public class ViewDivisionGUI {
                 "-fx-font-size: 36px;");
 
         GridPane.setConstraints(viewDivisionLabel, 5, 1, 4, 2);
-        GridPane.setConstraints(table, 4, 3, 5, 4);
-        GridPane.setConstraints(enterButton, 8, 7);
+        GridPane.setConstraints(table, 5, 3, 5, 6);
+        GridPane.setConstraints(removeButton, 8, 9);
 
-        table.setEditable(false);
-        final TableColumn idCol = new TableColumn("ID");
-        idCol.setMinWidth(50);
-        idCol.setCellValueFactory(new PropertyValueFactory<Division, String>("division_id"));
-        final TableColumn nameCol = new TableColumn("Name");
-        nameCol.setMinWidth(200);
-        nameCol.setCellValueFactory(new PropertyValueFactory<Division, String>("divisionName"));
-        final TableColumn mainCol = new TableColumn("Main Referee Fee");
-        mainCol.setMinWidth(50);
-        mainCol.setCellValueFactory(new PropertyValueFactory<Division, String>("mainRefereeFee"));
-        final TableColumn arCol = new TableColumn("Assistant Referee Fee");
-        arCol.setMinWidth(50);
-        arCol.setCellValueFactory(new PropertyValueFactory<Division, String>("arFee"));
-
-        ObservableList<Division> div = FXCollections.observableArrayList();
-        div.addAll(Division.divisionList);
+        setupTable();
         table.setItems(div);
-        table.getColumns().addAll(idCol, nameCol, mainCol, arCol);
 
         CommonGUI.getInstance().makeRowsAndCols(centre);
 
-        centre.getChildren().addAll(viewDivisionLabel, table,enterButton);
+        centre.getChildren().addAll(table, viewDivisionLabel,removeButton);
 
         //BackButton
         Button backButton = new Button("Back");
@@ -89,5 +74,48 @@ public class ViewDivisionGUI {
         CommonGUI.panes.add(viewDivisions);
 
         return viewDivisions;
+    }
+
+    private void setupTable() {
+        table.setEditable(false);
+        final TableColumn<Division, Integer> idCol = new TableColumn<>("ID");
+        idCol.setMinWidth(40);
+        idCol.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getDivisionId()));
+
+        final TableColumn<Division, String> nameCol = new TableColumn<>("Name");
+        nameCol.setMinWidth(150);
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("divisionName"));
+
+        final TableColumn<Division, Number> mainCol = new TableColumn<>("Main Referee Fee");
+        mainCol.setMinWidth(50);
+        mainCol.setCellValueFactory(new PropertyValueFactory<>("mainRefereeFee"));
+        mainCol.setCellFactory(tc -> setTableCell());
+
+        final TableColumn<Division, Number> arCol = new TableColumn<>("Assistant Referee Fee");
+        arCol.setMinWidth(50);
+        arCol.setCellValueFactory(new PropertyValueFactory<>("arFee"));
+        arCol.setCellFactory(tc -> setTableCell());
+
+        table.setPlaceholder(new Label("There are no divisions to display"));
+        table.getColumns().clear();
+        table.getColumns().add(idCol);
+        table.getColumns().add(nameCol);
+        table.getColumns().add(mainCol);
+        table.getColumns().add(arCol);
+    }
+
+
+    private TableCell<Division, Number> setTableCell() {
+        return new TableCell<Division, Number>() {
+            @Override
+            protected void updateItem(Number value, boolean empty) {
+                super.updateItem(value, empty) ;
+                if (empty) {
+                    setText(null);
+                } else {
+                    setText(String.format("$%.2f", value.doubleValue()));
+                }
+            }
+        };
     }
 }

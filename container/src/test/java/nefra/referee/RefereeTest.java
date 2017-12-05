@@ -12,9 +12,9 @@ public class RefereeTest {
     @Before
     public void setUp()
     {
-        ex1 = new Referee("ABC", "DEF");
-        ex2 = new Referee("GHI", "JKL", "abc@def.com", true);
-        ex3 = new Referee("MNO", "PQR", "0303030303", false);
+        ex1 = new Referee("ABC", "DEF", null, null);
+        ex2 = new Referee("MNO", "PQR", null,"0303030303");
+        ex3 = new Referee("GHI", "JKL", "abc@def.com", null);
         ex4 = new Referee("STU", "VWX","abc@def.com", "0404040404");
 
         System.out.println(ex1.toString());
@@ -29,8 +29,8 @@ public class RefereeTest {
         assertEquals("ex1 first name not ABC", "ABC", ex1.getFirstName());
         assertEquals("ex1 last name not DEF", "DEF", ex1.getLastName());
 
-        assertEquals("ex2 email not abc@def.com", "abc@def.com", ex2.getEmail());
-        assertEquals("ex3 phone not 0303030303", "0303030303", ex3.getPhone());
+        assertEquals("ex2 email not abc@def.com", "abc@def.com", ex3.getEmail());
+        assertEquals("ex3 phone not 0303030303", "0303030303", ex2.getPhone());
 
         assertEquals("ex4 first name not STU", "STU", ex4.getFirstName());
         assertEquals("ex4 last name not VWX", "VWX", ex4.getLastName());

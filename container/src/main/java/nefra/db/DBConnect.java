@@ -1,5 +1,7 @@
 package nefra.db;
 
+import nefra.misc.Debug;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -7,9 +9,16 @@ import java.util.ArrayList;
 
 /**
  * DBConnect contains the connection for the database and related functions (Open/Close)
+ * @author Cordel Murphy
+ * @version 1.0
+ * @since 1.0
  */
 public class DBConnect {
 
+    /**
+     * List to hold all connections to terminate them when the program is closed.
+     * @since 1.0
+     */
     private static ArrayList<Connection> conns = new ArrayList<>();
 
     public static void closeConnections() {
@@ -23,6 +32,7 @@ public class DBConnect {
     /**
      * function to load and connect to the embedded database (h2)
      * @return the database connection, so it can be accessed outside.
+     * @since 1.0
      */
     Connection dbConnection()
     {
@@ -30,7 +40,8 @@ public class DBConnect {
         try {
             Class.forName("org.h2.Driver");
             connection = DriverManager.getConnection("jdbc:h2:./NEFRA Data/db/NEFRA.db;create=true");
-            System.out.println("db connected to.\nConnection: " + connection);
+            if(Debug.debugMode)
+                System.out.println("db connected to.\nConnection: " + connection);
             conns.add(connection);
         }
         catch (Exception e) { e.printStackTrace(); }

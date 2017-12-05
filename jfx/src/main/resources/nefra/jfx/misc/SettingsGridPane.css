@@ -1,0 +1,45 @@
+@font-face {
+    src: url(Roboto-Regular.ttf);
+}
+
+@font-face {
+    src: url(Roboto-Bold.ttf);
+}
+
+@font-face {
+    src: url(Roboto-Italic.ttf);
+}
+
+.internals {
+    -fx-padding: 2px;
+    -fx-background-color: transparent;
+}
+
+.label {
+    -fx-font: bold 12px Roboto;
+}
+
+.checkBox {
+    -fx-font-size: 12px;
+    -fx-font-family: Roboto;
+    -fx-font-style: italic;
+}
+
+.textField {
+    -fx-font-size: 12px;
+    -fx-font-family: Roboto;
+}
+
+.choiceBox {
+    -fx-font-size: 12px;
+}
+
+.button .label {
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.other {
+    -fx-font-size: 12px;
+}

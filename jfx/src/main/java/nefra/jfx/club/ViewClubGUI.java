@@ -1,21 +1,25 @@
 package nefra.jfx.club;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.util.Callback;
+import nefra.club.Club;
 import nefra.club.GUIFunctions;
 import nefra.jfx.CommonGUI;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-
 public class ViewClubGUI {
     private GUIFunctions guif = new GUIFunctions();
+    private TableView<Club> table = new TableView<>();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
@@ -24,117 +28,44 @@ public class ViewClubGUI {
      * @return the root BorderPane
      */
     public BorderPane initGUI() {
+        ObservableList<Club> club = FXCollections.observableArrayList(Club.clubList);
+
         //Top
         MenuBar menu = CommonGUI.getInstance().loadMenu();
 
         //Centre
         GridPane centre = new GridPane();
-        Label clubNameLabel = new Label("Club Name: ");
-        Label streetLabel = new Label("Address Line 1:");
-        Label suburbLabel = new Label("Suburb: ");
-        Label stateLabel = new Label("State: ");
-        Label postcodeLabel = new Label("Postcode: ");
-        Label presidentNameLabel = new Label("President's Name: ");
-        Label presidentContactLabel = new Label("President's Contact: ");
-        Label createClubLabel = new Label("CREATE CLUB");
-        TextField clubName = new TextField();
-        TextField street = new TextField();
-        TextField suburb = new TextField();
-        TextField state = new TextField();
-        TextField postcode = new TextField();
-        TextField presidentName = new TextField();
-        TextField presidentContact = new TextField();
+        final Label viewClubLabel = new Label("VIEW CLUBS");
         Button enterButton = new Button("Enter");
 
-        //isEmail.setIndeterminate(false);
 
         /*
          * Set the action for the enter button based on what information was entered into the fields.
          */
         enterButton.setOnAction(e -> {
-            System.out.println("CN: "+ clubName.getText());
-            System.out.println("AD: "+ street.getText());
-            System.out.println("SU: "+ suburb.getText());
-            System.out.println("ST: "+ state.getText());
-            System.out.println("PC: "+ postcode.getText());
-            System.out.println("PN: "+ presidentName.getText());
-            System.out.println("PC: "+ presidentContact.getText());
 
-            if(isEmpty(clubName.getText()))
-                guif.displayError(e);
-            else
-            {
-                if(isEmpty(presidentName.getText()) || isEmpty(presidentContact.getText()))
-                    guif.makeClub(e, clubName.getText(),
-                            street.getText(), suburb.getText(),
-                            state.getText(), postcode.getText());
-                else if (isEmpty(street.getText()) || isEmpty(suburb.getText())
-                        || isEmpty(state.getText()) || isEmpty(postcode.getText()))
-                    guif.makeClub(e, clubName.getText() , presidentName.getText(), presidentContact.getText());
-                else if (isNotEmpty(presidentName.getText()) && isNotEmpty(presidentContact.getText())
-                        && isNotEmpty(street.getText()) && isNotEmpty(suburb.getText())
-                        && isNotEmpty(state.getText()) && isNotEmpty(postcode.getText()))
-                    guif.makeClub(e, clubName.getText(), street.getText(), suburb.getText(), state.getText(),
-                            postcode.getText(), presidentName.getText(), presidentContact.getText());
-                else guif.makeClub(e, clubName.getText());
-            }
         });
 
-        clubNameLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
-        streetLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
-        suburbLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
-        stateLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
-        postcodeLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
-        presidentNameLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
-        presidentContactLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
+
         enterButton.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 16px;");
 
-        GridPane.setHalignment(clubNameLabel, HPos.RIGHT);
-        GridPane.setHalignment(streetLabel, HPos.RIGHT);
-        GridPane.setHalignment(suburbLabel, HPos.RIGHT);
-        GridPane.setHalignment(stateLabel, HPos.CENTER);
-        GridPane.setHalignment(postcodeLabel, HPos.CENTER);
-        GridPane.setHalignment(presidentNameLabel, HPos.RIGHT);
-        GridPane.setHalignment(presidentContactLabel, HPos.RIGHT);
-        GridPane.setHalignment(state, HPos.LEFT);
-        GridPane.setHalignment(postcode, HPos.LEFT);
-        GridPane.setHalignment(createClubLabel, HPos.CENTER);
-        GridPane.setValignment(createClubLabel, VPos.CENTER);
+        GridPane.setHalignment(viewClubLabel, HPos.CENTER);
+        GridPane.setValignment(viewClubLabel, VPos.CENTER);
 
-        createClubLabel.setStyle("-fx-font-weight: bold;" +
+        viewClubLabel.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 36px;");
 
-
-        GridPane.setConstraints(createClubLabel, 5, 1, 4, 2);
-        GridPane.setConstraints(clubNameLabel, 2, 3, 2, 1);
-        GridPane.setConstraints(streetLabel, 2, 4, 2, 1);
-        GridPane.setConstraints(suburbLabel, 3, 5);
-        GridPane.setConstraints(stateLabel, 5, 5);
-        GridPane.setConstraints(postcodeLabel, 7, 5);
-        GridPane.setConstraints(presidentNameLabel, 2, 6, 2, 1);
-        GridPane.setConstraints(presidentContactLabel, 2, 7, 2, 1);
-        GridPane.setConstraints(clubName, 4, 3,2, 1);
-        GridPane.setConstraints(street, 4, 4, 2, 1);
-        GridPane.setConstraints(suburb, 4, 5);
-        GridPane.setConstraints(state, 6, 5);
-        GridPane.setConstraints(postcode, 8, 5);
-        GridPane.setConstraints(presidentName, 4, 6,2, 1);
-        GridPane.setConstraints(presidentContact, 4, 7, 2, 1);
+        GridPane.setConstraints(viewClubLabel, 5, 1, 4, 2);
+        GridPane.setConstraints(table, 5,3,8,5);
         GridPane.setConstraints(enterButton, 6, 8);
+
+        setupTable();
+        table.setItems(club);
 
         CommonGUI.getInstance().makeRowsAndCols(centre);
 
-        centre.getChildren().addAll(createClubLabel, clubNameLabel, streetLabel,
-                suburbLabel, stateLabel, postcodeLabel, presidentNameLabel, presidentContactLabel,
-                clubName, street, suburb, state, postcode, presidentName, presidentContact, enterButton);
+        centre.getChildren().addAll(viewClubLabel, table, enterButton);
 
         //BackButton
         Button backButton = new Button("Back");
@@ -143,11 +74,84 @@ public class ViewClubGUI {
                 "-fx-font-size: 16px;");
 
         //Container
-        BorderPane clubs = new BorderPane(centre, menu, null, backButton, null);
-        clubs.setPrefSize(640,480);
+        BorderPane viewClubs = new BorderPane(centre, menu, null, backButton, null);
+        viewClubs.setPrefSize(640,480);
 
-        CommonGUI.panes.add(clubs);
+        CommonGUI.panes.add(viewClubs);
 
-        return clubs;
+        return viewClubs;
+    }
+
+    private void setupTable()
+    {
+        table.setEditable(false);
+        final TableColumn<Club, Integer> idCol = new TableColumn<>("ID");
+        idCol.setMinWidth(40);
+        idCol.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getClubId()));
+
+        final TableColumn<Club, String> clubNameCol = new TableColumn<>("Club Name");
+        clubNameCol.setMinWidth(100);
+        clubNameCol.setCellValueFactory(new PropertyValueFactory<>("ClubName"));
+
+        final TableColumn<Club, String> streetCol = new TableColumn<>("Street");
+        streetCol.setMinWidth(100);
+        streetCol.setCellValueFactory(new PropertyValueFactory<>("street"));
+
+        final TableColumn<Club, String> suburbCol = new TableColumn<>("Suburb");
+        suburbCol.setMinWidth(100);
+        suburbCol.setCellValueFactory(new PropertyValueFactory<>("suburb"));
+
+        final TableColumn<Club, String> stateCol = new TableColumn<>("State");
+        stateCol.setMinWidth(100);
+        stateCol.setCellValueFactory(new PropertyValueFactory<>("state"));
+
+        final TableColumn<Club, String> postcodeCol = new TableColumn<>("Postcode");
+        postcodeCol.setMinWidth(100);
+        postcodeCol.setCellValueFactory(new PropertyValueFactory<>("postcode"));
+
+        final TableColumn<Club, String> presNameCol = new TableColumn<>("President Name");
+        presNameCol.setMinWidth(110);
+        presNameCol.setCellValueFactory(new PropertyValueFactory<>("presidentName"));
+
+        final TableColumn<Club, String> presContactCol = new TableColumn<>("President Contact");
+        presContactCol.setMinWidth(110);
+        presContactCol.setCellValueFactory(new PropertyValueFactory<>("presidentContact"));
+
+        final TableColumn<Club, Number> weeklyFeeCol = new TableColumn<>("Weekly Fee");
+        weeklyFeeCol.setMinWidth(100);
+        weeklyFeeCol.setCellValueFactory(new PropertyValueFactory<>("weeklyFee"));
+        weeklyFeeCol.setCellFactory(tc -> setTableCell());
+
+        final TableColumn<Club, Number> totalFeeCol = new TableColumn<>("Total Fee");
+        totalFeeCol.setMinWidth(100);
+        totalFeeCol.setCellValueFactory(new PropertyValueFactory<>("totalFee"));
+        totalFeeCol.setCellFactory(tc -> setTableCell());
+
+        table.setPlaceholder(new Label("There are no clubs to display"));
+        table.getColumns().clear();
+        table.getColumns().add(idCol);
+        table.getColumns().add(clubNameCol);
+        table.getColumns().add(streetCol);
+        table.getColumns().add(suburbCol);
+        table.getColumns().add(stateCol);
+        table.getColumns().add(postcodeCol);
+        table.getColumns().add(presNameCol);
+        table.getColumns().add(presContactCol);
+        table.getColumns().add(weeklyFeeCol);
+        table.getColumns().add(totalFeeCol);
+    }
+
+    private TableCell<Club, Number> setTableCell() {
+        return new TableCell<Club, Number>() {
+            @Override
+            protected void updateItem(Number value, boolean empty) {
+                super.updateItem(value, empty) ;
+                if (empty) {
+                    setText(null);
+                } else {
+                    setText(String.format("$%.2f", value.doubleValue()));
+                }
+            }
+        };
     }
 }

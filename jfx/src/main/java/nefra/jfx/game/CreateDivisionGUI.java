@@ -40,6 +40,7 @@ public class CreateDivisionGUI {
         /*
          * Set the action for the enter button based on what information was entered into the fields.
          */
+        //TODO: CLEAR TEXT BOXES (DEFAULT)
         enterButton.setOnAction(e -> {
             System.out.println("DN: "+ divisionName.getText());
             System.out.println("MF: "+ mainRefFee.getText());

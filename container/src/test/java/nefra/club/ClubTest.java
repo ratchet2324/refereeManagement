@@ -12,12 +12,12 @@ public class ClubTest {
     @Before
     public void setUp()
     {
-        ex1 = new Club("Westside", "XYZ ABC", "0101010101");
-        ex2 = new Club("Eastside", "DEF GHI", "0202020202");
-        ex3 = new Club("Norths", "Phil Weaton Oval", "Armidale", "NSW", "2350");
+        ex1 = new Club("Westside", null, null, null, null,"XYZ ABC", "0101010101");
+        ex2 = new Club("Eastside", null, null, null, null,"DEF GHI", "0202020202");
+        ex3 = new Club("Norths", "Phil Weaton Oval", "Armidale", "NSW", "2350", null, null);
         ex4 = new Club("Norths", "Phil Weaton Oval", "Armidale", "NSW", "2350",
                 "JKL MNO", "0303030303");
-        ex5 = new Club("Ace FC");
+        ex5 = new Club("Ace FC", null, null, null, null,null, null);
 
         System.out.println(ex1.toString() + "\n");
         System.out.println(ex2.toString() + "\n");

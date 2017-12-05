@@ -11,8 +11,10 @@ import nefra.db.DBFunctions;
 import nefra.game.Division;
 import nefra.game.Game;
 import nefra.jfx.mainmenu.MainMenu;
+import nefra.misc.Debug;
 import nefra.referee.Referee;
 import nefra.settings.Settings;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Contract;
 
 public class Main extends Application
@@ -36,11 +38,15 @@ public class Main extends Application
     @Contract(pure = true)
     public static Main getInstance() { return instance; }
 
+    @Contract(pure = true)
+    public Stage getStage() { return stage; }
+
     @Override
     public void start(Stage s) throws Exception {
         MainMenu mm = new MainMenu();
         Settings.initSettings();
-        System.out.println(Settings.getSetting("DatabaseInstantiation"));
+        if (Debug.debugMode)
+            System.out.println(Settings.getSetting("DatabaseInstantiation"));
         loadAll();
 
         //Get screen size
@@ -59,7 +65,8 @@ public class Main extends Application
 
 
         //Set title and default scene.
-        stage.setTitle("New England Football Referees Association");
+        String title = "New England Football Referees Association" + (Debug.debugMode ? " **DEBUG**" : "");
+        stage.setTitle(title);
         stage.setScene(new Scene(init));
         stage.show();
 
@@ -84,18 +91,32 @@ public class Main extends Application
     {
         DBFunctions dbFunctions = new DBFunctions();
 
-        dbFunctions.printDatabase();
         dbFunctions.loadDatabase();
 
-        for(Referee r : Referee.refereeList)
-            r.displayInfo();
-        for(Club c : Club.clubList)
-            c.displayInfo();
-        for(Division d : Division.divisionList)
-            d.displayInfo();
-        for(Game g : Game.gameList)
-            System.out.println(g.toString());
-
+        if(Debug.debugMode)
+        {
+            dbFunctions.printDatabase();
+            for (Referee r : Referee.refereeList)
+                r.displayInfo();
+            for (Club c : Club.clubList)
+                c.displayInfo();
+            for (Division d : Division.divisionList)
+                d.displayInfo();
+            for (Game g : Game.gameList)
+                System.out.println(g.displayInfo());
+        }
     }
 
+    public static void main(String args[])
+    {
+        for(String s : args)
+        {
+            System.out.println("Arg: " + s);
+            if(StringUtils.trim(s).equalsIgnoreCase( "debug")) Debug.setDebugMode(true);
+        }
+        if (Debug.debugMode) loadDebug();
+        launch(args);
+    }
+
+    private static void loadDebug() { Debug.debugInfo(); }
 }
