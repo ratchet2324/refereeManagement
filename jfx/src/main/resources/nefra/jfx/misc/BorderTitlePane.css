@@ -1,0 +1,23 @@
+.label {
+    -fx-font-size: 14;
+    -fx-text-alignment: left;
+    -fx-alignment: top-left;
+}
+
+.bordered-titled-title {
+    -fx-background-color: transparent;
+    -fx-translate-y: -10;
+    -fx-font-size: 14;
+}
+
+.bordered-titled-border {
+    -fx-content-display: top;
+    -fx-border-insets: 15 15;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 1;
+}
+
+.bordered-titled-content {
+    -fx-padding: 10 10;
+}
