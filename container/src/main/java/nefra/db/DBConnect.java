@@ -13,6 +13,7 @@ import java.util.ArrayList;
  * @author Cordel Murphy
  * @version 1.0
  * @since 1.0
+ * @deprecated See {@link SysCreator} and {@link SysLoader}
  */
 public class DBConnect {
 

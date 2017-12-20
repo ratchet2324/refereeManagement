@@ -17,8 +17,10 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
  * Class to hold all functions for accessing, updating, removing and inserting into the database.
  * @author Cordel Murphy
  * @version 1.0
+ * @deprecated See {@link SysCreator} and {@link SysLoader}
  * @since 1.0
  */
+@Deprecated
 public class DBFunctions {
 
     /**
@@ -55,8 +57,11 @@ public class DBFunctions {
     /**
      * If required it sets up the database by creating the tables and constraints.
      * @param statement Passes the connection into the function so it can continue to use the existing one.
+     * @return If the instantiation is successful or not.
+     * @deprecated See {@link SysCreator#Setup()}
      * @since 1.0
      */
+    @Deprecated
     private boolean instantiateDatabase(Statement statement) {
         if (Debug.debugMode)
             DelLog.getInstance().Log("Instantiating Database");
@@ -134,8 +139,11 @@ public class DBFunctions {
     /**
      * Load the database into memory so it can be used in the GUI.
      * This also sets to foreign keys to what they should be (Clubs, Division, Referees).
+     * @return If the loading of the database is successful or not.
+     * @deprecated See {@link SysLoader#getInstance()}
      * @since 1.0
      */
+    @Deprecated
     public boolean loadDatabase() {
         ResultSet rs;
         try {
@@ -203,8 +211,11 @@ public class DBFunctions {
      * Inserts a referee into the database using the data given from the GUI when entered. After successfully inserting
      * into the database, it gets the id from the database (auto increment column) and sets it to the object in memory.
      * @param referee The Referee object to be entered into the database using the information from the created object.
+     * @return If the insertion is successful or not.
+     * @deprecated See {@link SysCreator#Referee(Referee, boolean)}
      * @since 1.0
      */
+    @Deprecated
     public boolean insertReferee(Referee referee) {
         try {
             //Insert into database
@@ -238,8 +249,11 @@ public class DBFunctions {
      * Inserts a club into the database using the data given from the GUI when entered. After successfully inserting
      * into the database, it gets the id from the database (auto increment column) and sets it to the object in memory.
      * @param club The Club object to be entered into the database using the information from the created object.
+     * @return If the insertion is successful or not.
+     * @deprecated See {@link SysCreator#Club(Club, boolean)}
      * @since 1.0
      */
+    @Deprecated
     public boolean insertClub(Club club) {
         try {
             //Insert into database
@@ -281,8 +295,11 @@ public class DBFunctions {
      * Inserts a division into the database using the data given from the GUI when entered. After successfully inserting
      * into the database, it gets the id from the database (auto increment column) and sets it to the object in memory.
      * @param division The Division object to be entered into the database using the information from the created object.
+     * @return If the insertion is successful or not.
+     * @deprecated See {@link SysCreator#Division(Division, boolean)}
      * @since 1.0
      */
+    @Deprecated
     public boolean insertDivision(Division division) {
         try {
             //insert into database
@@ -312,8 +329,11 @@ public class DBFunctions {
      * Inserts a game into the database using the data given from the GUI when entered. After successfully inserting
      * into the database, it gets the id from the database (auto increment column) and sets it to the object in memory.
      * @param game The Game object to be entered into the database using the information from the created object.
+     * @return If the insertion is successful or not.
+     * @deprecated See {@link SysCreator#Game(Game, boolean)}
      * @since 1.0
      */
+    @Deprecated
     public boolean insertGame(Game game) {
         try {
             //Insert Into Database
@@ -359,8 +379,10 @@ public class DBFunctions {
      * Updates the information of the referee provided in the database
      * @param referee the referee to update
      * @return whether the operation was successful or not
+     * @deprecated See {@link SysCreator#Referee(Referee, boolean)}
      * @since 1.0
      */
+    @Deprecated
     public boolean updateReferee(Referee referee)
     {
         try {
@@ -388,8 +410,10 @@ public class DBFunctions {
      * Updates the information of the club provided in the database
      * @param club the club to update
      * @return whether the operation was successful or not
+     * @deprecated See {@link SysCreator#Club(Club, boolean)}
      * @since 1.0
      */
+    @Deprecated
     public boolean updateClub(Club club)
     {
         try {
@@ -425,8 +449,10 @@ public class DBFunctions {
      * Updates the information of the division provided in the database
      * @param division the division to update
      * @return whether the operation was successful or not
+     * @deprecated See {@link SysCreator#Division(Division, boolean)}
      * @since 1.0
      */
+    @Deprecated
     public boolean updateDivision(Division division)
     {
         try {
@@ -449,8 +475,10 @@ public class DBFunctions {
      * Updates the information of the game provided in the database
      * @param game the game to update
      * @return whether the operation was successful or not
+     * @deprecated See {@link SysCreator#Game(Game, boolean)}
      * @since 1.0
      */
+    @Deprecated
     public boolean updateGame(Game game)
     {
         try {
@@ -484,8 +512,10 @@ public class DBFunctions {
      * Removes the referee provided from the database
      * @param refereeID the ID of the referee to remove
      * @return whether the operation was successful or not
+     * @deprecated
      * @since 1.0
      */
+    @Deprecated
     public boolean removeReferee(UUID refereeID)
     {
         try {
@@ -503,8 +533,10 @@ public class DBFunctions {
      * Removes the club provided from the database
      * @param clubID the ID of the club to remove
      * @return whether the operation was successful or not
+     * @deprecated
      * @since 1.0
      */
+    @Deprecated
     public boolean removeClub(UUID clubID)
     {
         try {
@@ -522,8 +554,10 @@ public class DBFunctions {
      * Removes the division provided from the database
      * @param divisionID the ID of the division to remove
      * @return whether the operation was successful or not
+     * @deprecated
      * @since 1.0
      */
+    @Deprecated
     public boolean removeDivision(UUID divisionID)
     {
         try {
@@ -541,8 +575,10 @@ public class DBFunctions {
      * Removes the game provided from the database
      * @param gameID the ID of the game to remove
      * @return whether the operation was successful or not
+     * @deprecated
      * @since 1.0
      */
+    @Deprecated
     public boolean removeGame(UUID gameID)
     {
         try {
@@ -562,8 +598,10 @@ public class DBFunctions {
      * @param totalFee the total fee to update to
      * @param weeklyFee the weekly fee to update to
      * @return whether the operation was successful or not
+     * @deprecated
      * @since 1.0
      */
+    @Deprecated
     public boolean updateRefereeFees(int refereeID, double totalFee, double weeklyFee)
     {
         try {
@@ -587,8 +625,10 @@ public class DBFunctions {
      * @param totalFee the total fee to update to
      * @param weeklyFee the weekly fee to update to
      * @return whether the operation was successful or not
+     * @deprecated
      * @since 1.0
      */
+    @Deprecated
     public boolean updateClubFees(int clubID, double totalFee, double weeklyFee)
     {
         try {
@@ -609,8 +649,10 @@ public class DBFunctions {
 
     /**
      * Prints the database to standard out to check database is working properly.
+     * @deprecated See {@link DelLog#DumpLog()}
      * @since 1.0
      */
+    @Deprecated
     public void printDatabase() {
         if(Debug.debugMode) {
             try {
@@ -666,8 +708,10 @@ public class DBFunctions {
     /**
      * Prints the columns from the specified table to standard out to check database is working properly.
      * @param table the table whose columns are to be printed.
+     * @deprecated No longer required
      * @since 1.0
      */
+    @Deprecated
     private void printColumns(String table) {
         if (Debug.debugMode) {
             try {
