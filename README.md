@@ -34,7 +34,7 @@ This is still a work in progress and will update over the next few weeks/months.
 
 ---
 
-###Documentation
+### Documentation
 The developer documentation can be found [here](https://ratchet2324.github.io/refereeManagement/Docs/index.html).
 
 The main documentation can be found in the program under `Help` (Not done yet, still pre-release)
