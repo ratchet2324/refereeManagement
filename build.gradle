@@ -4,8 +4,8 @@ apply plugin: 'java'
 mainClassName = "nefra.jfx.Main"
 
 def versionMajor = 0
-def versionMinor = 0
-def versionMicro = 2
+def versionMinor = 5
+def versionMicro = 0
 def versionBuild = 0
 
 dependencies {
@@ -17,8 +17,8 @@ allprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
 
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
     repositories {
         mavenLocal()
@@ -26,7 +26,7 @@ allprojects {
         jcenter()
     }
 
-    version = '0.1-SNAPSHOT'
+    version = "${versionMajor}-${versionMinor}-${versionMicro}-SNAPSHOT"
     ext {
     }
 }

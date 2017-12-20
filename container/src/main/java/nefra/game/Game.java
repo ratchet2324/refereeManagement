@@ -1,17 +1,25 @@
 package nefra.game;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import nefra.club.Club;
 import nefra.referee.Referee;
 
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Game holds all the information necessary to "play" a game, it also works out the match fees payable to the referees
  * and adds it both to the clubs and to the referees fees.
+ * @author Cordel Murphy
+ * @version 1.0
+ * @since 1.0
  */
-public class Game {
-    public static ArrayList<Game> gameList = new ArrayList<>();
-    private int game_id;
+@SuppressWarnings("SameReturnValue")
+public class Game implements Serializable {
+    public static final ObservableList<Game> gameList = FXCollections.observableArrayList();
+    private UUID game_id;
     private Club home;
     private Club away;
     private Division division;
@@ -24,7 +32,7 @@ public class Game {
     private double homeClubFee;
     private double awayClubFee;
     private double adminFee;
-    private ArrayList<Referee> extra = new ArrayList<>();
+    private ObservableList<Referee> extra = FXCollections.observableArrayList();
 
     /**
      * This constructor is called when the games are loaded from the database.
@@ -42,8 +50,9 @@ public class Game {
      * @param homeClubFee      The amount payable by the Home Club.
      * @param awayClubFee      The amount payable by the Away Club.
      * @param adminFee 10% of the fee is for administration.
+     * @since 1.0
      */
-    public Game(int game_id, Club home, Club away,
+    public Game(UUID game_id, Club home, Club away,
                 Division division, int round, int year,
                 Referee main, Referee ar1, Referee ar2,
                 double totalFee, double homeClubFee, double awayClubFee,
@@ -70,24 +79,27 @@ public class Game {
      * @param away The away club
      * @param division The division the game is in
      * @param round The round the game is played in
+     * @param year The year in which the game has occurred
      * @param main The main referee (centre referee)
      * @param ar1 The 1st Assistant Referee
      * @param ar2 The 2nd Assistant Referee
+     * @since 1.0
      */
-    public Game(Club home, Club away, Division division, int round, Referee main, Referee ar1, Referee ar2) {
+    public Game(Club home, Club away, Division division, int round, int year, Referee main, Referee ar1, Referee ar2) {
         this.home = home;
         this.away = away;
         this.division = division;
         this.round = round;
+        this.year = year;
         this.main = main;
         this.ar1 = ar1;
         this.ar2 = ar2;
         gameList.add(this);
     }
 
-    public ArrayList<Game> getGameList() { return gameList; }
+    public ObservableList<Game> getGameList() { return gameList; }
 
-    public int getGameId() { return game_id; }
+    public UUID getGameId() { return game_id; }
 
     public Club getHome() { return home; }
 
@@ -99,13 +111,13 @@ public class Game {
 
     public int getRound() { return round; }
 
+    public int getYear() { return year; }
+
     public Referee getMain() { return main; }
 
     public Referee getAr1() { return ar1; }
 
     public Referee getAr2() { return ar2; }
-
-    public int getYear() { return year; }
 
     public double getTotalFee() { return totalFee; }
 
@@ -115,9 +127,9 @@ public class Game {
 
     public double getAdminFee() { return adminFee; }
 
-    public ArrayList<Referee> getExtra() { return extra; }
+    public ObservableList<Referee> getExtra() { return extra; }
 
-    public void setGameId(int game_id) { this.game_id = game_id; }
+    public void setGameId(UUID game_id) { this.game_id = game_id; }
 
     public void setHome(Club home) { this.home = home; }
 
@@ -125,7 +137,7 @@ public class Game {
 
     public void setDivision(Division division) { this.division = division; }
 
-    private void setRound(int round) { this.round = round; }
+    public void setRound(int round) { this.round = round; }
 
     public void setYear(int year) { this.year = year; }
 
@@ -143,7 +155,7 @@ public class Game {
 
     public void setAdminFee(double adminFee) { this.adminFee = adminFee; }
 
-    public void setExtra(ArrayList<Referee> extra) {
+    public void setExtra(ObservableList<Referee> extra) {
         this.extra = extra;
     }
 
@@ -151,10 +163,11 @@ public class Game {
      * Make the game fees ready to add to the referees afterwards. This function adds the required fees to the clubs
      * automatically. It also calculates the 10% required.
      * @param replacementMainReferee True if the centre referee was replaced (i.e. injury)
-     * @return Returns the amount of the game fees.
+     * @since 1.0
      */
-    public double makeGameFees(boolean replacementMainReferee) {
+    public void gameFees(boolean replacementMainReferee) {
         double gameFees;
+        double fee;
         double main = this.division.getMainRefereeFee();
         double ar = this.division.getArFee();
         double extraReferees = this.extra.size() * this.division.getArFee();
@@ -164,12 +177,13 @@ public class Game {
         else
             gameFees = main + (2 * ar) + extraReferees;
 
+        fee = gameFees / 2;
         this.adminFee = gameFees * 0.10;
-
-        home.addToWeeklyFee(gameFees / 2);
-        away.addToWeeklyFee(gameFees / 2);
-
-        return gameFees;
+        this.homeClubFee = fee + adminFee / 2;
+        this.awayClubFee = fee + adminFee / 2;
+        this.home.addToWeeklyFee(fee);
+        this.away.addToWeeklyFee(fee);
+        this.totalFee = gameFees + adminFee;
     }
 
     /**
@@ -177,6 +191,7 @@ public class Game {
      *
      * @param replacementMainReferee True if the centre referee was replaced (i.e. injury)
      * @param replacement            The replacement referee, so they can be paid. Only used if previous is true
+     * @since 1.0
      */
     public void payReferee(boolean replacementMainReferee, Referee replacement) {
         this.main.addToWeeklyFee(this.division.getMainRefereeFee());
@@ -189,10 +204,59 @@ public class Game {
         if(replacementMainReferee) { replacement.addToWeeklyFee(this.division.getMainRefereeFee()); }
     }
 
+    void delete()
+    {
+        gameList.remove(this);
+        home = away = null;
+        division = null;
+        main = ar1 = ar2 = null;
+        round = year = 0;
+        game_id = null;
+        totalFee = homeClubFee = awayClubFee = adminFee = 0;
+    }
+
     @Override
-    public String toString() {
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Game game = (Game) o;
+
+        return game_id == game.game_id &&
+                round == game.round &&
+                year == game.year &&
+                home.equals(game.home) &&
+                away.equals(game.away) &&
+                division.equals(game.division) &&
+                main.equals(game.main) &&
+                ar1.equals(game.ar1) &&
+                ar2.equals(game.ar2);
+    }
+
+    @Override
+    public int hashCode() {
+        Random r = new Random();
+        int result = r.nextInt();
+        result = 31 * result + home.hashCode();
+        result = 31 * result + away.hashCode();
+        result = 31 * result + division.hashCode();
+        result = 31 * result + round;
+        result = 31 * result + year;
+        result = 31 * result + main.hashCode();
+        result = 31 * result + ar1.hashCode();
+        result = 31 * result + ar2.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("%s vs %s\nRound %d, %d", home.getClubName(), away.getClubName(), round, year);
+    }
+
+    public String displayInfo() {
         return "Division: " + getDivision().getDivisionName() + " " +
-                "Round: " + getRound() + "\n" +
+                "Round: " + getRound() + " Year: " + getYear() + "\n" +
                 getHome().getClubName() + " vs " + getAway().getClubName() + "\n" +
                 "Main Referee: " + getMain().getName() + "\n" +
                 "Assistant Referee 1: " + getAr1().getName() + "\n" +

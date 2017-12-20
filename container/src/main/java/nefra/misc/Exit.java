@@ -5,10 +5,19 @@ import javafx.event.Event;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import nefra.db.DBConnect;
+import nefra.exceptions.DelLog;
+import nefra.exceptions.FailedToCloseException;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Optional;
 
+/**
+ * Class to exit the program from anywhere, GUI, shortcut, X-button
+ * @author Cordel Murphy
+ * @version 1.0
+ * @since 1.0
+ */
 public class Exit {
 
     private static Exit instance = new Exit();
@@ -24,10 +33,12 @@ public class Exit {
 
     /**
      * Exit the program with a prompt. This uses Event rather than ActionEvent and WindowEvent, so it is universal.
-     *
      * @param e the event passed through
+     * @return Returns an exit code, defaults to 0, unless an error occurs, then 240.
+     * @since 1.0
      */
-    public void exit(Event e) {
+    public int exit(Event e) {
+        int exitCode = 0;
         Alert exit = new Alert(Alert.AlertType.CONFIRMATION);
         exit.setTitle("Exit");
         exit.setHeaderText(null);
@@ -42,7 +53,16 @@ public class Exit {
 
         Optional<ButtonType> result = exit.showAndWait();
         if (result.isPresent() && result.get() == yes) {
+            DBConnect.closeConnections();
+            try {
+                if (!DelLog.getInstance().Close()) {
+                    exitCode = 240;
+                    throw new FailedToCloseException("Failed to Close ");
+                }
+            }
+            catch(FailedToCloseException ex) { ex.printStackTrace(); }
             Platform.exit();
         }
+        return exitCode;
     }
 }

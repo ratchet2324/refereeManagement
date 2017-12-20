@@ -1,23 +1,26 @@
 package nefra.settings;
 
+import nefra.exceptions.DelLog;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Properties;
 
-public class Settings {
-    private static Properties settingsPropertyFile = new Properties();
-    public static String base = "./NEFRA Data/Settings/";
-    private static File settingsFile = new File(base + "settings.properties");
+import static nefra.misc.Paths.settingsFile;
 
+/**
+ * Settings class is so the Properties files can be utilised, it allows settings to be added, removed and queried.
+ * @author Cordel Murphy
+ * @version 1.0
+ * @since 1.0
+ */
+public class Settings {
+    private static final Properties settingsPropertyFile = new Properties();
     private static Settings instance;
 
-    public Settings() {
-        instance = this;
-    }
+    public Settings() { instance = this; }
 
     @Contract(pure = true)
     public static Settings getInstance() {
@@ -34,10 +37,10 @@ public class Settings {
             settingsPropertyFile.load(input);
             input.close();
 
-            if(!settingsPropertyFile.containsKey("DatabaseInstantiation"))
-                writeSetting("DatabaseInstantiation", "true");
+            if(!settingsPropertyFile.containsKey("InitialisationNeeded"))
+                writeSetting("InitialisationNeeded", "true");
         } catch (IOException IOE) {
-            System.out.println("An IO Error occurred");
+            DelLog.getInstance().Log(IOE);
         }
     }
 
@@ -49,7 +52,7 @@ public class Settings {
             FileOutputStream output = FileUtils.openOutputStream(settingsFile, false);
             settingsPropertyFile.store(output, null);
         } catch (IOException e) {
-            e.printStackTrace();
+            DelLog.getInstance().Log(e);
         }
     }
 
@@ -64,7 +67,7 @@ public class Settings {
             settingsPropertyFile.store(output, comment);
             output.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            DelLog.getInstance().Log(e);
         }
     }
 
@@ -112,27 +115,4 @@ public class Settings {
         Settings.initSettings();
         return settingsPropertyFile.containsKey(propertyName);
     }
-
-    /**
-     * Remove a setting from the file.
-     *
-     * @param propertyName The name of the setting to remove.
-     */
-    public static void removeSetting(@NotNull String propertyName) {
-        settingsPropertyFile.remove(propertyName);
-        storeSettings();
-    }
-
-    /**
-     * Save the content of a file without a comment.
-     */
-    private static void saveFile(File file) {
-        try {
-            FileOutputStream output = FileUtils.openOutputStream(file, false);
-            settingsPropertyFile.store(output, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }
