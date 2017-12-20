@@ -7,14 +7,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import nefra.exceptions.DelLog;
 import nefra.jfx.CommonGUI;
 import nefra.club.GUIFunctions;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class CreateClubGUI {
-    private GUIFunctions guif = new GUIFunctions();
+    private final GUIFunctions guif = new GUIFunctions();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
@@ -45,37 +45,26 @@ public class CreateClubGUI {
         TextField presidentContact = new TextField();
         Button enterButton = new Button("Enter");
 
-        //isEmail.setIndeterminate(false);
 
         /*
          * Set the action for the enter button based on what information was entered into the fields.
          */
+        //TODO: CLEAR TEXT BOXES (DEFAULT)
         enterButton.setOnAction(e -> {
-            System.out.println("CN: "+ clubName.getText());
-            System.out.println("AD: "+ street.getText());
-            System.out.println("SU: "+ suburb.getText());
-            System.out.println("ST: "+ state.getText());
-            System.out.println("PC: "+ postcode.getText());
-            System.out.println("PN: "+ presidentName.getText());
-            System.out.println("PC: "+ presidentContact.getText());
+            DelLog.getInstance().Log("CN: "+ clubName.getText());
+            DelLog.getInstance().Log("AD: "+ street.getText());
+            DelLog.getInstance().Log("SU: "+ suburb.getText());
+            DelLog.getInstance().Log("ST: "+ state.getText());
+            DelLog.getInstance().Log("PC: "+ postcode.getText());
+            DelLog.getInstance().Log("PN: "+ presidentName.getText());
+            DelLog.getInstance().Log("PC: "+ presidentContact.getText());
 
             if(isEmpty(clubName.getText()))
                 guif.displayError(e);
             else
             {
-                if(isEmpty(presidentName.getText()) || isEmpty(presidentContact.getText()))
-                    guif.makeClub(e, clubName.getText(),
-                            street.getText(), suburb.getText(),
-                            state.getText(), postcode.getText());
-                else if (isEmpty(street.getText()) || isEmpty(suburb.getText())
-                        || isEmpty(state.getText()) || isEmpty(postcode.getText()))
-                    guif.makeClub(e, clubName.getText() , presidentName.getText(), presidentContact.getText());
-                else if (isNotEmpty(presidentName.getText()) && isNotEmpty(presidentContact.getText())
-                        && isNotEmpty(street.getText()) && isNotEmpty(suburb.getText())
-                        && isNotEmpty(state.getText()) && isNotEmpty(postcode.getText()))
-                    guif.makeClub(e, clubName.getText(), street.getText(), suburb.getText(), state.getText(),
-                            postcode.getText(), presidentName.getText(), presidentContact.getText());
-                else guif.makeClub(e, clubName.getText());
+                guif.makeClub(e, clubName.getText(), street.getText(), suburb.getText(), state.getText(),
+                        postcode.getText(), presidentName.getText(), presidentContact.getText());
             }
         });
 
@@ -142,11 +131,11 @@ public class CreateClubGUI {
                 "-fx-font-size: 16px;");
 
         //Container
-        BorderPane clubs = new BorderPane(centre, menu, null, backButton, null);
-        clubs.setPrefSize(640,480);
+        BorderPane createClubs = new BorderPane(centre, menu, null, backButton, null);
+        createClubs.setPrefSize(640,480);
 
-        CommonGUI.panes.add(clubs);
+        CommonGUI.panes.add(createClubs);
 
-        return clubs;
+        return createClubs;
     }
 }

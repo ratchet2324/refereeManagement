@@ -1,5 +1,6 @@
 package nefra.game;
 
+import nefra.exceptions.DelLog;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,14 +21,14 @@ public class DivisionTest {
         ex7 = new Division("14B", 30.0, 15.0);
         ex8 = new Division("12A", 20.0, 10.0);
 
-        System.out.println(ex1.toString());
-        System.out.println(ex2.toString());
-        System.out.println(ex3.toString());
-        System.out.println(ex4.toString());
-        System.out.println(ex5.toString());
-        System.out.println(ex6.toString());
-        System.out.println(ex7.toString());
-        System.out.println(ex8.toString());
+        DelLog.getInstance().Log(ex1.toString());
+        DelLog.getInstance().Log(ex2.toString());
+        DelLog.getInstance().Log(ex3.toString());
+        DelLog.getInstance().Log(ex4.toString());
+        DelLog.getInstance().Log(ex5.toString());
+        DelLog.getInstance().Log(ex6.toString());
+        DelLog.getInstance().Log(ex7.toString());
+        DelLog.getInstance().Log(ex8.toString());
     }
 
     @Test

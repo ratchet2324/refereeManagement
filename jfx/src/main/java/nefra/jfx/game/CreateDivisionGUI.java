@@ -8,13 +8,14 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import nefra.exceptions.DelLog;
 import nefra.game.GUIFunctions;
 import nefra.jfx.CommonGUI;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class CreateDivisionGUI {
-    private GUIFunctions guif = new GUIFunctions();
+    private final GUIFunctions guif = new GUIFunctions();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
@@ -40,10 +41,11 @@ public class CreateDivisionGUI {
         /*
          * Set the action for the enter button based on what information was entered into the fields.
          */
+        //TODO: CLEAR TEXT BOXES (DEFAULT)
         enterButton.setOnAction(e -> {
-            System.out.println("DN: "+ divisionName.getText());
-            System.out.println("MF: "+ mainRefFee.getText());
-            System.out.println("AR: "+ arFee.getText());
+            DelLog.getInstance().Log("DN: "+ divisionName.getText());
+            DelLog.getInstance().Log("MF: "+ mainRefFee.getText());
+            DelLog.getInstance().Log("AR: "+ arFee.getText());
 
             if (isEmpty(divisionName.getText()) && isEmpty(mainRefFee.getText()) && isEmpty(arFee.getText()))
                 guif.displayError(e);

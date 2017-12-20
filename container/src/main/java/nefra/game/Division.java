@@ -1,10 +1,21 @@
 package nefra.game;
 
-import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
-public class Division {
-    public static ArrayList<Division> divisionList = new ArrayList<>();
-    private int division_id;
+import java.io.Serializable;
+import java.util.Random;
+import java.util.UUID;
+
+/**
+ * Holds all the information required to make a division: name and match official fees.
+ * @author Cordel Murphy
+ * @version 1.0
+ * @since 1.0
+ */
+public class Division implements Serializable {
+    public static final ObservableList<Division> divisionList = FXCollections.observableArrayList();
+    private UUID division_id;
     private String divisionName;
     private double mainRefereeFee;
     private double arFee;
@@ -16,8 +27,9 @@ public class Division {
      * @param divisionName   The name of the division
      * @param mainRefereeFee The fee to be paid to the main referee
      * @param arFee          The fee to be paid to the assistant referees.
+     * @since 1.0
      */
-    public Division(int division_id, String divisionName, double mainRefereeFee, double arFee) {
+    public Division(UUID division_id, String divisionName, double mainRefereeFee, double arFee) {
         this.division_id = division_id;
         this.divisionName = divisionName;
         this.mainRefereeFee = mainRefereeFee;
@@ -30,6 +42,7 @@ public class Division {
      * @param divisionName The name of the division
      * @param mainRefereeFee The fee to be paid to the main referee
      * @param arFee The fee to be paid to the assistant referees.
+     * @since 1.0
      */
     public Division(String divisionName, double mainRefereeFee, double arFee) {
         this.divisionName = divisionName;
@@ -38,9 +51,7 @@ public class Division {
         divisionList.add(this);
     }
 
-    public ArrayList<Division> getDivisionList() { return divisionList; }
-
-    public int getDivisionId() { return division_id; }
+    public UUID getDivisionId() { return division_id; }
 
     public String getDivisionName() { return divisionName; }
 
@@ -48,7 +59,7 @@ public class Division {
 
     public double getArFee() { return arFee; }
 
-    public void setDivision_id(int division_id) { this.division_id = division_id; }
+    public void setDivisionId(UUID division_id) { this.division_id = division_id; }
 
     public void setDivisionName(String divisionName) { this.divisionName = divisionName; }
 
@@ -56,11 +67,46 @@ public class Division {
 
     public void setArFee(double arFee) { this.arFee = arFee; }
 
+    void delete()
+    {
+        divisionList.remove(this);
+        division_id = null;
+        divisionName = null;
+        mainRefereeFee = arFee = 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Division division = (Division) o;
+
+        return division_id == division.division_id &&
+                Double.compare(mainRefereeFee, division.mainRefereeFee) == 0 &&
+                Double.compare(arFee, division.arFee) == 0 &&
+                divisionName.equals(division.divisionName);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        Random r = new Random();
+        result = r.nextInt();
+        result = 31 * result + divisionName.hashCode();
+        temp = Double.doubleToLongBits(mainRefereeFee);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(arFee);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
     @Override
     public String toString() { return this.getDivisionName(); }
 
-    public String displayInfo() {
-        return String.format("Division Name: %s\nMain Referee Fee: $%.2f\nAssistant Referee Fee: $%.2f\n",
-                getDivisionName(), getMainRefereeFee(), getArFee());
+    public void displayInfo() {
+        System.out.printf("Division ID: %s\nDivision Name: %s\nMain Referee Fee: $%.2f\nAssistant Referee Fee: $%.2f\n",
+                getDivisionId(), getDivisionName(), getMainRefereeFee(), getArFee());
     }
 }

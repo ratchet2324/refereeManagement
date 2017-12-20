@@ -8,23 +8,28 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.*;
 import nefra.jfx.club.CreateClubGUI;
-import nefra.jfx.game.CreateDivisionGUI;
-import nefra.jfx.game.CreateGameGUI;
+import nefra.jfx.club.EditClubGUI;
+import nefra.jfx.club.ViewClubGUI;
+import nefra.jfx.game.*;
 import nefra.jfx.mainmenu.MainMenu;
 import nefra.jfx.referee.CreateRefereeGUI;
+import nefra.jfx.referee.EditRefereeGUI;
+import nefra.jfx.referee.ViewRefereeGUI;
+import nefra.misc.Debug;
 
 import java.util.ArrayList;
 
 /**
- * A simple class to hold all the common gui components such as the menu, back button functionality
+ * A simple class to hold all the common GUI components such as the menu, back button functionality
  * and the array of scenes to track the scene to go back to.
  */
 public class CommonGUI {
 
+    public static boolean singleSetting = false;
     /**
      * Track scenes to allow changing back to the previous scene.
      */
-    public static ArrayList<BorderPane> panes = new ArrayList<>();
+    public static final ArrayList<BorderPane> panes = new ArrayList<>();
     /**
      * Allows static and non-static methods to be called statically.
      */
@@ -42,11 +47,15 @@ public class CommonGUI {
      */
     public MenuBar loadMenu() {
         Menu file = new Menu("File");
-        MenuItem settings = new MenuItem("Settings");
-        settings.setOnAction(this::loadSettings);
+        if(Debug.debugMode)
+        {
+            MenuItem settings = new MenuItem("Settings");
+            settings.setOnAction(this::loadSettings);
+            file.getItems().addAll(settings, new SeparatorMenuItem());
+        }
         MenuItem exit = new MenuItem("Exit");
-        exit.setOnAction(e -> nefra.misc.Exit.getInstance().exit(e));
-        file.getItems().addAll(settings, new SeparatorMenuItem(),exit);
+        exit.setOnAction(e -> Main.exitCode = nefra.misc.Exit.getInstance().exit(e));
+        file.getItems().add(exit);
 
         Menu referee = new Menu("Referee");
         MenuItem newRef = new MenuItem("New Referee");
@@ -61,6 +70,19 @@ public class CommonGUI {
             Main.getInstance().changeScene(new Scene(crGUI.initGUI()));
         });
 
+        editRef.setOnAction(e -> {
+            e.consume();
+            EditRefereeGUI edGUI = new EditRefereeGUI();
+            panes.add(edGUI.initGUI());
+            Main.getInstance().changeScene(new Scene(edGUI.initGUI()));
+        });
+
+        /*viewRef.setOnAction(e -> {
+            e.consume();
+            ViewRefereeGUI vGUI = new ViewRefereeGUI();
+            panes.add(vGUI.initGUI());
+            Main.getInstance().changeScene(new Scene(vGUI.initGUI()));
+        });*/
 
         Menu club = new Menu("Club");
         MenuItem newClub = new MenuItem("New Club");
@@ -70,10 +92,24 @@ public class CommonGUI {
 
         newClub.setOnAction(e -> {
             e.consume();
-            CreateClubGUI ccGUI = new CreateClubGUI();
-            panes.add(ccGUI.initGUI());
-            Main.getInstance().changeScene(new Scene(ccGUI.initGUI()));
+            CreateClubGUI crGUI = new CreateClubGUI();
+            panes.add(crGUI.initGUI());
+            Main.getInstance().changeScene(new Scene(crGUI.initGUI()));
         });
+
+        editClub.setOnAction(e -> {
+            e.consume();
+            EditClubGUI edGUI = new EditClubGUI();
+            panes.add(edGUI.initGUI());
+            Main.getInstance().changeScene(new Scene(edGUI.initGUI()));
+        });
+
+        /*viewClub.setOnAction(e -> {
+            e.consume();
+            ViewClubGUI vGUI = new ViewClubGUI();
+            panes.add(vGUI.initGUI());
+            Main.getInstance().changeScene(new Scene(vGUI.initGUI()));
+        });*/
 
         Menu game = new Menu("Game");
         MenuItem newGame = new MenuItem("New Game");
@@ -83,10 +119,24 @@ public class CommonGUI {
 
         newGame.setOnAction(e -> {
             e.consume();
-            CreateGameGUI cgGUI = new CreateGameGUI();
-            panes.add(cgGUI.initGUI());
-            Main.getInstance().changeScene(new Scene(cgGUI.initGUI()));
+            CreateGameGUI crGUI = new CreateGameGUI();
+            panes.add(crGUI.initGUI());
+            Main.getInstance().changeScene(new Scene(crGUI.initGUI()));
         });
+
+        editGame.setOnAction(e -> {
+            e.consume();
+            EditGameGUI edGUI = new EditGameGUI();
+            panes.add(edGUI.initGUI());
+            Main.getInstance().changeScene(new Scene(edGUI.initGUI()));
+        });
+
+        /*viewGame.setOnAction(e -> {
+            e.consume();
+            ViewGameGUI vGUI = new ViewGameGUI();
+            panes.add(vGUI.initGUI());
+            Main.getInstance().changeScene(new Scene(vGUI.initGUI()));
+        });*/
 
         Menu division = new Menu("Division");
         MenuItem newDivision = new MenuItem("New Division");
@@ -96,9 +146,23 @@ public class CommonGUI {
 
         newDivision.setOnAction(e -> {
             e.consume();
-            CreateDivisionGUI cdGUI = new CreateDivisionGUI();
-            panes.add(cdGUI.initGUI());
-            Main.getInstance().changeScene(cdGUI.initGUI());
+            CreateDivisionGUI crGUI = new CreateDivisionGUI();
+            panes.add(crGUI.initGUI());
+            Main.getInstance().changeScene(new Scene(crGUI.initGUI()));
+        });
+
+        editDivision.setOnAction(e -> {
+            e.consume();
+            EditDivisionGUI edGUI = new EditDivisionGUI();
+            panes.add(edGUI.initGUI());
+            Main.getInstance().changeScene(new Scene(edGUI.initGUI()));
+        });
+
+        viewDivision.setOnAction(e -> {
+            e.consume();
+            ViewDivisionGUI vGUI = new ViewDivisionGUI();
+            panes.add(vGUI.initGUI());
+            Main.getInstance().changeScene(new Scene(vGUI.initGUI()));
         });
 
         return new MenuBar(file, referee, club, game, division);
@@ -132,9 +196,13 @@ public class CommonGUI {
      * @param event the event
      */
     private void loadSettings(ActionEvent event) {
-        event.consume();
-        SettingsGUI sGUI = new SettingsGUI();
-        Main.getInstance().changeScene(sGUI.initGUI());
+        if(!singleSetting)
+        {
+            singleSetting = true;
+            event.consume();
+            SettingsGUI sGUI = new SettingsGUI();
+            sGUI.initGUI(Main.getInstance().getStage());
+        }
     }
 
     /**

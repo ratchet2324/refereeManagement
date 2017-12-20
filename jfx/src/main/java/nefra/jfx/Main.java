@@ -6,17 +6,13 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import nefra.club.Club;
-import nefra.db.DBFunctions;
-import nefra.db.dbf_rewrite;
-import nefra.game.Division;
-import nefra.game.Game;
+import nefra.db.SysLoader;
+import nefra.exceptions.DelLog;
 import nefra.jfx.mainmenu.MainMenu;
-import nefra.referee.Referee;
+import nefra.misc.Debug;
 import nefra.settings.Settings;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Contract;
-
-import java.util.ArrayList;
 
 public class Main extends Application
 {
@@ -24,7 +20,8 @@ public class Main extends Application
      * Provide an instance to access non-static parts from a static instance.
      */
     private static Main instance;
-    private Stage stage = new Stage();
+    private final Stage stage = new Stage();
+    static int exitCode = 0;
 
     /**
      * constructor to make the instance
@@ -39,12 +36,16 @@ public class Main extends Application
     @Contract(pure = true)
     public static Main getInstance() { return instance; }
 
+    @Contract(pure = true)
+    Stage getStage() { return stage; }
+
     @Override
     public void start(Stage s) throws Exception {
         MainMenu mm = new MainMenu();
         Settings.initSettings();
-        System.out.println(Settings.getSetting("DatabaseInstantiation"));
-        loadAll();
+        if (Debug.debugMode)
+            DelLog.getInstance().Log(Settings.getSetting("DatabaseInstantiation"));
+        SysLoader.getInstance();
 
         //Get screen size
         Rectangle2D screen = Screen.getPrimary().getVisualBounds();
@@ -62,12 +63,13 @@ public class Main extends Application
 
 
         //Set title and default scene.
-        stage.setTitle("New England Football Referees Association");
+        String title = "New England Football Referees Association" + (Debug.debugMode ? " **DEBUG**" : "");
+        stage.setTitle(title);
         stage.setScene(new Scene(init));
         stage.show();
 
 
-        stage.setOnCloseRequest(e -> nefra.misc.Exit.getInstance().exit(e));
+        stage.setOnCloseRequest(e -> exitCode = nefra.misc.Exit.getInstance().exit(e));
     }
 
     /**
@@ -83,72 +85,17 @@ public class Main extends Application
      */
     void changeScene(BorderPane root) { stage.setScene(new Scene(root));}
 
-    private void loadAll()
+    public static void main(String args[])
     {
-        dbf_rewrite dbFunctions = new dbf_rewrite();
-        ArrayList<String> x;
-
-        dbFunctions.loadDatabase();
-        /*
-        nefra.settings.Settings.initSettings();
-        ArrayList<String> z = new ArrayList<>();
-        String[] split;
-        x = dbFunctions.loadDbToFile("referee");
-        for(String i : x) { System.out.println(i); }
-        for (String e : x) {
-            split = e.split("=");
-            z.add(split[1]);
-        }
-        for (int i = 0; i < z.size(); i += 7)
+        for(String s : args)
         {
-            Referee y = new Referee(Integer.valueOf(z.get(i)), z.get(i + 1),
-                    z.get(i + 2), z.get(i + 3), z.get(i + 4),
-                    Double.valueOf(z.get(i+ 5)), Double.valueOf(z.get(i + 6)));
-            System.out.println(y.displayInfo());
+            DelLog.getInstance().Log("Arg: " + s);
+            if(StringUtils.trim(s).equalsIgnoreCase( "debug")) Debug.setDebugMode(true);
         }
-        z.clear();
-        x = dbFunctions.loadDbToFile("club");
-        for(String j : x) { System.out.println(j); }
-        for (String e : x) {
-            split = e.split("=");
-            z.add(split[1]);
-        }
-        for (int i = 0; i < z.size(); i += 10)
-        {
-            Club y = new Club(Integer.valueOf(z.get(i)), z.get(i + 1),
-                    z.get(i + 2), z.get(i + 3),
-                    z.get(i + 4), z.get(i + 5),
-                    z.get(i + 6), z.get(i + 7),
-                    Double.valueOf(z.get(i+ 8)), Double.valueOf(z.get(i + 9)));
-            System.out.println(y.displayInfo());
-        }
-        z.clear();
-        x = dbFunctions.loadDbToFile("division");
-        for(String k : x) { System.out.println(k); }
-        for (String e : x) {
-            split = e.split("=");
-            z.add(split[1]);
-        }
-        for (int i = 0; i < z.size(); i += 4)
-        {
-            Division y = new Division(Integer.valueOf(z.get(i)), z.get(i + 1),
-                    Double.valueOf(z.get(i+ 2)), Double.valueOf(z.get(i + 3)));
-            System.out.println(y.displayInfo());
-        }
-        z.clear();
-        x = dbFunctions.loadDbToFile("game");
-        for(String l : x) { System.out.println(l); }
-        for (String e : x) {
-            split = e.split("=");
-            z.add(split[1]);
-        }
-        /*for (int i = 0; i < x.size(); i += 7)
-        {
-            Game y = new Game(Integer.valueOf(x.get(i)), x.get(i + 1),
-                    x.get(i + 2), x.get(i + 3), x.get(i + 4),
-                    Double.valueOf(x.get(i+ 5)), Double.valueOf(x.get(i + 6)));
-            System.out.println(y.toString());
-        }*/
+        if (Debug.debugMode) loadDebug();
+        launch(args);
+        System.exit(exitCode);
     }
 
+    private static void loadDebug() { Debug.debugInfo(); }
 }

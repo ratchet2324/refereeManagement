@@ -1,16 +1,20 @@
 package nefra.club;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Class to create Clubs, able to be extended and/or modified for other sports.
  */
-public class Club {
-    public static ArrayList<Club> clubList = new ArrayList<Club>();
-    private int club_id;
+public class Club implements Serializable {
+    public static final ObservableList<Club> clubList = FXCollections.observableArrayList();
+    private UUID club_id;
     private String clubName;
     private String street;
     private String suburb;
@@ -32,8 +36,11 @@ public class Club {
      * @param postcode         The postcode (zip code) for the suburb
      * @param presidentName    The name of the president/chairman of the club
      * @param presidentContact Contact info for the president/chairman, can be phone or email
+     * @param totalFee The total fee over the year to be paid by the club for admin and match officials
+     * @param weeklyFee The total current weeks fee to be paid by the club for match officials and admin
+     * @since 1.0
      */
-    public Club(int club_id, String clubName, String street, String suburb, String state, String postcode,
+    public Club(UUID club_id, String clubName, String street, String suburb, String state, String postcode,
                 String presidentName, String presidentContact, double weeklyFee, double totalFee) {
         this.club_id = club_id;
         this.clubName = clubName;
@@ -49,78 +56,6 @@ public class Club {
     }
 
     /**
-     * Full constructor for when all information is provided
-     *
-     * @param club_id          ID number from database
-     * @param clubName         Name of the Club
-     * @param street           The street address, also includes street number
-     * @param suburb           The suburb the club is located in
-     * @param state            The state the club is in
-     * @param postcode         The postcode (zip code) for the suburb
-     * @param presidentName    The name of the president/chairman of the club
-     * @param presidentContact Contact info for the president/chairman, can be phone or email
-     */
-    public Club(int club_id, String clubName, String street, String suburb, String state, String postcode, String presidentName, String presidentContact) {
-        this.club_id = club_id;
-        this.clubName = clubName;
-        this.street = street;
-        this.suburb = suburb;
-        this.state = state;
-        this.postcode = postcode;
-        this.presidentName = presidentName;
-        this.presidentContact = presidentContact;
-        clubList.add(this);
-    }
-
-    /**
-     * Full constructor for when only address information is provided
-     *
-     * @param club_id  ID number from database
-     * @param clubName Name of the Club
-     * @param street   The street address, also includes street number
-     * @param suburb   The suburb the club is located in
-     * @param state    The state the club is in
-     * @param postcode The postcode (zip code) for the suburb
-     */
-    public Club(int club_id, String clubName, String street, String suburb, String state, String postcode) {
-        this.club_id = club_id;
-        this.clubName = clubName;
-        this.street = street;
-        this.suburb = suburb;
-        this.state = state;
-        this.postcode = postcode;
-        clubList.add(this);
-    }
-
-    /**
-     * Full constructor for when only president information is provided
-     *
-     * @param club_id          ID number from database
-     * @param clubName         Name of the Club
-     * @param presidentName    The name of the president/chairman of the club
-     * @param presidentContact Contact info for the president/chairman, can be phone or email
-     */
-    public Club(int club_id, String clubName, String presidentName, String presidentContact) {
-        this.club_id = club_id;
-        this.clubName = clubName;
-        this.presidentName = presidentName;
-        this.presidentContact = presidentContact;
-        clubList.add(this);
-    }
-
-    /**
-     * Full constructor for when only club name is provided
-     *
-     * @param club_id  ID number from database
-     * @param clubName Name of the Club
-     */
-    public Club(int club_id, String clubName) {
-        this.club_id = club_id;
-        this.clubName = clubName;
-        clubList.add(this);
-    }
-
-    /**
      * Creation of a club upon entering all fields on the GUI, no club number as it has not been assigned by the database
      *
      * @param clubName         Name of the Club
@@ -130,6 +65,7 @@ public class Club {
      * @param postcode         The postcode (zip code) for the suburb
      * @param presidentName    The name of the president/chairman of the club
      * @param presidentContact Contact info for the president/chairman, can be phone or email
+     * @since 1.0
      */
     public Club(String clubName, String street, String suburb, String state, String postcode, String presidentName, String presidentContact) {
         this.clubName = clubName;
@@ -142,48 +78,9 @@ public class Club {
         clubList.add(this);
     }
 
-    /**
-     * Creation of a club where only an address of the club is provided
-     * @param clubName Name of the Club
-     * @param street The street address, also includes street number
-     * @param suburb The suburb the club is located in
-     * @param state The state the club is in
-     * @param postcode The postcode (zip code) for the suburb
-     */
-    public Club(String clubName, String street, String suburb, String state, String postcode) {
-        this.clubName = clubName;
-        this.street = street;
-        this.suburb = suburb;
-        this.state = state;
-        this.postcode = postcode;
-        clubList.add(this);
-    }
+    private final DecimalFormat df = new DecimalFormat("0.00");
 
-    /**
-     * Creation of a club where only the president details are provided
-     * @param clubName Name of the Club
-     * @param presidentName The name of the president/chairman of the club
-     * @param presidentContact Contact info for the president/chairman, can be phone or email
-     */
-    public Club(String clubName, String presidentName, String presidentContact) {
-        this.clubName = clubName;
-        this.presidentName = presidentName;
-        this.presidentContact = presidentContact;
-        clubList.add(this);
-    }
-
-    /**
-     * Blank Club creation where only a name is given
-     * @param clubName Name of the Club
-     */
-    public Club(String clubName) { this.clubName = clubName;
-    }
-
-    private DecimalFormat df = new DecimalFormat("0.00");
-
-    public ArrayList<Club> getClubList() { return clubList; }
-
-    public int getClubId() {
+    public UUID getClubId() {
         return club_id;
     }
 
@@ -211,7 +108,7 @@ public class Club {
 
     public double getWeeklyFee() { return weeklyFee; }
 
-    public void setClub_id(int club_id) { this.club_id = club_id; }
+    public void setClub_id(UUID club_id) { this.club_id = club_id; }
 
     public void setClubName(String clubName) { this.clubName = clubName; }
 
@@ -242,6 +139,7 @@ public class Club {
 
     /**
      * Resets the weekly fee back to $0.00 and adds it to the total fee.
+     * @since 1.0
      */
     public void resetWeeklyFee() { addToTotalFee(weeklyFee);
         weeklyFee = 0;
@@ -249,9 +147,37 @@ public class Club {
 
     /**
      * Resets the total fee back to $0.00, to coincide with the end of the season.
+     * @since 1.0
      */
     public void resetTotalFee() {
         totalFee = 0;
+    }
+
+    void delete()
+    {
+        clubList.remove(this);
+        club_id = null;
+        clubName = street = suburb = state = postcode = presidentName = presidentContact = null;
+        weeklyFee = totalFee = 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Club club = (Club) o;
+
+        return club_id == club.club_id &&
+                clubName.equals(club.clubName);
+    }
+
+    @Override
+    public int hashCode() {
+        Random r = new Random();
+        int result = r.nextInt();
+        result = 31 * result + clubName.hashCode();
+        return result;
     }
 
     @Override
@@ -263,6 +189,7 @@ public class Club {
      * Depending on the information entered, it adjusts the output accordingly. So if only the club name are
      * entered, then only that is displayed.
      * @return the string that is printed out.
+     * @since 1.0
      */
     public String displayInfo() {
 
