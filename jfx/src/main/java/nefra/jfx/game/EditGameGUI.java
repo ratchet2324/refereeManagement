@@ -18,7 +18,7 @@ import nefra.referee.Referee;
 import java.util.Calendar;
 
 public class EditGameGUI {
-    private GUIFunctions guif = new GUIFunctions();
+    private final GUIFunctions guif = new GUIFunctions();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
@@ -168,6 +168,8 @@ public class EditGameGUI {
                     division.getValue(), Integer.valueOf(round.getText()), Integer.valueOf(year.getText()),
                     mainReferee.getValue(), ar1Referee.getValue(), ar2Referee.getValue());
             game.getSelectionModel().select(null);
+            game.setItems(null);
+            game.setItems(Game.gameList);
         });
 
         clearButton.setOnAction(e -> game.getSelectionModel().select(null));

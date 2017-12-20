@@ -1,6 +1,7 @@
 package nefra.db;
 
 import nefra.club.Club;
+import nefra.exceptions.DelLog;
 import nefra.game.Division;
 import nefra.game.Game;
 import nefra.misc.Debug;
@@ -8,6 +9,7 @@ import nefra.referee.Referee;
 import nefra.settings.Settings;
 
 import java.sql.*;
+import java.util.UUID;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
@@ -37,15 +39,15 @@ public class DBFunctions {
     public DBFunctions() {
         try {
             if (Debug.debugMode){
-                System.out.println("Connecting....");
-                System.out.println(Settings.getSetting("DatabaseInstantiation"));
+                DelLog.getInstance().Log("Connecting....");
+                DelLog.getInstance().Log(Settings.getSetting("DatabaseInstantiation"));
             }
             Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             if (Settings.getSetting("DatabaseInstantiation").equals("true")) {
                 instantiateDatabase(statement);
             }
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
         }
     }
 
@@ -57,7 +59,7 @@ public class DBFunctions {
      */
     private boolean instantiateDatabase(Statement statement) {
         if (Debug.debugMode)
-            System.out.println("Instantiating Database");
+            DelLog.getInstance().Log("Instantiating Database");
         try {
             Settings.writeSetting("DatabaseInstantiation", "false");
 
@@ -124,7 +126,7 @@ public class DBFunctions {
             return true;
 
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
             return false;
         }
     }
@@ -141,25 +143,25 @@ public class DBFunctions {
 
             rs = stmt.executeQuery("SELECT * FROM REFEREE;");
             while (rs.next()) {
-                new Referee(rs.getInt(1), rs.getString(2), rs.getString(3),
+                /*new Referee(rs.getInt(1), rs.getString(2), rs.getString(3),
                         rs.getString(4), rs.getString(5), rs.getDouble(6)
-                        , rs.getDouble(7));
+                        , rs.getDouble(7));*/
             }
 
             rs = stmt.executeQuery("SELECT * FROM CLUB;");
             while (rs.next()) {
-                new Club(rs.getInt(1), rs.getString(2), rs.getString(3),
+                /*new Club(rs.getInt(1), rs.getString(2), rs.getString(3),
                         rs.getString(4), rs.getString(5), rs.getString(6),
                         rs.getString(7), rs.getString(8), rs.getDouble(9),
-                        rs.getDouble(10));
+                        rs.getDouble(10));*/
             }
 
             rs = stmt.executeQuery("SELECT * FROM DIVISION;");
             while (rs.next()) {
-                new Division(rs.getInt(1), rs.getString(2),
-                        rs.getDouble(3), rs.getDouble(4));
+                /*new Division(rs.getInt(1), rs.getString(2),
+                        rs.getDouble(3), rs.getDouble(4));*/
             }
-
+/*
             rs = stmt.executeQuery("SELECT * FROM GAME;");
             while (rs.next()) {
                 Club home = null;
@@ -189,10 +191,10 @@ public class DBFunctions {
                 new Game(rs.getInt(1), home, away, division, rs.getInt(5), rs.getInt(6),
                         main, ar1, ar2, rs.getDouble(10), rs.getDouble(11),
                         rs.getDouble(12), rs.getDouble(13));
-            }
+            }*/
             return true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
             return false;
         }
     }
@@ -223,11 +225,11 @@ public class DBFunctions {
             pstmt.setString(2, referee.getLastName());
             ResultSet rs = pstmt.executeQuery();
             rs.next();
-            referee.setReferee_id(rs.getInt(1));
+            //referee.setReferee_id(rs.getInt(1));
             referee.displayInfo();
             return true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
             return false;
         }
     }
@@ -266,11 +268,11 @@ public class DBFunctions {
             pstmt.setString(1, club.getClubName());
             ResultSet rs = pstmt.executeQuery();
             rs.next();
-            club.setClub_id(rs.getInt(1));
+            //club.setClub_id(rs.getInt(1));
             club.displayInfo();
             return true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
             return false;
         }
     }
@@ -297,11 +299,11 @@ public class DBFunctions {
             pstmt.setString(1, division.getDivisionName());
             ResultSet rs = pstmt.executeQuery();
             rs.next();
-            division.setDivisionId(rs.getInt(1));
+            //division.setDivisionId(rs.getInt(1));
             division.displayInfo();
             return true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
             return false;
         }
     }
@@ -320,14 +322,14 @@ public class DBFunctions {
                     "YEAR, MAIN_REFEREE, ASSISTANT_ONE, ASSISTANT_TWO, " +
                     "TOTAL_GAME_FEE, HOME_FEE, AWAY_FEE, ADMIN_FEE)" +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
-            pstmt.setInt(1, game.getHome().getClubId());
-            pstmt.setInt(2, game.getAway().getClubId());
-            pstmt.setInt(3, game.getDivision().getDivisionId());
+            //pstmt.setInt(1, game.getHome().getClubId());
+            //pstmt.setInt(2, game.getAway().getClubId());
+            //pstmt.setInt(3, game.getDivision().getDivisionId());
             pstmt.setInt(4, game.getRound());
             pstmt.setInt(5, game.getYear());
-            pstmt.setInt(6, game.getMain().getRefereeId());
-            pstmt.setInt(7, game.getAr1().getRefereeId());
-            pstmt.setInt(8, game.getAr2().getRefereeId());
+            //pstmt.setInt(6, game.getMain().getRefereeId());
+            //pstmt.setInt(7, game.getAr1().getRefereeId());
+            //pstmt.setInt(8, game.getAr2().getRefereeId());
             pstmt.setDouble(9, game.getTotalFee());
             pstmt.setDouble(10, game.getHomeClubFee());
             pstmt.setDouble(11, game.getAwayClubFee());
@@ -337,18 +339,18 @@ public class DBFunctions {
             //Set Game ID From Database
             pstmt = connection.prepareStatement("SELECT GAME_ID FROM GAME WHERE HOME = ? AND" +
                     " AWAY = ? AND DIVISION = ? AND ROUND = ? AND YEAR = ?;");
-            pstmt.setInt(1, game.getHome().getClubId());
-            pstmt.setInt(2, game.getAway().getClubId());
-            pstmt.setInt(3, game.getDivision().getDivisionId());
+            //pstmt.setInt(1, game.getHome().getClubId());
+            //pstmt.setInt(2, game.getAway().getClubId());
+            //pstmt.setInt(3, game.getDivision().getDivisionId());
             pstmt.setInt(4, game.getRound());
             pstmt.setInt(5, game.getYear());
             ResultSet rs = pstmt.executeQuery();
             rs.next();
-            game.setGameId(rs.getInt(1));
+            //game.setGameId(rs.getInt(1));
             System.out.println(game);
             return true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
             return false;
         }
     }
@@ -373,11 +375,11 @@ public class DBFunctions {
             else pstmt.setNull(4, Types.NULL);
             pstmt.setDouble(5, referee.getTotalFee());
             pstmt.setDouble(6, referee.getTotalFee());
-            pstmt.setInt(7, referee.getRefereeId());
+            //pstmt.setInt(7, referee.getRefereeId());
             pstmt.executeUpdate();
             return true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
             return false;
         }
     }
@@ -410,11 +412,11 @@ public class DBFunctions {
             else pstmt.setNull(7, Types.NULL);
             pstmt.setDouble(8, club.getTotalFee());
             pstmt.setDouble(9, club.getTotalFee());
-            pstmt.setInt(10, club.getClubId());
+            //pstmt.setInt(10, club.getClubId());
             pstmt.executeUpdate();
             return true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
             return false;
         }
     }
@@ -434,11 +436,11 @@ public class DBFunctions {
             pstmt.setString(1, division.getDivisionName());
             pstmt.setDouble(2, division.getMainRefereeFee());
             pstmt.setDouble(3, division.getArFee());
-            pstmt.setInt(4, division.getDivisionId());
+            //pstmt.setInt(4, division.getDivisionId());
             pstmt.executeUpdate();
             return true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
             return false;
         }
     }
@@ -457,23 +459,23 @@ public class DBFunctions {
                     "MAIN_REFEREE = ?, ASSISTANT_ONE = ?, ASSISTANT_TWO = ?, " +
                     "TOTAL_GAME_FEE = ?, HOME_FEE = ?, AWAY_FEE = ?, ADMIN_FEE = ? " +
                     "WHERE GAME_ID = ?;");
-            pstmt.setInt(1, game.getHome().getClubId());
-            pstmt.setInt(2, game.getAway().getClubId());
-            pstmt.setInt(3, game.getDivision().getDivisionId());
+            //pstmt.setInt(1, game.getHome().getClubId());
+            //pstmt.setInt(2, game.getAway().getClubId());
+            //pstmt.setInt(3, game.getDivision().getDivisionId());
             pstmt.setInt(4, game.getRound());
             pstmt.setInt(5, game.getYear());
-            pstmt.setInt(6, game.getMain().getRefereeId());
-            pstmt.setInt(7, game.getAr1().getRefereeId());
-            pstmt.setInt(8, game.getAr2().getRefereeId());
+           // pstmt.setInt(6, game.getMain().getRefereeId());
+            //pstmt.setInt(7, game.getAr1().getRefereeId());
+            //pstmt.setInt(8, game.getAr2().getRefereeId());
             pstmt.setDouble(9, game.getTotalFee());
             pstmt.setDouble(10, game.getHomeClubFee());
             pstmt.setDouble(11, game.getAwayClubFee());
             pstmt.setDouble(12, game.getAdminFee());
-            pstmt.setInt(13, game.getGameId());
+           // pstmt.setInt(13, game.getGameId());
             pstmt.executeUpdate();
             return true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
             return false;
         }
     }
@@ -484,15 +486,15 @@ public class DBFunctions {
      * @return whether the operation was successful or not
      * @since 1.0
      */
-    public boolean removeReferee(int refereeID)
+    public boolean removeReferee(UUID refereeID)
     {
         try {
             PreparedStatement pstmt = connection.prepareStatement("DELETE FROM REFEREE WHERE REFEREE_ID = ?;");
-            pstmt.setInt(1, refereeID);
+            //pstmt.setInt(1, refereeID);
             pstmt.executeUpdate();
             return true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
             return false;
         }
     }
@@ -503,15 +505,15 @@ public class DBFunctions {
      * @return whether the operation was successful or not
      * @since 1.0
      */
-    public boolean removeClub(int clubID)
+    public boolean removeClub(UUID clubID)
     {
         try {
             PreparedStatement pstmt = connection.prepareStatement("DELETE FROM CLUB WHERE CLUB_ID = ?;");
-            pstmt.setInt(1, clubID);
+            //pstmt.setInt(1, clubID);
             pstmt.executeUpdate();
             return true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
             return false;
         }
     }
@@ -522,15 +524,15 @@ public class DBFunctions {
      * @return whether the operation was successful or not
      * @since 1.0
      */
-    public boolean removeDivision(int divisionID)
+    public boolean removeDivision(UUID divisionID)
     {
         try {
             PreparedStatement pstmt = connection.prepareStatement("DELETE FROM DIVISION WHERE DIVISION_ID = ?;");
-            pstmt.setInt(1, divisionID);
+            //pstmt.setInt(1, divisionID);
             pstmt.executeUpdate();
             return true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
             return false;
         }
     }
@@ -541,15 +543,15 @@ public class DBFunctions {
      * @return whether the operation was successful or not
      * @since 1.0
      */
-    public boolean removeGame(int gameID)
+    public boolean removeGame(UUID gameID)
     {
         try {
             PreparedStatement pstmt = connection.prepareStatement("DELETE FROM GAME WHERE GAME_ID = ?;");
-            pstmt.setInt(1, gameID);
+            //pstmt.setInt(1, gameID);
             pstmt.executeUpdate();
             return true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
             return false;
         }
     }
@@ -574,7 +576,7 @@ public class DBFunctions {
             pstmt.executeUpdate();
             return true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
             return false;
         }
     }
@@ -599,7 +601,7 @@ public class DBFunctions {
             pstmt.executeUpdate();
             return true;
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
             return false;
         }
     }

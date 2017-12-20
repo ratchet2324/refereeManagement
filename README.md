@@ -6,11 +6,12 @@ Currently it has a basic startup interface but no functionality, as I am still w
 This project is for my local soccer referee branch but can be modified for other uses.
 
 ## Features
-- Ability to add games (not implemented in GUI)
-- Ability to add divisions (not implemented in GUI)
-- Ability to add clubs (not implemented in GUI)
-- Ability to add referees (not implemented in GUI)
-- Everything contained inside an embedded database
-- Portable jar and data file
+- Ability to add, remove and edit games
+- Ability to add, remove and edit divisions
+- Ability to add, remove and edit clubs
+- Ability to add, remove and edit referees
+- Ability to view all entered information (games, divisions, clubs and referees) - Not implemented yet.
+- Files contained in single folder (containing subdirectories), with all files necessary to run and diagnose problems.
+- Portable jar and data folder
 
 This is still a work in progress and will update over the next few weeks/months.

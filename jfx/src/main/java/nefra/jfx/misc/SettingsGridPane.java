@@ -4,6 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import nefra.exceptions.DelLog;
 
 public class SettingsGridPane extends GridPane{
     public SettingsGridPane() {
@@ -16,7 +17,7 @@ public class SettingsGridPane extends GridPane{
         int maxRow = 0;
         for(int i = 0; i < getChildren().size(); i++) {
             if(getRowIndex(getChildren().get(i)) > maxRow) maxRow = getRowIndex(getChildren().get(i));
-            System.out.println(getChildren().get(i).getStyle());
+            DelLog.getInstance().Log(getChildren().get(i).getStyle());
         }
         getRowConstraints().clear();
         for (int i = 0; i <= maxRow; i++)
@@ -42,7 +43,7 @@ public class SettingsGridPane extends GridPane{
         getStyleClass().add("label");
         super.add(label, columnIndex, rowIndex);
         update();
-        System.out.println(label.getFont());
+        DelLog.getInstance().Log(label.getFont().toString());
     }
 
     /**
@@ -59,7 +60,7 @@ public class SettingsGridPane extends GridPane{
         getStyleClass().add("checkBox");
         super.add(checkBox, columnIndex, rowIndex);
         update();
-        System.out.println(checkBox.getFont());
+        DelLog.getInstance().Log(checkBox.getFont().toString());
     }
 
     /**
@@ -76,7 +77,7 @@ public class SettingsGridPane extends GridPane{
         getStyleClass().add("textField");
         super.add(textField, columnIndex, rowIndex);
         update();
-        System.out.println(textField.getFont());
+        DelLog.getInstance().Log(textField.getFont().toString());
     }
 
     /**
@@ -93,7 +94,7 @@ public class SettingsGridPane extends GridPane{
         getStyleClass().add("choiceBox");
         super.add(choiceBox, columnIndex, rowIndex);
         update();
-        System.out.println(choiceBox.getStyle());
+        DelLog.getInstance().Log(choiceBox.getStyle());
     }
 
     /**
@@ -110,7 +111,7 @@ public class SettingsGridPane extends GridPane{
         getStyleClass().add("button");
         super.add(button, columnIndex, rowIndex);
         update();
-        System.out.println(button.getFont());
+        DelLog.getInstance().Log(button.getFont().toString());
     }
 
     /**
@@ -128,7 +129,7 @@ public class SettingsGridPane extends GridPane{
         getStyleClass().add("other");
         super.add(node, columnIndex, rowIndex);
         update();
-        System.out.println(node.getStyle());
+        DelLog.getInstance().Log(node.getStyle());
     }
 
     /**
@@ -147,7 +148,7 @@ public class SettingsGridPane extends GridPane{
         getStyleClass().add("label");
         super.add(label, columnIndex, rowIndex, colspan, rowspan);
         update();
-        System.out.println(label.getFont());
+        DelLog.getInstance().Log(label.getFont().toString());
     }
 
     /**
@@ -166,7 +167,7 @@ public class SettingsGridPane extends GridPane{
         getStyleClass().add("checkBox");
         super.add(checkBox, columnIndex, rowIndex, colspan, rowspan);
         update();
-        System.out.println(checkBox.getFont());
+        DelLog.getInstance().Log(checkBox.getFont().toString());
     }
 
     /**
@@ -185,7 +186,7 @@ public class SettingsGridPane extends GridPane{
         getStyleClass().add("textField");
         super.add(textField, columnIndex, rowIndex, colspan, rowspan);
         update();
-        System.out.println(textField.getFont());
+        DelLog.getInstance().Log(textField.getFont().toString());
     }
 
     /**
@@ -204,7 +205,7 @@ public class SettingsGridPane extends GridPane{
         getStyleClass().add("choiceBox");
         super.add(choiceBox, columnIndex, rowIndex, colspan, rowspan);
         update();
-        System.out.println(choiceBox.getStyle());
+        DelLog.getInstance().Log(choiceBox.getStyle());
     }
 
     /**
@@ -223,7 +224,7 @@ public class SettingsGridPane extends GridPane{
         getStyleClass().add("button");
         super.add(button, columnIndex, rowIndex, colspan, rowspan);
         update();
-        System.out.println(button.getFont());
+        DelLog.getInstance().Log(button.getFont().toString());
     }
 
     /**
@@ -243,6 +244,6 @@ public class SettingsGridPane extends GridPane{
         getStyleClass().add("other");
         super.add(node, columnIndex, rowIndex, colspan, rowspan);
         update();
-        System.out.println(node.getStyle());
+        DelLog.getInstance().Log(node.getStyle());
     }
 }

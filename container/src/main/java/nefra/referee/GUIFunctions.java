@@ -3,6 +3,7 @@ package nefra.referee;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import nefra.db.DBFunctions;
+import nefra.db.SysCreator;
 import nefra.misc.Debug;
 
 /**
@@ -26,7 +27,7 @@ public class GUIFunctions {
     public void makeReferee(ActionEvent e, String firstName, String lastName, String email, String phone) {
         e.consume();
         Referee referee = new Referee(firstName, lastName, email, phone);
-        db.insertReferee(referee);
+        SysCreator.getInstance().Referee(referee, true);
         if(Debug.debugMode)
             db.printDatabase();
     }
@@ -59,7 +60,7 @@ public class GUIFunctions {
         referee.setLastName(lastName);
         referee.setEmail(email);
         referee.setPhone(phone);
-        if(!db.updateReferee(referee))
+        if(!SysCreator.getInstance().Referee(referee, false))
             displayError(e);
         if(Debug.debugMode)
             db.printDatabase();

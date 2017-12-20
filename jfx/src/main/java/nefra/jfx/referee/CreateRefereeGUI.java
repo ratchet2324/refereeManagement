@@ -6,16 +6,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import nefra.exceptions.DelLog;
 import nefra.jfx.CommonGUI;
 import nefra.misc.Debug;
 import nefra.referee.GUIFunctions;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-
 public class CreateRefereeGUI {
-    private GUIFunctions guif = new GUIFunctions();
+    private final GUIFunctions guif = new GUIFunctions();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
@@ -45,7 +44,7 @@ public class CreateRefereeGUI {
          */
         enterButton.setOnAction(e -> {
             if(Debug.debugMode)
-                System.out.println("FN: "+ firstName.getText() + "\n" +
+                DelLog.getInstance().Log("FN: "+ firstName.getText() + "\n" +
                         "LN: "+ lastName.getText() + "\n" +
                         "EM: "+ email.getText() + "\n" +
                         "PH: "+ phone.getText());

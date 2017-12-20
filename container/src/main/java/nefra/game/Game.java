@@ -1,9 +1,13 @@
 package nefra.game;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import nefra.club.Club;
 import nefra.referee.Referee;
 
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Game holds all the information necessary to "play" a game, it also works out the match fees payable to the referees
@@ -12,9 +16,10 @@ import java.util.ArrayList;
  * @version 1.0
  * @since 1.0
  */
-public class Game {
-    public static ArrayList<Game> gameList = new ArrayList<>();
-    private int game_id;
+@SuppressWarnings("SameReturnValue")
+public class Game implements Serializable {
+    public static final ObservableList<Game> gameList = FXCollections.observableArrayList();
+    private UUID game_id;
     private Club home;
     private Club away;
     private Division division;
@@ -27,7 +32,7 @@ public class Game {
     private double homeClubFee;
     private double awayClubFee;
     private double adminFee;
-    private ArrayList<Referee> extra = new ArrayList<>();
+    private ObservableList<Referee> extra = FXCollections.observableArrayList();
 
     /**
      * This constructor is called when the games are loaded from the database.
@@ -47,7 +52,7 @@ public class Game {
      * @param adminFee 10% of the fee is for administration.
      * @since 1.0
      */
-    public Game(int game_id, Club home, Club away,
+    public Game(UUID game_id, Club home, Club away,
                 Division division, int round, int year,
                 Referee main, Referee ar1, Referee ar2,
                 double totalFee, double homeClubFee, double awayClubFee,
@@ -92,9 +97,9 @@ public class Game {
         gameList.add(this);
     }
 
-    public ArrayList<Game> getGameList() { return gameList; }
+    public ObservableList<Game> getGameList() { return gameList; }
 
-    public int getGameId() { return game_id; }
+    public UUID getGameId() { return game_id; }
 
     public Club getHome() { return home; }
 
@@ -122,9 +127,9 @@ public class Game {
 
     public double getAdminFee() { return adminFee; }
 
-    public ArrayList<Referee> getExtra() { return extra; }
+    public ObservableList<Referee> getExtra() { return extra; }
 
-    public void setGameId(int game_id) { this.game_id = game_id; }
+    public void setGameId(UUID game_id) { this.game_id = game_id; }
 
     public void setHome(Club home) { this.home = home; }
 
@@ -150,7 +155,7 @@ public class Game {
 
     public void setAdminFee(double adminFee) { this.adminFee = adminFee; }
 
-    public void setExtra(ArrayList<Referee> extra) {
+    public void setExtra(ObservableList<Referee> extra) {
         this.extra = extra;
     }
 
@@ -205,7 +210,8 @@ public class Game {
         home = away = null;
         division = null;
         main = ar1 = ar2 = null;
-        game_id = round = year = 0;
+        round = year = 0;
+        game_id = null;
         totalFee = homeClubFee = awayClubFee = adminFee = 0;
     }
 
@@ -229,7 +235,8 @@ public class Game {
 
     @Override
     public int hashCode() {
-        int result = game_id;
+        Random r = new Random();
+        int result = r.nextInt();
         result = 31 * result + home.hashCode();
         result = 31 * result + away.hashCode();
         result = 31 * result + division.hashCode();

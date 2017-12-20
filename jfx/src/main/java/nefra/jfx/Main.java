@@ -6,13 +6,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import nefra.club.Club;
-import nefra.db.DBFunctions;
-import nefra.game.Division;
-import nefra.game.Game;
+import nefra.db.SysLoader;
+import nefra.exceptions.DelLog;
 import nefra.jfx.mainmenu.MainMenu;
 import nefra.misc.Debug;
-import nefra.referee.Referee;
 import nefra.settings.Settings;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Contract;
@@ -23,7 +20,8 @@ public class Main extends Application
      * Provide an instance to access non-static parts from a static instance.
      */
     private static Main instance;
-    private Stage stage = new Stage();
+    private final Stage stage = new Stage();
+    static int exitCode = 0;
 
     /**
      * constructor to make the instance
@@ -39,15 +37,15 @@ public class Main extends Application
     public static Main getInstance() { return instance; }
 
     @Contract(pure = true)
-    public Stage getStage() { return stage; }
+    Stage getStage() { return stage; }
 
     @Override
     public void start(Stage s) throws Exception {
         MainMenu mm = new MainMenu();
         Settings.initSettings();
         if (Debug.debugMode)
-            System.out.println(Settings.getSetting("DatabaseInstantiation"));
-        loadAll();
+            DelLog.getInstance().Log(Settings.getSetting("DatabaseInstantiation"));
+        SysLoader.getInstance();
 
         //Get screen size
         Rectangle2D screen = Screen.getPrimary().getVisualBounds();
@@ -71,7 +69,7 @@ public class Main extends Application
         stage.show();
 
 
-        stage.setOnCloseRequest(e -> nefra.misc.Exit.getInstance().exit(e));
+        stage.setOnCloseRequest(e -> exitCode = nefra.misc.Exit.getInstance().exit(e));
     }
 
     /**
@@ -87,35 +85,16 @@ public class Main extends Application
      */
     void changeScene(BorderPane root) { stage.setScene(new Scene(root));}
 
-    private void loadAll()
-    {
-        DBFunctions dbFunctions = new DBFunctions();
-
-        dbFunctions.loadDatabase();
-
-        if(Debug.debugMode)
-        {
-            dbFunctions.printDatabase();
-            for (Referee r : Referee.refereeList)
-                r.displayInfo();
-            for (Club c : Club.clubList)
-                c.displayInfo();
-            for (Division d : Division.divisionList)
-                d.displayInfo();
-            for (Game g : Game.gameList)
-                System.out.println(g.displayInfo());
-        }
-    }
-
     public static void main(String args[])
     {
         for(String s : args)
         {
-            System.out.println("Arg: " + s);
+            DelLog.getInstance().Log("Arg: " + s);
             if(StringUtils.trim(s).equalsIgnoreCase( "debug")) Debug.setDebugMode(true);
         }
         if (Debug.debugMode) loadDebug();
         launch(args);
+        System.exit(exitCode);
     }
 
     private static void loadDebug() { Debug.debugInfo(); }

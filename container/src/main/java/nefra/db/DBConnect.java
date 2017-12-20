@@ -1,5 +1,6 @@
 package nefra.db;
 
+import nefra.exceptions.DelLog;
 import nefra.misc.Debug;
 
 import java.sql.Connection;
@@ -25,7 +26,7 @@ public class DBConnect {
         try {
             for (Connection e : conns) e.close();
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            DelLog.getInstance().Log(sqle);
         }
     }
 
@@ -41,10 +42,11 @@ public class DBConnect {
             Class.forName("org.h2.Driver");
             connection = DriverManager.getConnection("jdbc:h2:./NEFRA Data/db/NEFRA.db;create=true");
             if(Debug.debugMode)
-                System.out.println("db connected to.\nConnection: " + connection);
+                DelLog.getInstance().Log("db connected to.\nConnection: " + connection);
             conns.add(connection);
         }
-        catch (Exception e) { e.printStackTrace(); }
+        catch (Exception e) { DelLog.getInstance().Log(e);
+        }
         return connection;
     }
 }

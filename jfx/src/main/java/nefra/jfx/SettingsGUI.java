@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import nefra.exceptions.DelLog;
 import nefra.jfx.misc.SettingsGridPane;
 import nefra.misc.Debug;
 import nefra.jfx.misc.BorderTitlePane;
@@ -113,7 +114,7 @@ public class SettingsGUI {
 
     private void checkAndLoadFont()
     {
-        System.out.println("\n\nSEARCHING FONTS!\n\n");
+        DelLog.getInstance().Log("\n\nSEARCHING FONTS!\n\n");
         int found = 0;
         for(String s : Font.getFamilies())
         {
@@ -121,22 +122,22 @@ public class SettingsGUI {
                 found = 1;
             }
         }
-        if (found == 1) {Font.font("Roboto"); System.out.println("\n\nFOUND ROBOTO!\n\n");}
+        if (found == 1) {Font.font("Roboto"); DelLog.getInstance().Log("\n\nFOUND ROBOTO!\n\n");}
         else
         {
-            System.out.println("\n\nFONT NOT FOUND!\nLOADING FONTS NOW!\n\n");
+            DelLog.getInstance().Log("\n\nFONT NOT FOUND!\nLOADING FONTS NOW!\n\n");
 
             Font f1 = Font.loadFont(getClass().getResourceAsStream("/nefra/jfx/misc/Roboto-Regular.ttf"), 12);
             Font f2 = Font.loadFont(getClass().getResourceAsStream("/nefra/jfx/misc/Roboto-Italic.ttf"), 12);
             Font f3 = Font.loadFont(getClass().getResourceAsStream("/nefra/jfx/misc/Roboto-Bold.ttf"), 12);
-            System.out.println(f1);
-            System.out.println(f2);
-            System.out.println(f3);
+            DelLog.getInstance().Log(f1.toString());
+            DelLog.getInstance().Log(f2.toString());
+            DelLog.getInstance().Log(f3.toString());
         }
         for(String t : Font.getFamilies())
         {
             if (t.contains("Roboto"))
-                System.out.println("\n\nFOUND ROBOTO!\n\n");
+                DelLog.getInstance().Log("\n\nFOUND ROBOTO!\n\n");
         }
     }
 

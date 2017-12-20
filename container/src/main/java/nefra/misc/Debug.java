@@ -1,5 +1,6 @@
 package nefra.misc;
 
+import nefra.exceptions.DelLog;
 import org.apache.commons.lang3.StringUtils;
 
 public class Debug {
@@ -9,7 +10,7 @@ public class Debug {
 
     public static void debugInfo()
     {
-        System.out.println(
+        DelLog.getInstance().Log(
                 StringUtils.leftPad("DEBUG MODE ACTIVATED",50) + "\n" +
                         StringUtils.repeat('-', 80) + "\n" +
                         StringUtils.leftPad("**NEFRA DEBUG INFO**",50) + "\n" +

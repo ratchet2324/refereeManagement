@@ -39,12 +39,12 @@ public class MainMenu {
         viewRef.setStyle("-fx-font-size: 34.0");
         viewRef.setPrefSize(200,125);
 
-        viewRef.setOnAction(e -> {
+        /*viewRef.setOnAction(e -> {
             e.consume();
             ViewRefereeGUI vGUI = new ViewRefereeGUI();
             CommonGUI.panes.add(vGUI.initGUI());
             Main.getInstance().changeScene(new Scene(vGUI.initGUI()));
-        });
+        });*/
 
 
         Button viewClubs = new Button("View Clubs");
@@ -57,12 +57,12 @@ public class MainMenu {
         viewClubs.setPrefSize(200,125);
         viewClubs.setLayoutY(125);
 
-        viewClubs.setOnAction(e -> {
+        /*viewClubs.setOnAction(e -> {
             e.consume();
             ViewClubGUI vGUI = new ViewClubGUI();
             CommonGUI.panes.add(vGUI.initGUI());
             Main.getInstance().changeScene(new Scene(vGUI.initGUI()));
-        });
+        });*/
 
         Button addGame = new Button("Add Game");
         addGame.setAlignment(Pos.TOP_CENTER);

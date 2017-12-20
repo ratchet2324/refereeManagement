@@ -9,6 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
 import nefra.club.Club;
+import nefra.exceptions.DelLog;
 import nefra.game.Division;
 import nefra.game.GUIFunctions;
 import nefra.jfx.CommonGUI;
@@ -17,7 +18,7 @@ import nefra.referee.Referee;
 import java.util.Calendar;
 
 public class CreateGameGUI {
-    private GUIFunctions guif = new GUIFunctions();
+    private final GUIFunctions guif = new GUIFunctions();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
@@ -72,13 +73,13 @@ public class CreateGameGUI {
          */
         //TODO: CLEAR TEXT BOXES (DEFAULT)
         enterButton.setOnAction(e -> {
-            System.out.println("HT: "+ homeTeam.getValue());
-            System.out.println("AT: "+ awayTeam.getValue());
-            System.out.println("DI: "+ division.getValue());
-            System.out.println("RO: "+ round.getText());
-            System.out.println("MR: "+ mainReferee.getValue());
-            System.out.println("AR: "+ ar1Referee.getValue());
-            System.out.println("AR: "+ ar2Referee.getValue());
+            DelLog.getInstance().Log("HT: "+ homeTeam.getValue());
+            DelLog.getInstance().Log("AT: "+ awayTeam.getValue());
+            DelLog.getInstance().Log("DI: "+ division.getValue());
+            DelLog.getInstance().Log("RO: "+ round.getText());
+            DelLog.getInstance().Log("MR: "+ mainReferee.getValue());
+            DelLog.getInstance().Log("AR: "+ ar1Referee.getValue());
+            DelLog.getInstance().Log("AR: "+ ar2Referee.getValue());
             guif.makeGame(e, homeTeam.getValue(), awayTeam.getValue(), division.getValue(),
                     Integer.valueOf(round.getText()), Integer.valueOf(year.getText()), mainReferee.getValue(),
                     ar1Referee.getValue(), ar2Referee.getValue());

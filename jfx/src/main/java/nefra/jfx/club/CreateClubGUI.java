@@ -7,14 +7,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import nefra.exceptions.DelLog;
 import nefra.jfx.CommonGUI;
 import nefra.club.GUIFunctions;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class CreateClubGUI {
-    private GUIFunctions guif = new GUIFunctions();
+    private final GUIFunctions guif = new GUIFunctions();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
@@ -51,13 +51,13 @@ public class CreateClubGUI {
          */
         //TODO: CLEAR TEXT BOXES (DEFAULT)
         enterButton.setOnAction(e -> {
-            System.out.println("CN: "+ clubName.getText());
-            System.out.println("AD: "+ street.getText());
-            System.out.println("SU: "+ suburb.getText());
-            System.out.println("ST: "+ state.getText());
-            System.out.println("PC: "+ postcode.getText());
-            System.out.println("PN: "+ presidentName.getText());
-            System.out.println("PC: "+ presidentContact.getText());
+            DelLog.getInstance().Log("CN: "+ clubName.getText());
+            DelLog.getInstance().Log("AD: "+ street.getText());
+            DelLog.getInstance().Log("SU: "+ suburb.getText());
+            DelLog.getInstance().Log("ST: "+ state.getText());
+            DelLog.getInstance().Log("PC: "+ postcode.getText());
+            DelLog.getInstance().Log("PN: "+ presidentName.getText());
+            DelLog.getInstance().Log("PC: "+ presidentContact.getText());
 
             if(isEmpty(clubName.getText()))
                 guif.displayError(e);

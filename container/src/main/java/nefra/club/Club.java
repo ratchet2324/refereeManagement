@@ -1,16 +1,20 @@
 package nefra.club;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Class to create Clubs, able to be extended and/or modified for other sports.
  */
-public class Club {
-    public static ArrayList<Club> clubList = new ArrayList<>();
-    private int club_id;
+public class Club implements Serializable {
+    public static final ObservableList<Club> clubList = FXCollections.observableArrayList();
+    private UUID club_id;
     private String clubName;
     private String street;
     private String suburb;
@@ -36,7 +40,7 @@ public class Club {
      * @param weeklyFee The total current weeks fee to be paid by the club for match officials and admin
      * @since 1.0
      */
-    public Club(int club_id, String clubName, String street, String suburb, String state, String postcode,
+    public Club(UUID club_id, String clubName, String street, String suburb, String state, String postcode,
                 String presidentName, String presidentContact, double weeklyFee, double totalFee) {
         this.club_id = club_id;
         this.clubName = clubName;
@@ -74,11 +78,9 @@ public class Club {
         clubList.add(this);
     }
 
-    private DecimalFormat df = new DecimalFormat("0.00");
+    private final DecimalFormat df = new DecimalFormat("0.00");
 
-    public ArrayList<Club> getClubList() { return clubList; }
-
-    public int getClubId() {
+    public UUID getClubId() {
         return club_id;
     }
 
@@ -106,7 +108,7 @@ public class Club {
 
     public double getWeeklyFee() { return weeklyFee; }
 
-    public void setClub_id(int club_id) { this.club_id = club_id; }
+    public void setClub_id(UUID club_id) { this.club_id = club_id; }
 
     public void setClubName(String clubName) { this.clubName = clubName; }
 
@@ -154,7 +156,7 @@ public class Club {
     void delete()
     {
         clubList.remove(this);
-        club_id = 0;
+        club_id = null;
         clubName = street = suburb = state = postcode = presidentName = presidentContact = null;
         weeklyFee = totalFee = 0;
     }
@@ -172,7 +174,8 @@ public class Club {
 
     @Override
     public int hashCode() {
-        int result = club_id;
+        Random r = new Random();
+        int result = r.nextInt();
         result = 31 * result + clubName.hashCode();
         return result;
     }

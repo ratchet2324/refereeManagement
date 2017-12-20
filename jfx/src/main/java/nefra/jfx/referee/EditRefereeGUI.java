@@ -1,6 +1,5 @@
 package nefra.jfx.referee;
 
-import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
@@ -10,11 +9,8 @@ import nefra.jfx.CommonGUI;
 import nefra.referee.GUIFunctions;
 import nefra.referee.Referee;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-
 public class EditRefereeGUI {
-    private GUIFunctions guif = new GUIFunctions();
+    private final GUIFunctions guif = new GUIFunctions();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
@@ -38,10 +34,9 @@ public class EditRefereeGUI {
         TextField lastName = new TextField();
         TextField email = new TextField();
         TextField phone = new TextField();
-        ChoiceBox<Referee> referee = new ChoiceBox<>(FXCollections.observableArrayList(Referee.refereeList));
+        ChoiceBox<Referee> referee = new ChoiceBox<>(Referee.refereeList);
         Button updateButton = new Button("Update");
         Button clearButton = new Button("Clear");
-
         firstNameLabel.setVisible(false);
         firstName.setVisible(false);
         lastNameLabel.setVisible(false);
@@ -103,6 +98,8 @@ public class EditRefereeGUI {
         updateButton.setOnAction(e -> {
             guif.updateReferee(e, referee.getValue(), firstName.getText(), lastName.getText(), email.getText(), phone.getText());
             referee.getSelectionModel().select(null);
+            referee.setItems(null);
+            referee.setItems(Referee.refereeList);
         });
 
         clearButton.setOnAction(e -> referee.getSelectionModel().select(null));

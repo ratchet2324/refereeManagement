@@ -29,7 +29,7 @@ public class CommonGUI {
     /**
      * Track scenes to allow changing back to the previous scene.
      */
-    public static ArrayList<BorderPane> panes = new ArrayList<>();
+    public static final ArrayList<BorderPane> panes = new ArrayList<>();
     /**
      * Allows static and non-static methods to be called statically.
      */
@@ -54,7 +54,7 @@ public class CommonGUI {
             file.getItems().addAll(settings, new SeparatorMenuItem());
         }
         MenuItem exit = new MenuItem("Exit");
-        exit.setOnAction(e -> nefra.misc.Exit.getInstance().exit(e));
+        exit.setOnAction(e -> Main.exitCode = nefra.misc.Exit.getInstance().exit(e));
         file.getItems().add(exit);
 
         Menu referee = new Menu("Referee");
@@ -77,12 +77,12 @@ public class CommonGUI {
             Main.getInstance().changeScene(new Scene(edGUI.initGUI()));
         });
 
-        viewRef.setOnAction(e -> {
+        /*viewRef.setOnAction(e -> {
             e.consume();
             ViewRefereeGUI vGUI = new ViewRefereeGUI();
             panes.add(vGUI.initGUI());
             Main.getInstance().changeScene(new Scene(vGUI.initGUI()));
-        });
+        });*/
 
         Menu club = new Menu("Club");
         MenuItem newClub = new MenuItem("New Club");
@@ -104,12 +104,12 @@ public class CommonGUI {
             Main.getInstance().changeScene(new Scene(edGUI.initGUI()));
         });
 
-        viewClub.setOnAction(e -> {
+        /*viewClub.setOnAction(e -> {
             e.consume();
             ViewClubGUI vGUI = new ViewClubGUI();
             panes.add(vGUI.initGUI());
             Main.getInstance().changeScene(new Scene(vGUI.initGUI()));
-        });
+        });*/
 
         Menu game = new Menu("Game");
         MenuItem newGame = new MenuItem("New Game");
@@ -131,12 +131,12 @@ public class CommonGUI {
             Main.getInstance().changeScene(new Scene(edGUI.initGUI()));
         });
 
-        viewGame.setOnAction(e -> {
+        /*viewGame.setOnAction(e -> {
             e.consume();
             ViewGameGUI vGUI = new ViewGameGUI();
             panes.add(vGUI.initGUI());
             Main.getInstance().changeScene(new Scene(vGUI.initGUI()));
-        });
+        });*/
 
         Menu division = new Menu("Division");
         MenuItem newDivision = new MenuItem("New Division");

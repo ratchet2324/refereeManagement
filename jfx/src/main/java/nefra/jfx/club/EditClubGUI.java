@@ -10,11 +10,8 @@ import nefra.club.Club;
 import nefra.club.GUIFunctions;
 import nefra.jfx.CommonGUI;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-
 public class EditClubGUI {
-    private GUIFunctions guif = new GUIFunctions();
+    private final GUIFunctions guif = new GUIFunctions();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
@@ -145,6 +142,8 @@ public class EditClubGUI {
             guif.updateClub(e, club.getValue(), clubName.getText(), street.getText(), suburb.getText(),
                     state.getText(), postcode.getText(), presidentName.getText(), presidentContact.getText());
             club.getSelectionModel().select(null);
+            club.setItems(null);
+            club.setItems(Club.clubList);
         });
 
         clearButton.setOnAction(e -> club.getSelectionModel().select(null));

@@ -13,9 +13,11 @@ import nefra.game.Division;
 import nefra.game.GUIFunctions;
 import nefra.jfx.CommonGUI;
 
+import java.util.UUID;
+
 public class ViewDivisionGUI {
-    private GUIFunctions guif = new GUIFunctions();
-    private TableView<Division> table = new TableView<>();
+    private final GUIFunctions guif = new GUIFunctions();
+    private final TableView<Division> table = new TableView<>();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
@@ -37,9 +39,7 @@ public class ViewDivisionGUI {
         /*
          * Set the action for the enter button based on what information was entered into the fields.
          */
-        removeButton.setOnAction(e -> {
-            guif.removeDivision(e, table.getSelectionModel().getSelectedItem());
-        });
+        removeButton.setOnAction(e -> guif.removeDivision(e, table.getSelectionModel().getSelectedItem()));
 
         removeButton.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 16px;");
@@ -78,7 +78,7 @@ public class ViewDivisionGUI {
 
     private void setupTable() {
         table.setEditable(false);
-        final TableColumn<Division, Integer> idCol = new TableColumn<>("ID");
+        final TableColumn<Division, UUID> idCol = new TableColumn<>("ID");
         idCol.setMinWidth(40);
         idCol.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getDivisionId()));
 

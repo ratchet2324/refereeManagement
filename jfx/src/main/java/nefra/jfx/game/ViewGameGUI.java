@@ -7,22 +7,18 @@ import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
-import nefra.club.Club;
-import nefra.game.Division;
 import nefra.game.GUIFunctions;
 import nefra.game.Game;
 import nefra.jfx.CommonGUI;
-import nefra.referee.Referee;
 
-import java.util.Calendar;
+import java.util.UUID;
 
 public class ViewGameGUI {
-    private GUIFunctions guif = new GUIFunctions();
-    private TableView<Game> table = new TableView<>();
+    private final GUIFunctions guif = new GUIFunctions();
+    private final TableView<Game> table = new TableView<>();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
@@ -43,9 +39,7 @@ public class ViewGameGUI {
         /*
          * Set the action for the enter button based on what information was entered into the fields.
          */
-        removeButton.setOnAction(e -> {
-            guif.removeGame(e, table.getSelectionModel().getSelectedItem());
-        });
+        removeButton.setOnAction(e -> guif.removeGame(e, table.getSelectionModel().getSelectedItem()));
 
         removeButton.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 16px;");
@@ -87,7 +81,7 @@ public class ViewGameGUI {
     private void setupTable() {
         table.setEditable(false);
 
-        final TableColumn<Game, Integer> idCol = new TableColumn<>("ID");
+        final TableColumn<Game, UUID> idCol = new TableColumn<>("ID");
         idCol.setMinWidth(40);
         idCol.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getGameId()));
 

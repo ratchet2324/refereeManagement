@@ -13,9 +13,11 @@ import nefra.jfx.CommonGUI;
 import nefra.referee.GUIFunctions;
 import nefra.referee.Referee;
 
+import java.util.UUID;
+
 public class ViewRefereeGUI {
-    private GUIFunctions guif = new GUIFunctions();
-    private TableView<Referee> table = new TableView<>();
+    private final GUIFunctions guif = new GUIFunctions();
+    private final TableView<Referee> table = new TableView<>();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
@@ -37,9 +39,7 @@ public class ViewRefereeGUI {
         /*
          * Set the action for the enter button based on what information was entered into the fields.
          */
-        removeButton.setOnAction(e -> {
-            guif.removeReferee(e, table.getSelectionModel().getSelectedItem());
-        });
+        removeButton.setOnAction(e -> guif.removeReferee(e, table.getSelectionModel().getSelectedItem()));
 
         removeButton.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 16px;");
@@ -78,7 +78,7 @@ public class ViewRefereeGUI {
 
     private void setupTable() {
         table.setEditable(false);
-        final TableColumn<Referee, Integer> idCol = new TableColumn<>("ID");
+        final TableColumn<Referee, UUID> idCol = new TableColumn<>("ID");
         idCol.setMinWidth(40);
         idCol.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getRefereeId()));
 

@@ -11,7 +11,7 @@ import nefra.game.GUIFunctions;
 import nefra.jfx.CommonGUI;
 
 public class EditDivisionGUI {
-    private GUIFunctions guif = new GUIFunctions();
+    private final GUIFunctions guif = new GUIFunctions();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
@@ -93,6 +93,8 @@ public class EditDivisionGUI {
             guif.updateDivision(e, divisions.getValue(), divisionName.getText(),
                     Double.valueOf(mainRefFee.getText()), Double.valueOf(arFee.getText()));
             divisions.getSelectionModel().select(null);
+            divisions.setItems(null);
+            divisions.setItems(Division.divisionList);
         });
 
         clearButton.setOnAction(e -> divisions.getSelectionModel().select(null));

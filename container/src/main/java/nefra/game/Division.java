@@ -1,6 +1,11 @@
 package nefra.game;
 
-import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.io.Serializable;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Holds all the information required to make a division: name and match official fees.
@@ -8,9 +13,9 @@ import java.util.ArrayList;
  * @version 1.0
  * @since 1.0
  */
-public class Division {
-    public static ArrayList<Division> divisionList = new ArrayList<>();
-    private int division_id;
+public class Division implements Serializable {
+    public static final ObservableList<Division> divisionList = FXCollections.observableArrayList();
+    private UUID division_id;
     private String divisionName;
     private double mainRefereeFee;
     private double arFee;
@@ -24,7 +29,7 @@ public class Division {
      * @param arFee          The fee to be paid to the assistant referees.
      * @since 1.0
      */
-    public Division(int division_id, String divisionName, double mainRefereeFee, double arFee) {
+    public Division(UUID division_id, String divisionName, double mainRefereeFee, double arFee) {
         this.division_id = division_id;
         this.divisionName = divisionName;
         this.mainRefereeFee = mainRefereeFee;
@@ -46,7 +51,7 @@ public class Division {
         divisionList.add(this);
     }
 
-    public int getDivisionId() { return division_id; }
+    public UUID getDivisionId() { return division_id; }
 
     public String getDivisionName() { return divisionName; }
 
@@ -54,7 +59,7 @@ public class Division {
 
     public double getArFee() { return arFee; }
 
-    public void setDivisionId(int division_id) { this.division_id = division_id; }
+    public void setDivisionId(UUID division_id) { this.division_id = division_id; }
 
     public void setDivisionName(String divisionName) { this.divisionName = divisionName; }
 
@@ -65,7 +70,7 @@ public class Division {
     void delete()
     {
         divisionList.remove(this);
-        division_id = 0;
+        division_id = null;
         divisionName = null;
         mainRefereeFee = arFee = 0;
     }
@@ -87,7 +92,8 @@ public class Division {
     public int hashCode() {
         int result;
         long temp;
-        result = division_id;
+        Random r = new Random();
+        result = r.nextInt();
         result = 31 * result + divisionName.hashCode();
         temp = Double.doubleToLongBits(mainRefereeFee);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
@@ -100,7 +106,7 @@ public class Division {
     public String toString() { return this.getDivisionName(); }
 
     public void displayInfo() {
-        System.out.printf("Division ID: %d\nDivision Name: %s\nMain Referee Fee: $%.2f\nAssistant Referee Fee: $%.2f\n",
+        System.out.printf("Division ID: %s\nDivision Name: %s\nMain Referee Fee: $%.2f\nAssistant Referee Fee: $%.2f\n",
                 getDivisionId(), getDivisionName(), getMainRefereeFee(), getArFee());
     }
 }

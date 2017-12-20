@@ -3,9 +3,8 @@ package nefra.club;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import nefra.db.DBFunctions;
+import nefra.db.SysCreator;
 import nefra.misc.Debug;
-
-import javax.swing.*;
 
 /**
  * The functions for the Club GUIs (Create, Edit, View)
@@ -32,7 +31,7 @@ public class GUIFunctions {
                             String presidentName, String presidentContact) {
         e.consume();
         Club club = new Club(clubName, street, suburb, state, postcode, presidentName, presidentContact);
-        db.insertClub(club);
+        SysCreator.getInstance().Club(club, true);
         if(Debug.debugMode)
             db.printDatabase();
     }
@@ -73,7 +72,7 @@ public class GUIFunctions {
         club.setPostcode(postcode);
         club.setPresidentName(presidentName);
         club.setPresidentContact(presidentContact);
-        if(!db.updateClub(club))
+        if(!SysCreator.getInstance().Club(club, false))
             displayError(e);
         if(Debug.debugMode)
             db.printDatabase();

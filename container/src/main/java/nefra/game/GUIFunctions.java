@@ -4,6 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import nefra.club.Club;
 import nefra.db.DBFunctions;
+import nefra.db.SysCreator;
+import nefra.exceptions.DelLog;
 import nefra.misc.Debug;
 import nefra.referee.Referee;
 
@@ -18,7 +20,7 @@ import java.text.ParseException;
  */
 public class GUIFunctions {
     private DBFunctions db = new DBFunctions();
-    private DecimalFormat df = new DecimalFormat("0.00");
+    private final DecimalFormat df = new DecimalFormat("0.00");
 
     /**
      * The GUI call to insert the created division and insert it into the database.
@@ -39,10 +41,10 @@ public class GUIFunctions {
             df.format(ar);
 
             //TODO: REMOVE PRINT STATEMENTS
-            System.out.println("Main: " + main);
-            System.out.println("AR: " + ar);
+            DelLog.getInstance().Log("Main: " + main);
+            DelLog.getInstance().Log("AR: " + ar);
             Division division = new Division(divisionName, main, ar);
-            db.insertDivision(division);
+            SysCreator.getInstance().Division(division, true);
             if(Debug.debugMode)
                 db.printDatabase();
         } catch (ParseException pe) { pe.printStackTrace(); }
@@ -68,7 +70,7 @@ public class GUIFunctions {
         Game game = new Game(home, away, division, round, year, main, ar1, ar2);
         game.gameFees(false);
         game.payReferee(false, null);
-        db.insertGame(game);
+        SysCreator.getInstance().Game(game, true);
         if(Debug.debugMode)
             db.printDatabase();
     }
@@ -95,7 +97,7 @@ public class GUIFunctions {
         division.setMainRefereeFee(mainFee);
         division.setArFee(arFee);
         for(Game g : Game.gameList) if(g.getDivision().getDivisionId() == division.getDivisionId()) g.gameFees(false);
-        if(!db.updateDivision(division))
+        if(!SysCreator.getInstance().Division(division, false))
             displayError(e);
         if(Debug.debugMode)
             db.printDatabase();

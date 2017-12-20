@@ -1,9 +1,13 @@
 package nefra.referee;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Referee class to hold all the information required of a
@@ -12,9 +16,9 @@ import java.util.ArrayList;
  * @version 1.0
  * @since 1.0
  */
-public class Referee {
-    public static ArrayList<Referee> refereeList = new ArrayList<>();
-    private int referee_id;
+public class Referee implements Serializable {
+    public static final ObservableList<Referee> refereeList = FXCollections.observableArrayList();
+    private UUID referee_id;
     private String firstName;
     private String lastName;
     private String email;
@@ -33,7 +37,7 @@ public class Referee {
      * @param weeklyFee The total current weeks fee to be paid to the referee
      * @since 1.0
      */
-    public Referee(int referee_id, String firstName, String lastName,
+    public Referee(UUID referee_id, String firstName, String lastName,
                    String email, String phone, double weeklyFee, double totalFee) {
         this.referee_id = referee_id;
         this.firstName = firstName;
@@ -65,9 +69,9 @@ public class Referee {
      * Used for the dollar amount for the fees.
      * @since 1.0
      */
-    private DecimalFormat df = new DecimalFormat("0.00");
+    private final DecimalFormat df = new DecimalFormat("0.00");
 
-    public int getRefereeId() { return referee_id; }
+    public UUID getRefereeId() { return referee_id; }
 
     public String getFirstName() { return firstName; }
 
@@ -83,7 +87,7 @@ public class Referee {
 
     public double getTotalFee() { return totalFee; }
 
-    public void setReferee_id(int referee_id) { this.referee_id = referee_id; }
+    public void setReferee_id(UUID referee_id) { this.referee_id = referee_id; }
 
     public void setFirstName(String firstName) { this.firstName = firstName; }
 
@@ -113,7 +117,7 @@ public class Referee {
     void delete()
     {
         refereeList.remove(this);
-        referee_id = 0;
+        referee_id = null;
         firstName =  lastName =  email =  phone = null;
         weeklyFee = totalFee = 0;
     }
@@ -132,7 +136,8 @@ public class Referee {
 
     @Override
     public int hashCode() {
-        int result = referee_id;
+        Random r = new Random();
+        int result = r.nextInt();
         result = 31 * result + firstName.hashCode();
         result = 31 * result + lastName.hashCode();
         return result;

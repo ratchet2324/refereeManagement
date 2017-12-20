@@ -1,9 +1,6 @@
 package nefra.jfx.club;
 
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -12,14 +9,15 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.util.Callback;
 import nefra.club.Club;
 import nefra.club.GUIFunctions;
 import nefra.jfx.CommonGUI;
 
+import java.util.UUID;
+
 public class ViewClubGUI {
     private GUIFunctions guif = new GUIFunctions();
-    private TableView<Club> table = new TableView<>();
+    private final TableView<Club> table = new TableView<>();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
@@ -85,7 +83,7 @@ public class ViewClubGUI {
     private void setupTable()
     {
         table.setEditable(false);
-        final TableColumn<Club, Integer> idCol = new TableColumn<>("ID");
+        final TableColumn<Club, UUID> idCol = new TableColumn<>("ID");
         idCol.setMinWidth(40);
         idCol.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getClubId()));
 
