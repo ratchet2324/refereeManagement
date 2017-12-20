@@ -1,5 +1,9 @@
 # Football (Soccer) Referee Management System
 
+---
+Current Build Status: [![Build Status](https://travis-ci.org/ratchet2324/refereeManagement.svg?branch=master)](https://travis-ci.org/ratchet2324/refereeManagement)
+
+---
 This program is designed to be easily extendable and implement an easy to use GUI for organising and paying referees.
 
 Currently it has a basic startup interface but no functionality, as I am still writing the code for it. It is all in Java and JavaFX using gradle as the build system.
