@@ -2,10 +2,7 @@ package nefra.jfx;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import nefra.jfx.club.CreateClubGUI;
 import nefra.jfx.club.EditClubGUI;
@@ -17,7 +14,9 @@ import nefra.jfx.referee.EditRefereeGUI;
 import nefra.jfx.referee.ViewRefereeGUI;
 import nefra.misc.Debug;
 
+import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * A simple class to hold all the common GUI components such as the menu, back button functionality
@@ -216,5 +215,32 @@ public class CommonGUI {
             Main.getInstance().changeScene(new Scene(mm.initGUI()));
             panes.remove(panes.size() - 1);
         }
+    }
+
+    /**
+     * Ask if user wants to continue entering data
+     * @param event action event to make it available on the GUI
+     * @param object the calling name, such as referee or game, used in text field.
+     * @since 1.0
+     * @return code to indicate response (Yes/No) or an error
+     */
+    public int multipleEntry(ActionEvent event,String object)
+    {
+        event.consume();
+        Alert entry = new Alert(Alert.AlertType.CONFIRMATION);
+        entry.setTitle(null);
+        entry.setHeaderText(null);
+        entry.setGraphic(null);
+        entry.setContentText(String.format("Do you wish to another %s?", object));
+
+        ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.NO);
+        entry.getDialogPane().getButtonTypes().clear();
+        entry.getDialogPane().getButtonTypes().addAll(yes, no);
+
+        Optional<ButtonType> result = entry.showAndWait();
+        if (result.isPresent() && result.get() == yes) return 1;
+        else if (result.isPresent() && result.get() == no) return 0;
+        else return -240;
     }
 }

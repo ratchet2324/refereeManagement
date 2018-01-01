@@ -10,7 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
-import nefra.game.GUIFunctions;
+import nefra.db.GUIFunctions;
 import nefra.game.Game;
 import nefra.jfx.CommonGUI;
 

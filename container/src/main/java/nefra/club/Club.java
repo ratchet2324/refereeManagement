@@ -153,7 +153,7 @@ public class Club implements Serializable {
         totalFee = 0;
     }
 
-    void delete()
+    public void delete()
     {
         clubList.remove(this);
         club_id = null;

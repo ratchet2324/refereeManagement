@@ -114,7 +114,7 @@ public class Referee implements Serializable {
      */
     public void resetTotalFee() { totalFee = 0; }
 
-    void delete()
+    public void delete()
     {
         refereeList.remove(this);
         referee_id = null;

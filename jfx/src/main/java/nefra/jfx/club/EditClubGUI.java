@@ -7,7 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import nefra.club.Club;
-import nefra.club.GUIFunctions;
+import nefra.db.GUIFunctions;
 import nefra.jfx.CommonGUI;
 
 public class EditClubGUI {

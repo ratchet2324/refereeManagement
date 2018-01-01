@@ -7,9 +7,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import nefra.db.GUIFunctions;
+import nefra.exceptions.CannotCreateException;
 import nefra.exceptions.DelLog;
 import nefra.jfx.CommonGUI;
-import nefra.club.GUIFunctions;
+import nefra.misc.Debug;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -51,20 +53,40 @@ public class CreateClubGUI {
          */
         //TODO: CLEAR TEXT BOXES (DEFAULT)
         enterButton.setOnAction(e -> {
-            DelLog.getInstance().Log("CN: "+ clubName.getText());
-            DelLog.getInstance().Log("AD: "+ street.getText());
-            DelLog.getInstance().Log("SU: "+ suburb.getText());
-            DelLog.getInstance().Log("ST: "+ state.getText());
-            DelLog.getInstance().Log("PC: "+ postcode.getText());
-            DelLog.getInstance().Log("PN: "+ presidentName.getText());
-            DelLog.getInstance().Log("PC: "+ presidentContact.getText());
+            if(Debug.debugMode) {
+                DelLog.getInstance().Log("CN: " + clubName.getText());
+                DelLog.getInstance().Log("AD: " + street.getText());
+                DelLog.getInstance().Log("SU: " + suburb.getText());
+                DelLog.getInstance().Log("ST: " + state.getText());
+                DelLog.getInstance().Log("PC: " + postcode.getText());
+                DelLog.getInstance().Log("PN: " + presidentName.getText());
+                DelLog.getInstance().Log("PC: " + presidentContact.getText());
+            }
 
             if(isEmpty(clubName.getText()))
-                guif.displayError(e);
+                guif.displayErrorClub(e);
             else
             {
-                guif.makeClub(e, clubName.getText(), street.getText(), suburb.getText(), state.getText(),
-                        postcode.getText(), presidentName.getText(), presidentContact.getText());
+                if(guif.makeClub(e, clubName.getText(), street.getText(), suburb.getText(), state.getText(),
+                        postcode.getText(), presidentName.getText(), presidentContact.getText()))
+                {
+                    int code = CommonGUI.getInstance().multipleEntry(e, "club");
+                    if(code == 1)
+                    {
+                        clubName.clear();
+                        street.clear();
+                        suburb.clear();
+                        state.clear();
+                        postcode.clear();
+                        presidentName.clear();
+                        presidentContact.clear();
+                    }
+                    else if (code == 0) CommonGUI.getInstance().back(e);
+                    else if (code == -240)
+                    {
+                        DelLog.getInstance().Log(new CannotCreateException("Popup error for create club"));
+                    }
+                }
             }
         });
 

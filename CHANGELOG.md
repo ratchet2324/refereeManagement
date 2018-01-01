@@ -1,6 +1,52 @@
 ChangeLog
 =========
 
+**Version 0.5.10**
+
++ Removed the extra GUIFunctions classes and put them into a single file inside ``nefra.db``
+
+**Version 0.5.9**
+
++ Reverted previous version due to program breaking bugs. Currently back at Logging entry when in DebugMode.
+
+**Version 0.5.8**
+
++ Started adding error checking and input checking when creating Referees, Clubs, Games and Divisions.
+
+**Version 0.5.7**
+
++ Fixed bugs relating to file permission errors and file naming errors when building due to ``gradle build`` 
+version number incrementation
+
+**Version 0.5.6**
+
++ Implemented boolean functions to increment version numbers (Major, Minor, Micro, Build Number)
+only when necessary by switching ``false`` to ``true`` and visa-versa. Will be more efficient in later
+versions of program, not during initial development.
+
+**Version 0.5.5**
+
++ Added ``version.properties`` to work with the gradle auto-increment and reworked the
+``build.gradle`` file accordingly to make it viable. Allows editing if versioning gets out of hand.
+
+**Version 0.5.4**
+
++ Added exit codes to identify errors easier, needs further implementing around various functions.
+
+**Version 0.5.3**
+
++ Fixed a couple of bugs relating to the previous update
+
+**Version 0.5.2**
+
++ Reworked the make functions in the GUIFunctions classes to make them return a boolean
+to check for errors.
+
+**Version 0.5.1**
+
++ Added popups for multiple data entry on creation interface
++ Created auto-increment script for ``gradle build`` using ``Date.now()``
+
 **Version 0.5.0**
 
 + Major rewrite of how the program handles saving and loading data

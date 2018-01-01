@@ -8,10 +8,11 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import nefra.db.GUIFunctions;
+import nefra.exceptions.CannotCreateException;
 import nefra.exceptions.DelLog;
 import nefra.jfx.CommonGUI;
 import nefra.misc.Debug;
-import nefra.referee.GUIFunctions;
 
 public class CreateRefereeGUI {
     private final GUIFunctions guif = new GUIFunctions();
@@ -48,7 +49,23 @@ public class CreateRefereeGUI {
                         "LN: "+ lastName.getText() + "\n" +
                         "EM: "+ email.getText() + "\n" +
                         "PH: "+ phone.getText());
-            guif.makeReferee(e, firstName.getText(), lastName.getText(), email.getText(), phone.getText());
+            if(guif.makeReferee(e, firstName.getText(), lastName.getText(), email.getText(), phone.getText()))
+            {
+                int code = CommonGUI.getInstance().multipleEntry(e,"referee");
+                if(code == 1)
+                {
+                    firstName.clear();
+                    lastName.clear();
+                    email.clear();
+                    phone.clear();
+                }
+                else if (code == 0) CommonGUI.getInstance().back(e);
+                else if (code == -240)
+                {
+                    DelLog.getInstance().Log(new CannotCreateException("Popup error for create referee"));
+                }
+            }
+
         });
 
         firstNameLabel.setStyle("-fx-font-weight: bold;" +

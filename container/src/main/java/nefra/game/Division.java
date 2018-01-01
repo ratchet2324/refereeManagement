@@ -67,7 +67,7 @@ public class Division implements Serializable {
 
     public void setArFee(double arFee) { this.arFee = arFee; }
 
-    void delete()
+    public void delete()
     {
         divisionList.remove(this);
         division_id = null;

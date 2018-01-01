@@ -9,8 +9,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import nefra.db.GUIFunctions;
 import nefra.jfx.CommonGUI;
-import nefra.referee.GUIFunctions;
 import nefra.referee.Referee;
 
 import java.util.UUID;
