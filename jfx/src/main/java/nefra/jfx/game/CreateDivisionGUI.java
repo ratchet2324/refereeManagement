@@ -8,9 +8,11 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import nefra.db.GUIFunctions;
+import nefra.exceptions.CannotCreateException;
 import nefra.exceptions.DelLog;
-import nefra.game.GUIFunctions;
 import nefra.jfx.CommonGUI;
+import nefra.misc.Debug;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -43,14 +45,30 @@ public class CreateDivisionGUI {
          */
         //TODO: CLEAR TEXT BOXES (DEFAULT)
         enterButton.setOnAction(e -> {
-            DelLog.getInstance().Log("DN: "+ divisionName.getText());
-            DelLog.getInstance().Log("MF: "+ mainRefFee.getText());
-            DelLog.getInstance().Log("AR: "+ arFee.getText());
+            if (Debug.debugMode) {
+                DelLog.getInstance().Log("DN: " + divisionName.getText());
+                DelLog.getInstance().Log("MF: " + mainRefFee.getText());
+                DelLog.getInstance().Log("AR: " + arFee.getText());
+            }
 
             if (isEmpty(divisionName.getText()) && isEmpty(mainRefFee.getText()) && isEmpty(arFee.getText()))
-                guif.displayError(e);
+                guif.displayErrorDivision(e);
             else
-                guif.makeDivision(e, divisionName.getText(), mainRefFee.getText(), arFee.getText());
+                if(guif.makeDivision(e, divisionName.getText(), mainRefFee.getText(), arFee.getText()))
+                {
+                    int code = CommonGUI.getInstance().multipleEntry(e,"division");
+                    if(code == 1)
+                    {
+                        divisionName.clear();
+                        mainRefFee.clear();
+                        arFee.clear();
+                    }
+                    else if (code == 0) CommonGUI.getInstance().back(e);
+                    else if (code == -240)
+                    {
+                        DelLog.getInstance().Log(new CannotCreateException("Popup error for create division"));
+                    }
+                }
         });
 
         divisionNameLabel.setStyle("-fx-font-weight: bold;" +

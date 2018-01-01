@@ -9,10 +9,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
 import nefra.club.Club;
+import nefra.db.GUIFunctions;
+import nefra.exceptions.CannotCreateException;
 import nefra.exceptions.DelLog;
 import nefra.game.Division;
-import nefra.game.GUIFunctions;
 import nefra.jfx.CommonGUI;
+import nefra.misc.Debug;
 import nefra.referee.Referee;
 
 import java.util.Calendar;
@@ -29,16 +31,6 @@ public class CreateGameGUI {
     public BorderPane initGUI() {
         //Top
         MenuBar menu = CommonGUI.getInstance().loadMenu();
-
-        /*
-        this.home = home;
-        this.away = away;
-        this.division = division;
-        this.round = round;
-        this.main = main;
-        this.ar1 = ar1;
-        this.ar2 = ar2;
-         */
 
         //Centre
         GridPane centre = new GridPane();
@@ -73,16 +65,39 @@ public class CreateGameGUI {
          */
         //TODO: CLEAR TEXT BOXES (DEFAULT)
         enterButton.setOnAction(e -> {
-            DelLog.getInstance().Log("HT: "+ homeTeam.getValue());
-            DelLog.getInstance().Log("AT: "+ awayTeam.getValue());
-            DelLog.getInstance().Log("DI: "+ division.getValue());
-            DelLog.getInstance().Log("RO: "+ round.getText());
-            DelLog.getInstance().Log("MR: "+ mainReferee.getValue());
-            DelLog.getInstance().Log("AR: "+ ar1Referee.getValue());
-            DelLog.getInstance().Log("AR: "+ ar2Referee.getValue());
-            guif.makeGame(e, homeTeam.getValue(), awayTeam.getValue(), division.getValue(),
+            if (Debug.debugMode) {
+                DelLog.getInstance().Log("HT: " + homeTeam.getValue());
+                DelLog.getInstance().Log("AT: " + awayTeam.getValue());
+                DelLog.getInstance().Log("DI: " + division.getValue());
+                DelLog.getInstance().Log("RO: " + round.getText());
+                DelLog.getInstance().Log("YR: " + year.getText());
+                DelLog.getInstance().Log("MR: " + mainReferee.getValue());
+                DelLog.getInstance().Log("AR: " + ar1Referee.getValue());
+                DelLog.getInstance().Log("AR: " + ar2Referee.getValue());
+            }
+            if(guif.makeGame(e, homeTeam.getValue(), awayTeam.getValue(), division.getValue(),
                     Integer.valueOf(round.getText()), Integer.valueOf(year.getText()), mainReferee.getValue(),
-                    ar1Referee.getValue(), ar2Referee.getValue());
+                    ar1Referee.getValue(), ar2Referee.getValue()))
+            {
+                int code = CommonGUI.getInstance().multipleEntry(e, "game");
+                if(code == 1)
+                {
+                    homeTeam.getSelectionModel().select(null);
+                    awayTeam.getSelectionModel().select(null);
+                    division.getSelectionModel().select(null);
+                    round.clear();
+                    year.clear();
+                    mainReferee.getSelectionModel().select(null);
+                    ar1Referee.getSelectionModel().select(null);
+                    ar2Referee.getSelectionModel().select(null);
+                }
+                else if (code == 0) CommonGUI.getInstance().back(e);
+                else if (code == -240)
+                {
+                    DelLog.getInstance().Log(new CannotCreateException("Popup error for create game"));
+                }
+            }
+
         });
 
         homeTeamLabel.setStyle("-fx-font-weight: bold;" +

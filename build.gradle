@@ -1,12 +1,17 @@
 apply plugin: 'application'
 apply plugin: 'java'
+apply plugin: 'groovy'
 
 mainClassName = "nefra.jfx.Main"
 
-def versionMajor = 0
-def versionMinor = 5
-def versionMicro = 0
-def versionBuild = 0
+versionNumbers.load()
+
+def versionMajor = versionNumbers.getMajor(false)
+def versionMinor = versionNumbers.getMinor(false)
+def versionMicro = versionNumbers.getMicro(false)
+def versionBuild = versionNumbers.getBuild()
+def versionString = "${versionMajor}.${versionMinor}.${versionMicro}_${versionBuild}"
+def projectName = "NEFRA"
 
 dependencies {
     compile project (":container")
@@ -26,7 +31,7 @@ allprojects {
         jcenter()
     }
 
-    version = "${versionMajor}-${versionMinor}-${versionMicro}-SNAPSHOT"
+    version = "${versionString}"
     ext {
     }
 }
@@ -50,7 +55,7 @@ subprojects {
     }
 
     build {
-        build.doFirst { clean }
+        doFirst { clean }
         file('./NEFRA Data').deleteDir()
     }
 }
@@ -63,8 +68,8 @@ jar {
                 'Main-Class': 'nefra.jfx.Main',
                 'Class-Path': configurations.compile.collect { it.getName() }.join(' ')
         )
-        baseName = "NEFRA"
-        version = "${versionMajor}.${versionMinor}.${versionMicro}.${versionBuild}"
+        baseName = "${projectName}"
+        version = "${versionString}"
 
     }
 }
@@ -78,18 +83,74 @@ task oneJar( type: Jar , dependsOn: mainProjects.collect{ it+":compileJava"}) {
                 'Main-Class': 'nefra.jfx.Main',
                 'Class-Path': configurations.compile.collect { it.getName() }.join(' ')
         )
-        baseName = "NEFRA"
-        version = "${versionMajor}.${versionMinor}.${versionMicro}.${versionBuild}"
+        baseName = "${projectName}"
+        version = "${versionString}"
     }
-    //from files(mainProjects.collect{ project(it).sourceSets.main.output })
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 
 build {
-    build.doFirst { clean }
+    doFirst { clean }
     file('/build/libs/NEFRA Data').deleteDir()
     file('/NEFRA Data').deleteDir()
     file('/src').deleteDir()
     build.finalizedBy(oneJar)
+}
+
+
+class versionNumbers
+{
+    static Properties props = new Properties()
+    static File versionFile = new File("version.properties")
+
+    versionNumbers()
+    {
+        load()
+        if(!props.containsKey("versionMajor")) getMajor(true)
+        if(!props.containsKey("versionMinor")) getMinor(true)
+        if(!props.containsKey("versionMicro")) getMicro(true)
+        if(!props.containsKey("versionMajor")) getBuild()
+    }
+
+    def static load() { props.load(versionFile.newDataInputStream())}
+
+    def static storeProps() { props.store(versionFile.newWriter(), null) }
+
+    static String getMajor(increment)
+    {
+        if(increment)
+        {
+            props.setProperty("versionMajor", (Integer.parseInt(props.getProperty("versionMajor", "-1")) + 1).toString())
+            storeProps()
+        }
+        return props.getProperty("versionMajor")
+    }
+
+    static String getMinor(increment)
+    {
+        if(increment)
+        {
+            props.setProperty("versionMinor", (Integer.parseInt(props.getProperty("versionMinor", "4")) + 1).toString())
+            storeProps()
+        }
+        return props.getProperty("versionMinor")
+    }
+
+    static String getMicro(increment)
+    {
+        if(increment)
+        {
+            props.setProperty("versionMicro", (Integer.parseInt(props.getProperty("versionMicro", "-1")) + 1).toString())
+            storeProps()
+        }
+        return props.getProperty("versionMicro")
+    }
+
+    static String getBuild()
+    {
+        props.setProperty("versionBuild", new Date().format("dd(MM.YY)_HHmmss").toString())
+        storeProps()
+        return props.getProperty("versionBuild")
+    }
 }

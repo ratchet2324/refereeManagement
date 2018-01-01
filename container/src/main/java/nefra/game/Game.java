@@ -204,7 +204,7 @@ public class Game implements Serializable {
         if(replacementMainReferee) { replacement.addToWeeklyFee(this.division.getMainRefereeFee()); }
     }
 
-    void delete()
+    public void delete()
     {
         gameList.remove(this);
         home = away = null;

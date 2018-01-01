@@ -36,6 +36,7 @@ public class Exit {
      *
      * @param e the event passed through
      * @since 1.0
+     * @return exit code to indicate successful shutdown or not.
      */
     public int exit(Event e) {
         int exitCode = 0;
