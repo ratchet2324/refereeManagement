@@ -39,6 +39,8 @@ public class Settings {
 
             if(!settingsPropertyFile.containsKey("InitialisationNeeded"))
                 writeSetting("InitialisationNeeded", "true");
+            if(!settingsPropertyFile.containsKey("FirstRun"))
+                writeSetting("FirstRun", "true");
         } catch (IOException IOE) {
             DelLog.getInstance().Log(IOE);
         }

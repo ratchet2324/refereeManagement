@@ -7,6 +7,7 @@ import nefra.game.Division;
 import nefra.game.Game;
 import nefra.referee.Referee;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -20,13 +21,7 @@ public class SysCreator {
 
     public static SysCreator getInstance() { return (instance == null) ? instance = new SysCreator() : instance; }
 
-
-    private SysCreator()
-    {
-       Setup();
-    }
-
-    private void Setup()
+    public void Setup()
     {
         try
         {
@@ -121,6 +116,32 @@ public class SysCreator {
             success = closeOutput(output);
         }
         return success;
+    }
+
+    public boolean Remove(String type, UUID id)
+    {
+        try {
+            String filename;
+            switch (type.toLowerCase()) {
+                case "referee":
+                    filename = String.format("%s%s%s", ref, id, refExt);
+                    break;
+                case "club":
+                    filename = String.format("%s%s%s", clu, id, cluExt);
+                    break;
+                case "division":
+                    filename = String.format("%s%s%s", div, id, divExt);
+                    break;
+                case "game":
+                    filename = String.format("%s%s%s", gam, id, gamExt);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Not a valid type!");
+            }
+            File file = new File(filename);
+            return file.delete();
+        } catch (IllegalArgumentException e) { DelLog.getInstance().Log(e); }
+        return false;
     }
 
     private boolean closeOutput(ObjectOutputStream output) {

@@ -20,7 +20,7 @@ public class CreateClubGUI {
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
-     * It uses the CommonGUI for the menus and also to allow the back button function.
+     * It uses the CommonGUI for the menus and also to allow the backToMainMenu button function.
      *
      * @return the root BorderPane
      */
@@ -30,6 +30,7 @@ public class CreateClubGUI {
 
         //Centre
         GridPane centre = new GridPane();
+        Label clubWarning = new Label("Club name is required.");
         Label clubNameLabel = new Label("Club Name: ");
         Label streetLabel = new Label("Address Line 1:");
         Label suburbLabel = new Label("Suburb: ");
@@ -51,7 +52,6 @@ public class CreateClubGUI {
         /*
          * Set the action for the enter button based on what information was entered into the fields.
          */
-        //TODO: CLEAR TEXT BOXES (DEFAULT)
         enterButton.setOnAction(e -> {
             if(Debug.debugMode) {
                 DelLog.getInstance().Log("CN: " + clubName.getText());
@@ -81,7 +81,7 @@ public class CreateClubGUI {
                         presidentName.clear();
                         presidentContact.clear();
                     }
-                    else if (code == 0) CommonGUI.getInstance().back(e);
+                    else if (code == 0) CommonGUI.getInstance().backToMainMenu(e);
                     else if (code == -240)
                     {
                         DelLog.getInstance().Log(new CannotCreateException("Popup error for create club"));
@@ -90,20 +90,23 @@ public class CreateClubGUI {
             }
         });
 
+        clubWarning.setStyle("-fx-font-weight: bold;" +
+                "-fx-text-fill: red;" +
+                "-fx-font-size: 16px;");
         clubNameLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
+                        "-fx-font-size: 16px;");
         streetLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
+                "-fx-font-size: 16px;");
         suburbLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
+                "-fx-font-size: 16px;");
         stateLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
+                "-fx-font-size: 16px;");
         postcodeLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
+                "-fx-font-size: 16px;");
         presidentNameLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
+                "-fx-font-size: 16px;");
         presidentContactLabel.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;");
+                "-fx-font-size: 16px;");
         enterButton.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 16px;");
 
@@ -124,36 +127,31 @@ public class CreateClubGUI {
 
 
         GridPane.setConstraints(createClubLabel, 5, 1, 4, 2);
-        GridPane.setConstraints(clubNameLabel, 2, 3, 2, 1);
-        GridPane.setConstraints(streetLabel, 2, 4, 2, 1);
-        GridPane.setConstraints(suburbLabel, 3, 5);
-        GridPane.setConstraints(stateLabel, 5, 5);
-        GridPane.setConstraints(postcodeLabel, 7, 5);
-        GridPane.setConstraints(presidentNameLabel, 2, 6, 2, 1);
-        GridPane.setConstraints(presidentContactLabel, 2, 7, 2, 1);
-        GridPane.setConstraints(clubName, 4, 3,2, 1);
-        GridPane.setConstraints(street, 4, 4, 2, 1);
-        GridPane.setConstraints(suburb, 4, 5);
-        GridPane.setConstraints(state, 6, 5);
-        GridPane.setConstraints(postcode, 8, 5);
-        GridPane.setConstraints(presidentName, 4, 6,2, 1);
-        GridPane.setConstraints(presidentContact, 4, 7, 2, 1);
-        GridPane.setConstraints(enterButton, 6, 8);
+        GridPane.setConstraints(clubWarning, 5, 3, 4, 1);
+        GridPane.setConstraints(clubNameLabel, 2, 4, 2, 1);
+        GridPane.setConstraints(streetLabel, 2, 5, 2, 1);
+        GridPane.setConstraints(suburbLabel, 3, 6);
+        GridPane.setConstraints(stateLabel, 5, 6);
+        GridPane.setConstraints(postcodeLabel, 7, 6);
+        GridPane.setConstraints(presidentNameLabel, 2, 7, 2, 1);
+        GridPane.setConstraints(presidentContactLabel, 2, 8, 2, 1);
+        GridPane.setConstraints(clubName, 4, 4,2, 1);
+        GridPane.setConstraints(street, 4, 5, 2, 1);
+        GridPane.setConstraints(suburb, 4, 6);
+        GridPane.setConstraints(state, 6, 6);
+        GridPane.setConstraints(postcode, 8, 6);
+        GridPane.setConstraints(presidentName, 4, 7,2, 1);
+        GridPane.setConstraints(presidentContact, 4, 8, 2, 1);
+        GridPane.setConstraints(enterButton, 6, 9);
 
         CommonGUI.getInstance().makeRowsAndCols(centre);
 
-        centre.getChildren().addAll(createClubLabel, clubNameLabel, streetLabel,
+        centre.getChildren().addAll(clubWarning, createClubLabel, clubNameLabel, streetLabel,
                 suburbLabel, stateLabel, postcodeLabel, presidentNameLabel, presidentContactLabel,
                 clubName, street, suburb, state, postcode, presidentName, presidentContact, enterButton);
 
-        //BackButton
-        Button backButton = new Button("Back");
-        backButton.setOnAction(e -> CommonGUI.getInstance().back(e));
-        backButton.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 16px;");
-
         //Container
-        BorderPane createClubs = new BorderPane(centre, menu, null, backButton, null);
+        BorderPane createClubs = new BorderPane(centre, menu, null, CommonGUI.getInstance().bottomBox(), null);
         createClubs.setPrefSize(640,480);
 
         CommonGUI.panes.add(createClubs);

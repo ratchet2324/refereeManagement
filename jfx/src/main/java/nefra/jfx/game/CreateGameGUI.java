@@ -19,12 +19,14 @@ import nefra.referee.Referee;
 
 import java.util.Calendar;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 public class CreateGameGUI {
     private final GUIFunctions guif = new GUIFunctions();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
-     * It uses the CommonGUI for the menus and also to allow the back button function.
+     * It uses the CommonGUI for the menus and also to allow the backToMainMenu button function.
      *
      * @return the root BorderPane
      */
@@ -34,6 +36,7 @@ public class CreateGameGUI {
 
         //Centre
         GridPane centre = new GridPane();
+        Label gameWarning = new Label("All fields are required");
         Label homeTeamLabel = new Label("Home: ");
         Label awayTeamLabel = new Label("Away: ");
         Label divisionLabel = new Label("Division: ");
@@ -75,31 +78,40 @@ public class CreateGameGUI {
                 DelLog.getInstance().Log("AR: " + ar1Referee.getValue());
                 DelLog.getInstance().Log("AR: " + ar2Referee.getValue());
             }
-            if(guif.makeGame(e, homeTeam.getValue(), awayTeam.getValue(), division.getValue(),
-                    Integer.valueOf(round.getText()), Integer.valueOf(year.getText()), mainReferee.getValue(),
-                    ar1Referee.getValue(), ar2Referee.getValue()))
+            if(homeTeam.getValue() == null || awayTeam.getValue() == null || division.getValue() == null ||
+                    isEmpty(round.getText()) || isEmpty(year.getText()) ||
+                    mainReferee.getValue() == null || ar1Referee.getValue() == null || ar2Referee.getValue() == null)
+                guif.displayErrorGame(e);
+            else
             {
-                int code = CommonGUI.getInstance().multipleEntry(e, "game");
-                if(code == 1)
+                if(guif.makeGame(e, homeTeam.getValue(), awayTeam.getValue(), division.getValue(),
+                        Integer.valueOf(round.getText()), Integer.valueOf(year.getText()), mainReferee.getValue(),
+                        ar1Referee.getValue(), ar2Referee.getValue()))
                 {
-                    homeTeam.getSelectionModel().select(null);
-                    awayTeam.getSelectionModel().select(null);
-                    division.getSelectionModel().select(null);
-                    round.clear();
-                    year.clear();
-                    mainReferee.getSelectionModel().select(null);
-                    ar1Referee.getSelectionModel().select(null);
-                    ar2Referee.getSelectionModel().select(null);
-                }
-                else if (code == 0) CommonGUI.getInstance().back(e);
-                else if (code == -240)
-                {
-                    DelLog.getInstance().Log(new CannotCreateException("Popup error for create game"));
+                    int code = CommonGUI.getInstance().multipleEntry(e, "game");
+                    if(code == 1)
+                    {
+                        homeTeam.getSelectionModel().select(null);
+                        awayTeam.getSelectionModel().select(null);
+                        division.getSelectionModel().select(null);
+                        round.clear();
+                        year.setText(String.format("%d", Calendar.getInstance().get(Calendar.YEAR)));
+                        mainReferee.getSelectionModel().select(null);
+                        ar1Referee.getSelectionModel().select(null);
+                        ar2Referee.getSelectionModel().select(null);
+                    }
+                    else if (code == 0) CommonGUI.getInstance().backToMainMenu(e);
+                    else if (code == -240)
+                    {
+                        DelLog.getInstance().Log(new CannotCreateException("Popup error for create game"));
+                    }
                 }
             }
-
         });
 
+        gameWarning.setStyle("-fx-font-weight: bold;" +
+                "-fx-text-fill: red;" +
+                "-fx-font-size: 20px;");
         homeTeamLabel.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 20px;");
         awayTeamLabel.setStyle("-fx-font-weight: bold;" +
@@ -136,39 +148,34 @@ public class CreateGameGUI {
 
 
         GridPane.setConstraints(createGameLabel, 5, 1, 4, 2);
-        GridPane.setConstraints(homeTeamLabel, 3, 3);
-        GridPane.setConstraints(awayTeamLabel,7 , 3);
-        GridPane.setConstraints(divisionLabel, 3, 4);
-        GridPane.setConstraints(roundLabel, 7, 4);
-        GridPane.setConstraints(yearLabel, 9, 4);
-        GridPane.setConstraints(mainRefereeLabel,4 , 6, 2, 1);
-        GridPane.setConstraints(ar1RefereeLabel, 3, 7);
-        GridPane.setConstraints(ar2RefereeLabel, 7, 7);
-        GridPane.setConstraints(homeTeam, 4, 3, 3, 1);
-        GridPane.setConstraints(awayTeam, 8, 3, 3, 1);
-        GridPane.setConstraints(division, 4, 4, 3, 1);
-        GridPane.setConstraints(round, 8, 4);
-        GridPane.setConstraints(year, 10, 4);
-        GridPane.setConstraints(mainReferee, 6, 6, 3, 1);
-        GridPane.setConstraints(ar1Referee, 4, 7, 3, 1);
-        GridPane.setConstraints(ar2Referee, 8, 7, 3, 1);
-        GridPane.setConstraints(enterButton, 9, 9);
+        GridPane.setConstraints(gameWarning, 5, 3, 4, 1);
+        GridPane.setConstraints(homeTeamLabel, 3,  4);
+        GridPane.setConstraints(awayTeamLabel,7 , 4);
+        GridPane.setConstraints(divisionLabel, 3, 5);
+        GridPane.setConstraints(roundLabel, 7, 5);
+        GridPane.setConstraints(yearLabel, 9, 5);
+        GridPane.setConstraints(mainRefereeLabel,4 , 7, 2, 1);
+        GridPane.setConstraints(ar1RefereeLabel, 3, 8);
+        GridPane.setConstraints(ar2RefereeLabel, 7, 8);
+        GridPane.setConstraints(homeTeam, 4, 4, 3, 1);
+        GridPane.setConstraints(awayTeam, 8, 4, 3, 1);
+        GridPane.setConstraints(division, 4, 5, 3, 1);
+        GridPane.setConstraints(round, 8, 5);
+        GridPane.setConstraints(year, 10, 5);
+        GridPane.setConstraints(mainReferee, 6, 7, 3, 1);
+        GridPane.setConstraints(ar1Referee, 4, 8, 3, 1);
+        GridPane.setConstraints(ar2Referee, 8, 8, 3, 1);
+        GridPane.setConstraints(enterButton, 9, 10);
 
         CommonGUI.getInstance().makeRowsAndCols(centre);
 
-        centre.getChildren().addAll(homeTeamLabel, awayTeamLabel, divisionLabel, roundLabel,
+        centre.getChildren().addAll(gameWarning, homeTeamLabel, awayTeamLabel, divisionLabel, roundLabel,
                 yearLabel, mainRefereeLabel, ar1RefereeLabel, ar2RefereeLabel,
                 homeTeam, awayTeam, division, round, year, mainReferee,
                 ar1Referee, ar2Referee, createGameLabel, enterButton);
 
-        //BackButton
-        Button backButton = new Button("Back");
-        backButton.setOnAction(e -> CommonGUI.getInstance().back(e));
-        backButton.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 16px;");
-
         //Container
-        BorderPane createGames = new BorderPane(centre, menu, null, backButton, null);
+        BorderPane createGames = new BorderPane(centre, menu, null, CommonGUI.getInstance().bottomBox(), null);
         createGames.setPrefSize(640,480);
 
         CommonGUI.panes.add(createGames);

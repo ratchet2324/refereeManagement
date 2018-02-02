@@ -5,6 +5,7 @@ import nefra.exceptions.DelLog;
 import nefra.game.Division;
 import nefra.game.Game;
 import nefra.referee.Referee;
+import nefra.settings.Settings;
 
 import java.io.*;
 
@@ -12,13 +13,14 @@ import static nefra.misc.Paths.*;
 
 public class SysLoader {
     private static SysLoader instance;
-    private boolean setup = false;
+    private boolean setup;
     private ObjectInputStream input;
 
     public static SysLoader getInstance() { return (instance == null) ? instance = new SysLoader() : instance; }
 
     private SysLoader()
     {
+        setup = Settings.getSetting("InitialisationNeeded").equals("true");
         if(!setup)
         {
             Setup();
@@ -40,7 +42,6 @@ public class SysLoader {
                 throw new FileNotFoundException("Cannot find Gam Directory");
             if (!divFile.exists())
                 throw new FileNotFoundException("Cannot find Div Directory");
-            setup = true;
         }
         catch(FileNotFoundException ex) { DelLog.getInstance().Log(ex); }
     }
@@ -50,11 +51,13 @@ public class SysLoader {
         try {
             File[] files = refFile.listFiles();
             assert files != null;
-            for (File file : files) {
-                input = new ObjectInputStream(new FileInputStream(file));
-                Referee t = (Referee) input.readObject();
-                Referee.refereeList.add(t);
-                input.close();
+            if(files != null) {
+                for (File file : files) {
+                    input = new ObjectInputStream(new FileInputStream(file));
+                    Referee t = (Referee) input.readObject();
+                    Referee.refereeList.add(t);
+                    input.close();
+                }
             }
         }
         catch(IOException | NullPointerException | ClassNotFoundException ex) {DelLog.getInstance().Log(ex); }

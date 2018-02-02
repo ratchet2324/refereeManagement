@@ -3,8 +3,11 @@ mainClassName = 'nefra.jfx.main'
 
 dependencies {
     compile project(":container")
+    compile project(":Updater")
+    compile 'javax.mail:mail:+'
 }
 
+//noinspection GroovyAssignabilityCheck
 task(runClient, dependsOn: "classes", type: JavaExec) {
     main = "nefra.jfx.Main"
     classpath = sourceSets.main.runtimeClasspath

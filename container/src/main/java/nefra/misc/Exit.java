@@ -5,7 +5,6 @@ import javafx.event.Event;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
-import nefra.db.DBConnect;
 import nefra.exceptions.DelLog;
 import nefra.exceptions.FailedToCloseException;
 import org.jetbrains.annotations.Contract;
@@ -54,7 +53,6 @@ public class Exit {
 
         Optional<ButtonType> result = exit.showAndWait();
         if (result.isPresent() && result.get() == yes) {
-            DBConnect.closeConnections();
             try {
                 if (!DelLog.getInstance().Close()) {
                     exitCode = 240;

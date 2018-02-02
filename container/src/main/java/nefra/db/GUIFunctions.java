@@ -2,18 +2,18 @@ package nefra.db;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import nefra.club.Club;
 import nefra.exceptions.DelLog;
 import nefra.game.Division;
 import nefra.game.Game;
-import nefra.misc.Debug;
 import nefra.referee.Referee;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
 
 public class GUIFunctions {
-    private DBFunctions db = new DBFunctions();
     private final DecimalFormat df = new DecimalFormat("0.00");
 
     /**
@@ -28,14 +28,12 @@ public class GUIFunctions {
      */
     public boolean makeReferee(ActionEvent e, String firstName, String lastName, String email, String phone) {
         e.consume();
-        Referee referee = new Referee(firstName, lastName, email, phone);
-        if (SysCreator.getInstance().Referee(referee, true))
-        {
-            if (Debug.debugMode)
-                db.printDatabase();
-            return true;
+        if(firstName.isEmpty() || lastName.isEmpty()) {
+            displayErrorReferee(e);
+            return false;
         }
-        return false;
+        Referee referee = new Referee(firstName, lastName, email, phone);
+        return (SysCreator.getInstance().Referee(referee, true));
     }
 
     /**
@@ -53,6 +51,10 @@ public class GUIFunctions {
                                  String email, String phone)
     {
         e.consume();
+        if(firstName.isEmpty() || lastName.isEmpty()) {
+            displayErrorReferee(e);
+            return false;
+        }
         for (Referee r : Referee.refereeList)
         {
             if(r.getRefereeId() == referee.getRefereeId())
@@ -67,16 +69,8 @@ public class GUIFunctions {
         referee.setLastName(lastName);
         referee.setEmail(email);
         referee.setPhone(phone);
-        if(SysCreator.getInstance().Referee(referee, false))
-        {
-            if (Debug.debugMode)
-                db.printDatabase();
-            return true;
-        }
-        else {
-            displayErrorReferee(e);
-            return false;
-        }
+
+        return (SysCreator.getInstance().Referee(referee, false));
     }
 
     /**
@@ -84,11 +78,10 @@ public class GUIFunctions {
      * @param e event passed from mouse click
      * @param referee the referee to remove
      */
-    //TODO: REMOVE REFERENCES ON GUI AND IN MEMORY
     public void removeReferee(ActionEvent e, Referee referee)
     {
-        if(db.removeReferee(referee.getRefereeId()))
-            db.loadDatabase();
+        e.consume();
+        if(SysCreator.getInstance().Remove("referee", referee.getRefereeId()))
         for (Referee r : Referee.refereeList) if(r.getRefereeId() == referee.getRefereeId()) r.delete();
     }
 
@@ -105,6 +98,7 @@ public class GUIFunctions {
         error.setContentText("Minimum required information is:\n" +
                 "First Name\n" +
                 "Last Name");
+        error.showAndWait();
     }
 
     /**
@@ -124,14 +118,13 @@ public class GUIFunctions {
                             String suburb, String state, String postcode,
                             String presidentName, String presidentContact) {
         e.consume();
-        Club club = new Club(clubName, street, suburb, state, postcode, presidentName, presidentContact);
-        if(SysCreator.getInstance().Club(club, true))
+        if(clubName.isEmpty())
         {
-            if(Debug.debugMode)
-                db.printDatabase();
-            return true;
+            displayErrorClub(e);
+            return false;
         }
-        return false;
+        Club club = new Club(clubName, street, suburb, state, postcode, presidentName, presidentContact);
+        return (SysCreator.getInstance().Club(club, true));
     }
 
     /**
@@ -152,6 +145,11 @@ public class GUIFunctions {
                               String suburb, String state, String postcode,
                               String presidentName, String presidentContact) {
         e.consume();
+        if(clubName.isEmpty())
+        {
+            displayErrorClub(e);
+            return false;
+        }
         for (Club c : Club.clubList) {
             if(c.getClubId() == club.getClubId())
             {
@@ -171,17 +169,7 @@ public class GUIFunctions {
         club.setPostcode(postcode);
         club.setPresidentName(presidentName);
         club.setPresidentContact(presidentContact);
-        if(SysCreator.getInstance().Club(club, false))
-        {
-            if (Debug.debugMode)
-                db.printDatabase();
-            return true;
-        }
-        else
-        {
-            displayErrorClub(e);
-            return false;
-        }
+        return (SysCreator.getInstance().Club(club, false));
     }
 
     /**
@@ -189,12 +177,25 @@ public class GUIFunctions {
      * @param e event passed from mouse click
      * @param club the club to remove
      */
-    //TODO: REMOVE REFERENCES ON GUI AND IN MEMORY
     public void removeClub(ActionEvent e, Club club)
     {
-        if(db.removeClub(club.getClubId()))
-            db.loadDatabase();
-        for (Club c : Club.clubList) if(c.getClubId() == club.getClubId()) c.delete();
+        int errorCode = 0;
+        for(Game g : Game.gameList)
+        {
+            if(club.getClubId() == g.getHome().getClubId() || club.getClubId() == g.getAway().getClubId())
+            {
+                errorCode = 1;
+                Alert error = new Alert(Alert.AlertType.ERROR);
+                error.setTitle("Cannot Remove!");
+                error.setContentText("Unable to remove club due to being in a game.");
+            }
+        }
+
+        if(errorCode != 0)
+        {
+            if(SysCreator.getInstance().Remove("club", club.getClubId()))
+                for (Club c : Club.clubList) if(c.getClubId() == club.getClubId()) c.delete();
+        }
         e.consume();
     }
 
@@ -225,25 +226,19 @@ public class GUIFunctions {
     public Boolean makeDivision(ActionEvent e, String divisionName, String mainRefFee, String arFee)
     {
         e.consume();
+        if(divisionName.isEmpty() || mainRefFee.isEmpty() || arFee.isEmpty())
+        {
+            displayErrorDivision(e);
+            return false;
+        }
         try {
             double main = df.parse(mainRefFee).doubleValue();
             double ar = df.parse(arFee).doubleValue();
             df.format(main);
             df.format(ar);
-
-            if(Debug.debugMode)
-            {
-                DelLog.getInstance().Log("Main: " + main);
-                DelLog.getInstance().Log("AR: " + ar);
-            }
             Division division = new Division(divisionName, main, ar);
-            if(SysCreator.getInstance().Division(division, true))
-            {
-                if (Debug.debugMode)
-                    db.printDatabase();
-                return true;
-            }
-        } catch (ParseException pe) { pe.printStackTrace(); }
+            if(SysCreator.getInstance().Division(division, true)) return true;
+        } catch (ParseException pe) { DelLog.getInstance().Log(pe); }
         return false;
     }
 
@@ -265,16 +260,16 @@ public class GUIFunctions {
                             Referee ar1, Referee ar2)
     {
         e.consume();
+        if(home == null || away == null || division == null ||
+                round <=0 || year <= 0 || main == null || ar1 == null || ar2 == null)
+        {
+            displayErrorGame(e);
+            return false;
+        }
         Game game = new Game(home, away, division, round, year, main, ar1, ar2);
         game.gameFees(false);
         game.payReferee(false, null);
-        if(SysCreator.getInstance().Game(game, true))
-        {
-            if(Debug.debugMode)
-                db.printDatabase();
-            return true;
-        }
-        return false;
+        return SysCreator.getInstance().Game(game, true);
     }
 
     /**
@@ -290,6 +285,19 @@ public class GUIFunctions {
     public Boolean updateDivision(ActionEvent e, Division division, String divisionName, double mainFee, double arFee)
     {
         e.consume();
+        if(divisionName.isEmpty() || mainFee <= 0 || arFee <= 0)
+        {
+            displayErrorDivision(e);
+            return false;
+        }
+        for(Game x : Game.gameList) if(x.getDivision().getDivisionId() == division.getDivisionId()) {
+            x.getHome().addToWeeklyFee(-x.getHomeClubFee());
+            x.getAway().addToWeeklyFee(-x.getAwayClubFee());
+            x.getMain().addToWeeklyFee(-x.getDivision().getMainRefereeFee());
+            x.getAr1().addToWeeklyFee(-x.getDivision().getArFee());
+            x.getAr2().addToWeeklyFee(-x.getDivision().getArFee());
+        }
+
         for (Division d : Division.divisionList)
             if(d.getDivisionId() == division.getDivisionId()) {
                 d.setDivisionName(divisionName);
@@ -299,18 +307,12 @@ public class GUIFunctions {
         division.setDivisionName(divisionName);
         division.setMainRefereeFee(mainFee);
         division.setArFee(arFee);
-        for(Game g : Game.gameList) if(g.getDivision().getDivisionId() == division.getDivisionId()) g.gameFees(false);
-        if(SysCreator.getInstance().Division(division, false))
-        {
-            if(Debug.debugMode)
-                db.printDatabase();
-            return true;
+        for(Game g : Game.gameList) if(g.getDivision().getDivisionId() == division.getDivisionId()) {
+            g.gameFees(false);
+            g.payReferee(false, null);
         }
-        else
-        {
-            displayErrorDivision(e);
-            return false;
-        }
+
+        return SysCreator.getInstance().Division(division, false);
     }
 
     /**
@@ -318,11 +320,21 @@ public class GUIFunctions {
      * @param e event passed from mouse click
      * @param division the referee to remove
      */
-    //TODO: REMOVE REFERENCES ON GUI AND IN MEMORY
     public void removeDivision(ActionEvent e, Division division)
     {
-        if(db.removeDivision(division.getDivisionId()))
-            db.loadDatabase();
+        for(Game g : Game.gameList)
+        {
+            if(g.getDivision().getDivisionId() == division.getDivisionId())
+            {
+                g.getMain().addToWeeklyFee(-division.getMainRefereeFee());
+                g.getAr1().addToWeeklyFee(-division.getArFee());
+                g.getAr2().addToWeeklyFee(-division.getArFee());
+                g.getHome().addToWeeklyFee(-g.getHomeClubFee());
+                g.getAway().addToWeeklyFee(-g.getAwayClubFee());
+                g.setDivision(null);
+            }
+        }
+        if(SysCreator.getInstance().Remove("division", division.getDivisionId()))
         for (Division d : Division.divisionList) if(d.getDivisionId() == division.getDivisionId()) d.delete();
         e.consume();
     }
@@ -346,6 +358,19 @@ public class GUIFunctions {
                               Referee main, Referee ar1, Referee ar2)
     {
         e.consume();
+
+        if(game == null || home == null || away == null || division == null ||
+                round <=0 || year <= 0 || main == null || ar1 == null || ar2 == null)
+        {
+            displayErrorGame(e);
+            return false;
+        }
+
+        game.getMain().addToWeeklyFee(-division.getMainRefereeFee());
+        game.getAr1().addToWeeklyFee(-division.getArFee());
+        game.getAr2().addToWeeklyFee(-division.getArFee());
+        game.getHome().addToWeeklyFee(-game.getHomeClubFee());
+        game.getAway().addToWeeklyFee(-game.getAwayClubFee());
 
         for (Game g : Game.gameList)
         {
@@ -373,17 +398,7 @@ public class GUIFunctions {
         game.setAr2(ar2);
         game.gameFees(false);
         game.payReferee(false, null);
-        if(SysCreator.getInstance().Game(game, false))
-        {
-            if(Debug.debugMode)
-                db.printDatabase();
-            return true;
-        }
-        else
-        {
-            displayErrorGame(e);
-            return false;
-        }
+        return SysCreator.getInstance().Game(game, false);
     }
 
     /**
@@ -391,11 +406,15 @@ public class GUIFunctions {
      * @param e event passed from mouse click
      * @param game the game to remove
      */
-    //TODO: REMOVE REFERENCES ON GUI AND IN MEMORY
     public void removeGame(ActionEvent e, Game game)
     {
-        if(db.removeGame(game.getGameId()))
-            db.loadDatabase();
+        game.getMain().addToWeeklyFee(-game.getDivision().getMainRefereeFee());
+        game.getAr1().addToWeeklyFee(-game.getDivision().getArFee());
+        game.getAr2().addToWeeklyFee(-game.getDivision().getArFee());
+        game.getHome().addToWeeklyFee(-game.getHomeClubFee());
+        game.getAway().addToWeeklyFee(-game.getAwayClubFee());
+
+        if(SysCreator.getInstance().Remove("game", game.getGameId()))
         for (Game g : Game.gameList) if(g.getGameId() == game.getGameId()) g.delete();
         e.consume();
     }
@@ -437,5 +456,25 @@ public class GUIFunctions {
                 "Need Year!\n" +
                 "Need main referee!\n" +
                 "Need assistant referees!");
+    }
+
+    public Label viewWarning(String name)
+    {
+        Label label =  new Label(String.format("To remove a %s click on it, then click remove and confirm it.", name));
+        label.setStyle("-fx-font-weight: bold;" +
+                "-fx-text-fill: red;" +
+                "-fx-font-size: 20px;");
+        return label;
+    }
+
+    public int removeWarning(String name)
+    {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirmation");
+        confirm.setHeaderText(null);
+        confirm.setContentText(String.format("Are you sure you wish to remove %s?", name));
+        confirm.showAndWait();
+        if(confirm.getResult() == ButtonType.OK) return 1;
+        else return 0;
     }
 }

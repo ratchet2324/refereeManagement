@@ -15,7 +15,7 @@ public class EditClubGUI {
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
-     * It uses the CommonGUI for the menus and also to allow the back button function.
+     * It uses the CommonGUI for the menus and also to allow the backToMainMenu button function.
      *
      * @return the root BorderPane
      */
@@ -139,11 +139,13 @@ public class EditClubGUI {
          * Set the action for the enter button based on what information was entered into the fields.
          */
         updateButton.setOnAction(e -> {
-            guif.updateClub(e, club.getValue(), clubName.getText(), street.getText(), suburb.getText(),
-                    state.getText(), postcode.getText(), presidentName.getText(), presidentContact.getText());
-            club.getSelectionModel().select(null);
-            club.setItems(null);
-            club.setItems(Club.clubList);
+            if(guif.updateClub(e, club.getValue(), clubName.getText(), street.getText(), suburb.getText(),
+                    state.getText(), postcode.getText(), presidentName.getText(), presidentContact.getText()))
+            {
+                club.getSelectionModel().select(null);
+                club.setItems(null);
+                club.setItems(Club.clubList);
+            }
         });
 
         clearButton.setOnAction(e -> club.getSelectionModel().select(null));
@@ -213,14 +215,8 @@ public class EditClubGUI {
                 clubName, street, suburb, state, postcode, presidentName, presidentContact, clearButton,
                 updateButton, clubLabel, club);
 
-        //BackButton
-        Button backButton = new Button("Back");
-        backButton.setOnAction(e -> CommonGUI.getInstance().back(e));
-        backButton.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 16px;");
-
         //Container
-        BorderPane editClubs = new BorderPane(centre, menu, null, backButton, null);
+        BorderPane editClubs = new BorderPane(centre, menu, null, CommonGUI.getInstance().bottomBox(), null);
         editClubs.setPrefSize(640,480);
 
         CommonGUI.panes.add(editClubs);

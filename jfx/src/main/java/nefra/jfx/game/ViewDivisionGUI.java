@@ -1,6 +1,5 @@
 package nefra.jfx.game;
 
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -13,15 +12,13 @@ import nefra.db.GUIFunctions;
 import nefra.game.Division;
 import nefra.jfx.CommonGUI;
 
-import java.util.UUID;
-
 public class ViewDivisionGUI {
     private final GUIFunctions guif = new GUIFunctions();
     private final TableView<Division> table = new TableView<>();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
-     * It uses the CommonGUI for the menus and also to allow the back button function.
+     * It uses the CommonGUI for the menus and also to allow the backToMainMenu button function.
      *
      * @return the root BorderPane
      */
@@ -39,7 +36,10 @@ public class ViewDivisionGUI {
         /*
          * Set the action for the enter button based on what information was entered into the fields.
          */
-        removeButton.setOnAction(e -> guif.removeDivision(e, table.getSelectionModel().getSelectedItem()));
+        removeButton.setOnAction(e -> {
+            if(guif.removeWarning("division") == 1)
+                guif.removeDivision(e, table.getSelectionModel().getSelectedItem());
+        });
 
         removeButton.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 16px;");
@@ -61,14 +61,8 @@ public class ViewDivisionGUI {
 
         centre.getChildren().addAll(table, viewDivisionLabel,removeButton);
 
-        //BackButton
-        Button backButton = new Button("Back");
-        backButton.setOnAction(e -> CommonGUI.getInstance().back(e));
-        backButton.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 16px;");
-
         //Container
-        BorderPane viewDivisions = new BorderPane(centre, menu, null, backButton, null);
+        BorderPane viewDivisions = new BorderPane(centre, menu, null, CommonGUI.getInstance().bottomBox(), null);
         viewDivisions.setPrefSize(640,480);
 
         CommonGUI.panes.add(viewDivisions);
@@ -78,9 +72,6 @@ public class ViewDivisionGUI {
 
     private void setupTable() {
         table.setEditable(false);
-        final TableColumn<Division, UUID> idCol = new TableColumn<>("ID");
-        idCol.setMinWidth(40);
-        idCol.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getDivisionId()));
 
         final TableColumn<Division, String> nameCol = new TableColumn<>("Name");
         nameCol.setMinWidth(150);
@@ -98,7 +89,6 @@ public class ViewDivisionGUI {
 
         table.setPlaceholder(new Label("There are no divisions to display"));
         table.getColumns().clear();
-        table.getColumns().add(idCol);
         table.getColumns().add(nameCol);
         table.getColumns().add(mainCol);
         table.getColumns().add(arCol);

@@ -10,6 +10,7 @@
     src: url(Roboto-Italic.ttf);
 }
 
+/*noinspection ALL*/
 .internals {
     -fx-padding: 2px;
     -fx-background-color: transparent;
@@ -19,17 +20,20 @@
     -fx-font: bold 12px Roboto;
 }
 
+/*noinspection ALL*/
 .checkBox {
     -fx-font-size: 12px;
     -fx-font-family: Roboto;
     -fx-font-style: italic;
 }
 
+/*noinspection ALL*/
 .textField {
     -fx-font-size: 12px;
     -fx-font-family: Roboto;
 }
 
+/*noinspection ALL*/
 .choiceBox {
     -fx-font-size: 12px;
 }
@@ -40,6 +44,7 @@
     -fx-font-weight: bold;
 }
 
+/*noinspection ALL*/
 .other {
     -fx-font-size: 12px;
 }

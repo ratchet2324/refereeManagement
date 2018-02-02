@@ -1,19 +1,15 @@
 package nefra.jfx.club;
 
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import nefra.club.Club;
 import nefra.db.GUIFunctions;
 import nefra.jfx.CommonGUI;
-
-import java.util.UUID;
 
 public class ViewClubGUI {
     private GUIFunctions guif = new GUIFunctions();
@@ -21,7 +17,7 @@ public class ViewClubGUI {
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
-     * It uses the CommonGUI for the menus and also to allow the back button function.
+     * It uses the CommonGUI for the menus and also to allow the backToMainMenu button function.
      *
      * @return the root BorderPane
      */
@@ -32,47 +28,34 @@ public class ViewClubGUI {
         MenuBar menu = CommonGUI.getInstance().loadMenu();
 
         //Centre
-        GridPane centre = new GridPane();
+        VBox centre = new VBox();
         final Label viewClubLabel = new Label("VIEW CLUBS");
-        Button enterButton = new Button("Enter");
+        final Button removeButton = new Button("Remove");
 
-
-        /*
-         * Set the action for the enter button based on what information was entered into the fields.
-         */
-        enterButton.setOnAction(e -> {
-
+        removeButton.setOnAction(e -> {
+            if(guif.removeWarning("club") == 1)
+                guif.removeClub(e, table.getSelectionModel().getSelectedItem());
         });
 
 
-        enterButton.setStyle("-fx-font-weight: bold;" +
+        removeButton.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 16px;");
-
-        GridPane.setHalignment(viewClubLabel, HPos.CENTER);
-        GridPane.setValignment(viewClubLabel, VPos.CENTER);
 
         viewClubLabel.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 36px;");
 
-        GridPane.setConstraints(viewClubLabel, 5, 1, 4, 2);
-        GridPane.setConstraints(table, 5,3,8,5);
-        GridPane.setConstraints(enterButton, 6, 8);
+        table.setMaxSize(1000, 500);
 
         setupTable();
         table.setItems(club);
 
-        CommonGUI.getInstance().makeRowsAndCols(centre);
+        centre.setAlignment(Pos.TOP_CENTER);
+        centre.setSpacing(50);
 
-        centre.getChildren().addAll(viewClubLabel, table, enterButton);
-
-        //BackButton
-        Button backButton = new Button("Back");
-        backButton.setOnAction(e -> CommonGUI.getInstance().back(e));
-        backButton.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 16px;");
+        centre.getChildren().addAll(viewClubLabel, guif.viewWarning("club"), table, removeButton);
 
         //Container
-        BorderPane viewClubs = new BorderPane(centre, menu, null, backButton, null);
+        BorderPane viewClubs = new BorderPane(centre, menu, null, CommonGUI.getInstance().bottomBox(), null);
         viewClubs.setPrefSize(640,480);
 
         CommonGUI.panes.add(viewClubs);
@@ -83,9 +66,6 @@ public class ViewClubGUI {
     private void setupTable()
     {
         table.setEditable(false);
-        final TableColumn<Club, UUID> idCol = new TableColumn<>("ID");
-        idCol.setMinWidth(40);
-        idCol.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getClubId()));
 
         final TableColumn<Club, String> clubNameCol = new TableColumn<>("Club Name");
         clubNameCol.setMinWidth(100);
@@ -127,7 +107,6 @@ public class ViewClubGUI {
 
         table.setPlaceholder(new Label("There are no clubs to display"));
         table.getColumns().clear();
-        table.getColumns().add(idCol);
         table.getColumns().add(clubNameCol);
         table.getColumns().add(streetCol);
         table.getColumns().add(suburbCol);

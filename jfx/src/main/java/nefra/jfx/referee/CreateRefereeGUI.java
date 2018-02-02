@@ -19,7 +19,7 @@ public class CreateRefereeGUI {
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
-     * It uses the CommonGUI for the menus and also to allow the back button function.
+     * It uses the CommonGUI for the menus and also to allow the backToMainMenu button function.
      *
      * @return the root BorderPane
      */
@@ -29,6 +29,7 @@ public class CreateRefereeGUI {
 
         //Centre
         GridPane centre = new GridPane();
+        Label refereeWarning = new Label("First & Last name required");
         Label firstNameLabel = new Label("First Name: ");
         Label lastNameLabel = new Label("Last Name: ");
         Label emailLabel = new Label("Email: ");
@@ -44,30 +45,34 @@ public class CreateRefereeGUI {
          * Set the action for the enter button based on what information was entered into the fields.
          */
         enterButton.setOnAction(e -> {
-            if(Debug.debugMode)
-                DelLog.getInstance().Log("FN: "+ firstName.getText() + "\n" +
-                        "LN: "+ lastName.getText() + "\n" +
-                        "EM: "+ email.getText() + "\n" +
-                        "PH: "+ phone.getText());
-            if(guif.makeReferee(e, firstName.getText(), lastName.getText(), email.getText(), phone.getText()))
+            if(firstName.getText().isEmpty() || lastName.getText().isEmpty())
+                guif.displayErrorReferee(e);
+            else
             {
-                int code = CommonGUI.getInstance().multipleEntry(e,"referee");
-                if(code == 1)
-                {
-                    firstName.clear();
-                    lastName.clear();
-                    email.clear();
-                    phone.clear();
-                }
-                else if (code == 0) CommonGUI.getInstance().back(e);
-                else if (code == -240)
-                {
-                    DelLog.getInstance().Log(new CannotCreateException("Popup error for create referee"));
+                if (Debug.debugMode)
+                    DelLog.getInstance().Log("FN: " + firstName.getText() + "\n" +
+                            "LN: " + lastName.getText() + "\n" +
+                            "EM: " + email.getText() + "\n" +
+                            "PH: " + phone.getText());
+
+                if (guif.makeReferee(e, firstName.getText(), lastName.getText(), email.getText(), phone.getText())) {
+                    int code = CommonGUI.getInstance().multipleEntry(e, "referee");
+                    if (code == 1) {
+                        firstName.clear();
+                        lastName.clear();
+                        email.clear();
+                        phone.clear();
+                    } else if (code == 0) CommonGUI.getInstance().backToMainMenu(e);
+                    else if (code == -240) {
+                        DelLog.getInstance().Log(new CannotCreateException("Popup error for create referee"));
+                    }
                 }
             }
-
         });
 
+        refereeWarning.setStyle("-fx-font-weight: bold;" +
+                "-fx-text-fill: red;" +
+                "-fx-font-size: 20px;");
         firstNameLabel.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 20px;");
         lastNameLabel.setStyle("-fx-font-weight: bold;" +
@@ -90,30 +95,25 @@ public class CreateRefereeGUI {
 
 
         GridPane.setConstraints(createRefereeLabel, 5, 1, 4, 2);
-        GridPane.setConstraints(firstNameLabel, 4, 3, 2, 1);
-        GridPane.setConstraints(lastNameLabel, 4, 4, 2, 1);
-        GridPane.setConstraints(emailLabel, 5, 5);
-        GridPane.setConstraints(phoneLabel, 5, 6);
-        GridPane.setConstraints(firstName, 6, 3,2, 1);
-        GridPane.setConstraints(lastName, 6, 4, 2, 1);
-        GridPane.setConstraints(email, 6, 5,2, 1);
-        GridPane.setConstraints(phone, 6, 6, 2, 1);
-        GridPane.setConstraints(enterButton, 8, 7);
+        GridPane.setConstraints(refereeWarning, 5, 3, 4, 1);
+        GridPane.setConstraints(firstNameLabel, 4, 4, 2, 1);
+        GridPane.setConstraints(lastNameLabel, 4, 5, 2, 1);
+        GridPane.setConstraints(emailLabel, 5, 6);
+        GridPane.setConstraints(phoneLabel, 5, 7);
+        GridPane.setConstraints(firstName, 6, 4,2, 1);
+        GridPane.setConstraints(lastName, 6, 5, 2, 1);
+        GridPane.setConstraints(email, 6, 6,2, 1);
+        GridPane.setConstraints(phone, 6, 7, 2, 1);
+        GridPane.setConstraints(enterButton, 8, 8);
 
         CommonGUI.getInstance().makeRowsAndCols(centre);
 
-        centre.getChildren().addAll(firstName, firstNameLabel,
+        centre.getChildren().addAll(refereeWarning, firstName, firstNameLabel,
                 lastNameLabel, lastName, emailLabel, email,
                 phoneLabel, phone, createRefereeLabel, enterButton);
 
-        //BackButton
-        Button backButton = new Button("Back");
-        backButton.setOnAction(e -> CommonGUI.getInstance().back(e));
-        backButton.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 16px;");
-
         //Container
-        BorderPane createReferees = new BorderPane(centre, menu, null, backButton, null);
+        BorderPane createReferees = new BorderPane(centre, menu, null, CommonGUI.getInstance().bottomBox(), null);
         createReferees.setPrefSize(640,480);
 
         CommonGUI.panes.add(createReferees);

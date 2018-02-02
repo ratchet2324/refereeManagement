@@ -15,7 +15,7 @@ public class EditDivisionGUI {
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
-     * It uses the CommonGUI for the menus and also to allow the back button function.
+     * It uses the CommonGUI for the menus and also to allow the backToMainMenu button function.
      *
      * @return the root BorderPane
      */
@@ -90,11 +90,13 @@ public class EditDivisionGUI {
          * Set the action for the enter button based on what information was entered into the fields.
          */
         updateButton.setOnAction(e -> {
-            guif.updateDivision(e, divisions.getValue(), divisionName.getText(),
-                    Double.valueOf(mainRefFee.getText()), Double.valueOf(arFee.getText()));
-            divisions.getSelectionModel().select(null);
-            divisions.setItems(null);
-            divisions.setItems(Division.divisionList);
+            if(guif.updateDivision(e, divisions.getValue(), divisionName.getText(),
+                    Double.valueOf(mainRefFee.getText()), Double.valueOf(arFee.getText())))
+            {
+                divisions.getSelectionModel().select(null);
+                divisions.setItems(null);
+                divisions.setItems(Division.divisionList);
+            }
         });
 
         clearButton.setOnAction(e -> divisions.getSelectionModel().select(null));
@@ -139,14 +141,8 @@ public class EditDivisionGUI {
         centre.getChildren().addAll(divisionLabel, editDivisionLabel, divisionNameLabel, divisions, divisionName,
                 mainRefFeeLabel, mainRefFee, arFeeLabel, arFee, clearButton, updateButton);
 
-        //BackButton
-        Button backButton = new Button("Back");
-        backButton.setOnAction(e -> CommonGUI.getInstance().back(e));
-        backButton.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 16px;");
-
         //Container
-        BorderPane editDivisions = new BorderPane(centre, menu, null, backButton, null);
+        BorderPane editDivisions = new BorderPane(centre, menu, null, CommonGUI.getInstance().bottomBox(), null);
         editDivisions.setPrefSize(640,480);
 
         CommonGUI.panes.add(editDivisions);

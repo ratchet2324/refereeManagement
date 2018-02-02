@@ -146,4 +146,7 @@ public class DelLog {
 
         return success;
     }
+
+    public String getFileName() { return LogFile.getAbsolutePath(); }
+    public String getFolderPath() { return LogFile.getParentFile().getParentFile().getAbsolutePath(); }
 }

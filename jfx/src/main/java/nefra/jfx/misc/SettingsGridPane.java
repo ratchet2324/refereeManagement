@@ -9,6 +9,7 @@ import nefra.exceptions.DelLog;
 public class SettingsGridPane extends GridPane{
     public SettingsGridPane() {
         getStylesheets().add(getClass().getResource("/nefra/jfx/misc/SettingsGridPane.css").toExternalForm());
+        getStyleClass().clear();
         getStyleClass().add("internals");
     }
 
@@ -40,6 +41,7 @@ public class SettingsGridPane extends GridPane{
      */
     public void add(Label label, int columnIndex, int rowIndex)
     {
+        getStyleClass().clear();
         getStyleClass().add("label");
         super.add(label, columnIndex, rowIndex);
         update();
@@ -57,6 +59,7 @@ public class SettingsGridPane extends GridPane{
      */
     public void add(CheckBox checkBox, int columnIndex, int rowIndex)
     {
+        getStyleClass().clear();
         getStyleClass().add("checkBox");
         super.add(checkBox, columnIndex, rowIndex);
         update();
@@ -74,6 +77,7 @@ public class SettingsGridPane extends GridPane{
      */
     public void add(TextField textField, int columnIndex, int rowIndex)
     {
+        getStyleClass().clear();
         getStyleClass().add("textField");
         super.add(textField, columnIndex, rowIndex);
         update();
@@ -91,6 +95,7 @@ public class SettingsGridPane extends GridPane{
      */
     public void add(ChoiceBox choiceBox, int columnIndex, int rowIndex)
     {
+        getStyleClass().clear();
         getStyleClass().add("choiceBox");
         super.add(choiceBox, columnIndex, rowIndex);
         update();
@@ -108,7 +113,8 @@ public class SettingsGridPane extends GridPane{
      */
     public void add(Button button, int columnIndex, int rowIndex)
     {
-        getStyleClass().add("button");
+        getStyleClass().clear();
+        getStyleClass().add("buttonClass");
         super.add(button, columnIndex, rowIndex);
         update();
         DelLog.getInstance().Log(button.getFont().toString());
@@ -126,6 +132,7 @@ public class SettingsGridPane extends GridPane{
     @Override
     public void add(Node node, int columnIndex, int rowIndex)
     {
+        getStyleClass().clear();
         getStyleClass().add("other");
         super.add(node, columnIndex, rowIndex);
         update();
@@ -145,6 +152,7 @@ public class SettingsGridPane extends GridPane{
      */
     public void add(Label label, int columnIndex, int rowIndex, int colspan, int rowspan)
     {
+        getStyleClass().clear();
         getStyleClass().add("label");
         super.add(label, columnIndex, rowIndex, colspan, rowspan);
         update();
@@ -164,6 +172,7 @@ public class SettingsGridPane extends GridPane{
      */
     public void add(CheckBox checkBox, int columnIndex, int rowIndex, int colspan, int rowspan)
     {
+        getStyleClass().clear();
         getStyleClass().add("checkBox");
         super.add(checkBox, columnIndex, rowIndex, colspan, rowspan);
         update();
@@ -183,6 +192,7 @@ public class SettingsGridPane extends GridPane{
      */
     public void add(TextField textField, int columnIndex, int rowIndex, int colspan, int rowspan)
     {
+        getStyleClass().clear();
         getStyleClass().add("textField");
         super.add(textField, columnIndex, rowIndex, colspan, rowspan);
         update();
@@ -202,6 +212,7 @@ public class SettingsGridPane extends GridPane{
      */
     public void add(ChoiceBox choiceBox, int columnIndex, int rowIndex, int colspan, int rowspan)
     {
+        getStyleClass().clear();
         getStyleClass().add("choiceBox");
         super.add(choiceBox, columnIndex, rowIndex, colspan, rowspan);
         update();
@@ -221,7 +232,8 @@ public class SettingsGridPane extends GridPane{
      */
     public void add(Button button, int columnIndex, int rowIndex, int colspan, int rowspan)
     {
-        getStyleClass().add("button");
+        getStyleClass().clear();
+        getStyleClass().add("buttonClass");
         super.add(button, columnIndex, rowIndex, colspan, rowspan);
         update();
         DelLog.getInstance().Log(button.getFont().toString());
@@ -241,6 +253,7 @@ public class SettingsGridPane extends GridPane{
     @Override
     public void add(Node node, int columnIndex, int rowIndex, int colspan, int rowspan)
     {
+        getStyleClass().clear();
         getStyleClass().add("other");
         super.add(node, columnIndex, rowIndex, colspan, rowspan);
         update();

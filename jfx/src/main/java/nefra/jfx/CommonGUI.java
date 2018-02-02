@@ -8,25 +8,29 @@ import nefra.jfx.club.CreateClubGUI;
 import nefra.jfx.club.EditClubGUI;
 import nefra.jfx.club.ViewClubGUI;
 import nefra.jfx.game.*;
+import nefra.jfx.help.AboutGUI;
 import nefra.jfx.mainmenu.MainMenu;
+import nefra.jfx.help.HelpGUI;
 import nefra.jfx.referee.CreateRefereeGUI;
 import nefra.jfx.referee.EditRefereeGUI;
 import nefra.jfx.referee.ViewRefereeGUI;
 import nefra.misc.Debug;
+import nefra.settings.Settings;
 
-import javax.swing.*;
+import refereeUpdater.updater.SelfUpdate;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
 /**
- * A simple class to hold all the common GUI components such as the menu, back button functionality
- * and the array of scenes to track the scene to go back to.
+ * A simple class to hold all the common GUI components such as the menu, backToMainMenu button functionality
+ * and the array of scenes to track the scene to go backToMainMenu to.
  */
 public class CommonGUI {
 
     public static boolean singleSetting = false;
     /**
-     * Track scenes to allow changing back to the previous scene.
+     * Track scenes to allow changing backToMainMenu to the previous scene.
      */
     public static final ArrayList<BorderPane> panes = new ArrayList<>();
     /**
@@ -76,12 +80,12 @@ public class CommonGUI {
             Main.getInstance().changeScene(new Scene(edGUI.initGUI()));
         });
 
-        /*viewRef.setOnAction(e -> {
+        viewRef.setOnAction(e -> {
             e.consume();
             ViewRefereeGUI vGUI = new ViewRefereeGUI();
             panes.add(vGUI.initGUI());
             Main.getInstance().changeScene(new Scene(vGUI.initGUI()));
-        });*/
+        });
 
         Menu club = new Menu("Club");
         MenuItem newClub = new MenuItem("New Club");
@@ -103,12 +107,12 @@ public class CommonGUI {
             Main.getInstance().changeScene(new Scene(edGUI.initGUI()));
         });
 
-        /*viewClub.setOnAction(e -> {
+        viewClub.setOnAction(e -> {
             e.consume();
             ViewClubGUI vGUI = new ViewClubGUI();
             panes.add(vGUI.initGUI());
             Main.getInstance().changeScene(new Scene(vGUI.initGUI()));
-        });*/
+        });
 
         Menu game = new Menu("Game");
         MenuItem newGame = new MenuItem("New Game");
@@ -130,12 +134,12 @@ public class CommonGUI {
             Main.getInstance().changeScene(new Scene(edGUI.initGUI()));
         });
 
-        /*viewGame.setOnAction(e -> {
+        viewGame.setOnAction(e -> {
             e.consume();
             ViewGameGUI vGUI = new ViewGameGUI();
             panes.add(vGUI.initGUI());
             Main.getInstance().changeScene(new Scene(vGUI.initGUI()));
-        });*/
+        });
 
         Menu division = new Menu("Division");
         MenuItem newDivision = new MenuItem("New Division");
@@ -164,7 +168,34 @@ public class CommonGUI {
             Main.getInstance().changeScene(new Scene(vGUI.initGUI()));
         });
 
-        return new MenuBar(file, referee, club, game, division);
+        Menu support = new Menu("Support");
+        MenuItem help = new MenuItem("Help");
+        help.setOnAction(e -> {
+            e.consume();
+            HelpGUI h = new HelpGUI();
+            h.initGUI();
+        });
+        support.getItems().add(help);
+
+        MenuItem about = new MenuItem("About");
+        about.setOnAction(e -> {
+            e.consume();
+            AboutGUI a = new AboutGUI();
+            a.initGUI();
+        });
+        support.getItems().add(about);
+
+        if(Debug.debugMode)
+        {
+            MenuItem update = new MenuItem("Update");
+            update.setOnAction(e -> {
+                e.consume();
+                SelfUpdate.main(null);
+            });
+            support.getItems().add(update);
+        }
+
+        return new MenuBar(file, referee, club, division, game, support);
     }
 
     public void makeRowsAndCols(GridPane gp)
@@ -204,16 +235,32 @@ public class CommonGUI {
         }
     }
 
+    public HBox bottomBox()
+    {
+
+        //Back To Menu Button
+        Button backToMenuButton = new Button("Back To Main Menu");
+        backToMenuButton.setOnAction(e -> CommonGUI.getInstance().backToMainMenu(e));
+        backToMenuButton.setStyle("-fx-font-weight: bold;" +
+                "-fx-font-size: 16px;");
+
+
+        HBox box = new HBox(backToMenuButton);
+        box.setSpacing(50);
+        return box;
+    }
+
     /**
-     * functionality for the back button so it can be easily debugged and extended.
+     * functionality for the backToMainMenu button so it can be easily debugged and extended.
      * @param event the event
      */
-    public void back(ActionEvent event) {
+    public void backToMainMenu(ActionEvent event) {
         {
             MainMenu mm = new MainMenu();
             event.consume();
             Main.getInstance().changeScene(new Scene(mm.initGUI()));
-            panes.remove(panes.size() - 1);
+            if(Settings.getSetting("FirstRun").equals("false"))
+                Main.getInstance().Start();
         }
     }
 
@@ -231,7 +278,7 @@ public class CommonGUI {
         entry.setTitle(null);
         entry.setHeaderText(null);
         entry.setGraphic(null);
-        entry.setContentText(String.format("Do you wish to another %s?", object));
+        entry.setContentText(String.format("Do you wish to create another %s?", object));
 
         ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.YES);
         ButtonType no = new ButtonType("No", ButtonBar.ButtonData.NO);

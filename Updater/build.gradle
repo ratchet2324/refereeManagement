@@ -1,0 +1,95 @@
+versionNumbers.load()
+
+def versionMajor = versionNumbers.getMajor(false)
+def versionMinor = versionNumbers.getMinor(false)
+def versionMicro = versionNumbers.getMicro(false)
+def versionBuild = versionNumbers.getBuild()
+def versionString = "${versionMajor}.${versionMinor}.${versionMicro}_${versionBuild}"
+def projectName = "Referee Management Updater"
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+configurations {
+    // configuration that holds jars to include in the jar
+    extraLibs
+}
+
+dependencies {
+    extraLibs  "commons-io:commons-io:+"
+    configurations.compile.extendsFrom(configurations.extraLibs)
+}
+
+jar {
+    manifest {
+        attributes(
+                'Implementation-Title': 'Referee Management Updater',
+                'Implementation-Version': version,
+                'Main-Class': 'SelfUpdate',
+                'Class-Path': configurations.compile.collect { it.getName() }.join(' ')
+        )
+        baseName = "${projectName}"
+        version = "${versionString}"
+    }
+    from {
+        configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+class versionNumbers
+{
+    static Properties props = new Properties()
+    static File versionFile = new File("Updater/src/main/resources/version.properties")
+
+    versionNumbers()
+    {
+        load()
+        if(!props.containsKey("versionMajor")) getMajor(true)
+        if(!props.containsKey("versionMinor")) getMinor(true)
+        if(!props.containsKey("versionMicro")) getMicro(true)
+        if(!props.containsKey("versionMajor")) getBuild()
+    }
+
+    def static load() { props.load(versionFile.newDataInputStream())}
+
+    def static storeProps() { props.store(versionFile.newWriter(), null) }
+
+    static String getMajor(increment)
+    {
+        if(increment)
+        {
+            props.setProperty("versionMajor", (Integer.parseInt(props.getProperty("versionMajor", "-1")) + 1).toString())
+            storeProps()
+        }
+        return props.getProperty("versionMajor")
+    }
+
+    static String getMinor(increment)
+    {
+        if(increment)
+        {
+            props.setProperty("versionMinor", (Integer.parseInt(props.getProperty("versionMinor", "-1")) + 1).toString())
+            storeProps()
+        }
+        return props.getProperty("versionMinor")
+    }
+
+    static String getMicro(increment)
+    {
+        if(increment)
+        {
+            props.setProperty("versionMicro", (Integer.parseInt(props.getProperty("versionMicro", "-1")) + 1).toString())
+            storeProps()
+        }
+        return props.getProperty("versionMicro")
+    }
+
+    static String getBuild()
+    {
+        props.setProperty("versionBuild", new Date().format("dd(MM.YY)_HHmmss").toString())
+        storeProps()
+        return props.getProperty("versionBuild")
+    }
+}

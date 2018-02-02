@@ -11,7 +11,7 @@ def versionMinor = versionNumbers.getMinor(false)
 def versionMicro = versionNumbers.getMicro(false)
 def versionBuild = versionNumbers.getBuild()
 def versionString = "${versionMajor}.${versionMinor}.${versionMicro}_${versionBuild}"
-def projectName = "NEFRA"
+def projectName = "Referee Management"
 
 dependencies {
     compile project (":container")
@@ -63,7 +63,7 @@ subprojects {
 jar {
     manifest {
         attributes(
-                'Implementation-Title': 'NEFRA Referee Management',
+                'Implementation-Title': 'Referee Management',
                 'Implementation-Version': version,
                 'Main-Class': 'nefra.jfx.Main',
                 'Class-Path': configurations.compile.collect { it.getName() }.join(' ')
@@ -78,7 +78,7 @@ def mainProjects = [':container', ':jfx']
 task oneJar( type: Jar , dependsOn: mainProjects.collect{ it+":compileJava"}) {
     manifest {
         attributes(
-                'Implementation-Title': 'NEFRA Referee Management',
+                'Implementation-Title': 'Referee Management',
                 'Implementation-Version': version,
                 'Main-Class': 'nefra.jfx.Main',
                 'Class-Path': configurations.compile.collect { it.getName() }.join(' ')
@@ -102,7 +102,7 @@ build {
 class versionNumbers
 {
     static Properties props = new Properties()
-    static File versionFile = new File("version.properties")
+    static File versionFile = new File("Updater/src/main/resources/version.properties")
 
     versionNumbers()
     {
@@ -131,7 +131,7 @@ class versionNumbers
     {
         if(increment)
         {
-            props.setProperty("versionMinor", (Integer.parseInt(props.getProperty("versionMinor", "4")) + 1).toString())
+            props.setProperty("versionMinor", (Integer.parseInt(props.getProperty("versionMinor", "-1")) + 1).toString())
             storeProps()
         }
         return props.getProperty("versionMinor")

@@ -1,6 +1,5 @@
 package nefra.jfx.referee;
 
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -13,15 +12,13 @@ import nefra.db.GUIFunctions;
 import nefra.jfx.CommonGUI;
 import nefra.referee.Referee;
 
-import java.util.UUID;
-
 public class ViewRefereeGUI {
     private final GUIFunctions guif = new GUIFunctions();
     private final TableView<Referee> table = new TableView<>();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
-     * It uses the CommonGUI for the menus and also to allow the back button function.
+     * It uses the CommonGUI for the menus and also to allow the backToMainMenu button function.
      *
      * @return the root BorderPane
      */
@@ -39,7 +36,10 @@ public class ViewRefereeGUI {
         /*
          * Set the action for the enter button based on what information was entered into the fields.
          */
-        removeButton.setOnAction(e -> guif.removeReferee(e, table.getSelectionModel().getSelectedItem()));
+        removeButton.setOnAction(e -> {
+            if(guif.removeWarning("referee") == 1)
+                guif.removeReferee(e, table.getSelectionModel().getSelectedItem());
+        });
 
         removeButton.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 16px;");
@@ -61,14 +61,10 @@ public class ViewRefereeGUI {
 
         centre.getChildren().addAll(table, viewRefereeLabel, removeButton);
 
-        //BackButton
-        Button backButton = new Button("Back");
-        backButton.setOnAction(e -> CommonGUI.getInstance().back(e));
-        backButton.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 16px;");
+
 
         //Container
-        BorderPane viewReferees = new BorderPane(centre, menu, null, backButton, null);
+        BorderPane viewReferees = new BorderPane(centre, menu, null, CommonGUI.getInstance().bottomBox(), null);
         viewReferees.setPrefSize(640,480);
 
         CommonGUI.panes.add(viewReferees);
@@ -78,9 +74,6 @@ public class ViewRefereeGUI {
 
     private void setupTable() {
         table.setEditable(false);
-        final TableColumn<Referee, UUID> idCol = new TableColumn<>("ID");
-        idCol.setMinWidth(40);
-        idCol.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getRefereeId()));
 
         final TableColumn<Referee, String> nameCol = new TableColumn<>("Name");
         nameCol.setMinWidth(150);
@@ -106,7 +99,6 @@ public class ViewRefereeGUI {
 
         table.setPlaceholder(new Label("There are no referees to display"));
         table.getColumns().clear();
-        table.getColumns().add(idCol);
         table.getColumns().add(nameCol);
         table.getColumns().add(emailCol);
         table.getColumns().add(phoneCol);

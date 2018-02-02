@@ -21,7 +21,7 @@ public class CreateDivisionGUI {
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
-     * It uses the CommonGUI for the menus and also to allow the back button function.
+     * It uses the CommonGUI for the menus and also to allow the backToMainMenu button function.
      *
      * @return the root BorderPane
      */
@@ -32,6 +32,7 @@ public class CreateDivisionGUI {
         //Centre
         GridPane centre = new GridPane();
         Label divisionNameLabel = new Label("Division Name: ");
+        Label divisionWarning = new Label("All fields must be entered.");
         Label mainRefFeeLabel = new Label("Main Referee Fee: ");
         Label arFeeLabel = new Label("AR Fee: ");
         Label createDivisionLabel = new Label("CREATE DIVISION");
@@ -43,7 +44,6 @@ public class CreateDivisionGUI {
         /*
          * Set the action for the enter button based on what information was entered into the fields.
          */
-        //TODO: CLEAR TEXT BOXES (DEFAULT)
         enterButton.setOnAction(e -> {
             if (Debug.debugMode) {
                 DelLog.getInstance().Log("DN: " + divisionName.getText());
@@ -63,7 +63,7 @@ public class CreateDivisionGUI {
                         mainRefFee.clear();
                         arFee.clear();
                     }
-                    else if (code == 0) CommonGUI.getInstance().back(e);
+                    else if (code == 0) CommonGUI.getInstance().backToMainMenu(e);
                     else if (code == -240)
                     {
                         DelLog.getInstance().Log(new CannotCreateException("Popup error for create division"));
@@ -71,6 +71,9 @@ public class CreateDivisionGUI {
                 }
         });
 
+        divisionWarning.setStyle("-fx-font-weight: bold;" +
+                "-fx-text-fill: red;" +
+                "-fx-font-size: 20px;");
         divisionNameLabel.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 20px;");
         mainRefFeeLabel.setStyle("-fx-font-weight: bold;" +
@@ -90,27 +93,22 @@ public class CreateDivisionGUI {
 
 
         GridPane.setConstraints(createDivisionLabel, 5, 1, 4, 2);
-        GridPane.setConstraints(divisionNameLabel, 4, 3, 2, 1);
-        GridPane.setConstraints(mainRefFeeLabel, 4, 4, 2, 1);
-        GridPane.setConstraints(arFeeLabel, 4, 5, 2, 1);
-        GridPane.setConstraints(divisionName, 6, 3,2, 1);
-        GridPane.setConstraints(mainRefFee, 6, 4);
-        GridPane.setConstraints(arFee, 6, 5);
-        GridPane.setConstraints(enterButton, 8, 7);
+        GridPane.setConstraints(divisionWarning, 5, 3, 3, 1);
+        GridPane.setConstraints(divisionNameLabel, 4, 4, 2, 1);
+        GridPane.setConstraints(mainRefFeeLabel, 4, 5, 2, 1);
+        GridPane.setConstraints(arFeeLabel, 4, 6, 2, 1);
+        GridPane.setConstraints(divisionName, 6, 4,2, 1);
+        GridPane.setConstraints(mainRefFee, 6, 5);
+        GridPane.setConstraints(arFee, 6, 6);
+        GridPane.setConstraints(enterButton, 8, 8);
 
         CommonGUI.getInstance().makeRowsAndCols(centre);
 
-        centre.getChildren().addAll(createDivisionLabel, divisionNameLabel, divisionName,
+        centre.getChildren().addAll(createDivisionLabel, divisionWarning, divisionNameLabel, divisionName,
                 mainRefFeeLabel, mainRefFee, arFeeLabel, arFee, enterButton);
 
-        //BackButton
-        Button backButton = new Button("Back");
-        backButton.setOnAction(e -> CommonGUI.getInstance().back(e));
-        backButton.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 16px;");
-
         //Container
-        BorderPane createDivisions = new BorderPane(centre, menu, null, backButton, null);
+        BorderPane createDivisions = new BorderPane(centre, menu, null, CommonGUI.getInstance().bottomBox(), null);
         createDivisions.setPrefSize(640,480);
 
         CommonGUI.panes.add(createDivisions);

@@ -10,6 +10,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
 import nefra.club.Club;
 import nefra.db.GUIFunctions;
+import nefra.exceptions.CannotUpdateException;
+import nefra.exceptions.DelLog;
 import nefra.game.Division;
 import nefra.game.Game;
 import nefra.jfx.CommonGUI;
@@ -22,7 +24,7 @@ public class EditGameGUI {
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
-     * It uses the CommonGUI for the menus and also to allow the back button function.
+     * It uses the CommonGUI for the menus and also to allow the backToMainMenu button function.
      *
      * @return the root BorderPane
      */
@@ -164,9 +166,10 @@ public class EditGameGUI {
          * Set the action for the enter button based on what information was entered into the fields.
          */
         updateButton.setOnAction(e -> {
-            guif.updateGame(e, game.getValue(), homeTeam.getValue(), awayTeam.getValue(),
+            if(!guif.updateGame(e, game.getValue(), homeTeam.getValue(), awayTeam.getValue(),
                     division.getValue(), Integer.valueOf(round.getText()), Integer.valueOf(year.getText()),
-                    mainReferee.getValue(), ar1Referee.getValue(), ar2Referee.getValue());
+                    mainReferee.getValue(), ar1Referee.getValue(), ar2Referee.getValue()))
+                DelLog.getInstance().Log(new CannotUpdateException("Unable to update Game."));
             game.getSelectionModel().select(null);
             game.setItems(null);
             game.setItems(Game.gameList);
@@ -244,14 +247,8 @@ public class EditGameGUI {
                 ar1Referee, ar2Referee, editGameLabel, updateButton, clearButton,
                 game, gameLabel);
 
-        //BackButton
-        Button backButton = new Button("Back");
-        backButton.setOnAction(e -> CommonGUI.getInstance().back(e));
-        backButton.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 16px;");
-
         //Container
-        BorderPane editGames = new BorderPane(centre, menu, null, backButton, null);
+        BorderPane editGames = new BorderPane(centre, menu, null, CommonGUI.getInstance().bottomBox(), null);
         editGames.setPrefSize(640,480);
 
         CommonGUI.panes.add(editGames);

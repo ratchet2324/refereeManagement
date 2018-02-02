@@ -14,7 +14,7 @@ public class EditRefereeGUI {
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
-     * It uses the CommonGUI for the menus and also to allow the back button function.
+     * It uses the CommonGUI for the menus and also to allow the backToMainMenu button function.
      *
      * @return the root BorderPane
      */
@@ -96,10 +96,12 @@ public class EditRefereeGUI {
          * Set the action for the enter button based on what information was entered into the fields.
          */
         updateButton.setOnAction(e -> {
-            guif.updateReferee(e, referee.getValue(), firstName.getText(), lastName.getText(), email.getText(), phone.getText());
-            referee.getSelectionModel().select(null);
-            referee.setItems(null);
-            referee.setItems(Referee.refereeList);
+            if(guif.updateReferee(e, referee.getValue(), firstName.getText(), lastName.getText(), email.getText(), phone.getText()))
+            {
+                referee.getSelectionModel().select(null);
+                referee.setItems(null);
+                referee.setItems(Referee.refereeList);
+            }
         });
 
         clearButton.setOnAction(e -> referee.getSelectionModel().select(null));
@@ -151,14 +153,8 @@ public class EditRefereeGUI {
                 phoneLabel, phone, editRefereeLabel, updateButton,
                 clearButton, referee, refereeLabel);
 
-        //BackButton
-        Button backButton = new Button("Back");
-        backButton.setOnAction(e -> CommonGUI.getInstance().back(e));
-        backButton.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 16px;");
-
         //Container
-        BorderPane editReferees = new BorderPane(centre, menu, null, backButton, null);
+        BorderPane editReferees = new BorderPane(centre, menu, null, CommonGUI.getInstance().bottomBox(), null);
         editReferees.setPrefSize(640,480);
 
         CommonGUI.panes.add(editReferees);

@@ -9,11 +9,14 @@ import javafx.scene.layout.StackPane;
 public class BorderTitlePane extends StackPane{
     public BorderTitlePane(String titleString, Node module, double minWidth, double minHeight) {
         getStylesheets().add(getClass().getResource("/nefra/jfx/misc/BorderTitlePane.css").toExternalForm());
+        getStyleClass().clear();
         Label title = new Label(" " + titleString + " ");
+        title.getStyleClass().clear();
         title.getStyleClass().add("bordered-titled-title");
         StackPane.setAlignment(title, Pos.TOP_CENTER);
 
         StackPane modulePane = new StackPane();
+        module.getStyleClass().clear();
         module.getStyleClass().add("bordered-titled-content");
         modulePane.getChildren().add(module);
 
@@ -27,6 +30,7 @@ public class BorderTitlePane extends StackPane{
         getStylesheets().add(getClass().getResource("/nefra/jfx/misc/BorderTitlePane.css").toExternalForm());
 
         StackPane modulePane = new StackPane();
+        module.getStyleClass().clear();
         module.getStyleClass().add("bordered-titled-content");
         modulePane.getChildren().add(module);
 

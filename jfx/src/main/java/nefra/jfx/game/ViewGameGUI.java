@@ -14,15 +14,13 @@ import nefra.db.GUIFunctions;
 import nefra.game.Game;
 import nefra.jfx.CommonGUI;
 
-import java.util.UUID;
-
 public class ViewGameGUI {
     private final GUIFunctions guif = new GUIFunctions();
     private final TableView<Game> table = new TableView<>();
 
     /**
      * Creates the GUI for the create referee, and sets it up with its own features.
-     * It uses the CommonGUI for the menus and also to allow the back button function.
+     * It uses the CommonGUI for the menus and also to allow the backToMainMenu button function.
      *
      * @return the root BorderPane
      */
@@ -39,7 +37,10 @@ public class ViewGameGUI {
         /*
          * Set the action for the enter button based on what information was entered into the fields.
          */
-        removeButton.setOnAction(e -> guif.removeGame(e, table.getSelectionModel().getSelectedItem()));
+        removeButton.setOnAction(e -> {
+            if(guif.removeWarning("game") == 1)
+                guif.removeGame(e, table.getSelectionModel().getSelectedItem());
+        });
 
         removeButton.setStyle("-fx-font-weight: bold;" +
                 "-fx-font-size: 16px;");
@@ -63,14 +64,8 @@ public class ViewGameGUI {
 
         centre.getChildren().addAll(table, viewGameLabel, removeButton);
 
-        //BackButton
-        Button backButton = new Button("Back");
-        backButton.setOnAction(e -> CommonGUI.getInstance().back(e));
-        backButton.setStyle("-fx-font-weight: bold;" +
-                "-fx-font-size: 16px;");
-
         //Container
-        BorderPane viewGames = new BorderPane(centre, menu, null, backButton, null);
+        BorderPane viewGames = new BorderPane(centre, menu, null, CommonGUI.getInstance().bottomBox(), null);
         viewGames.setPrefSize(640,480);
 
         CommonGUI.panes.add(viewGames);
@@ -80,10 +75,6 @@ public class ViewGameGUI {
 
     private void setupTable() {
         table.setEditable(false);
-
-        final TableColumn<Game, UUID> idCol = new TableColumn<>("ID");
-        idCol.setMinWidth(40);
-        idCol.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getGameId()));
 
         final TableColumn<Game, String> homeCol = new TableColumn<>("Home Team");
         homeCol.setMinWidth(100);
@@ -140,7 +131,6 @@ public class ViewGameGUI {
         table.setPlaceholder(new Label("There are no games to display"));
 
         table.getColumns().clear();
-        table.getColumns().add(idCol);
         table.getColumns().add(homeCol);
         table.getColumns().add(awayCol);
         table.getColumns().add(divisionCol);

@@ -1,6 +1,24 @@
 ChangeLog
 =========
 
+**Version 0.6.0**
+
++ Updated the update functions.
++ Removed some CSS. 
++ Fixed the remove function on the View Club page.
++ Created a new exception for failing to update.
++ Reworked the GUI to have a 'tutorial' on first run. Also started to integrate a help window.
++ Removed depreciated files.
++ Fixed ``WRITEABORTED`` exception.
++ Reworked Main Menu.
++ Added a ``Help`` menu.
+  + Created a simple (currently) help window, accessible via ``Help -> Help``
+  + Created an ``About`` window with contact and diagnostic information.
++ Added ability to send diagnostic email from within the program -- available from the help menu. <i>Debug mode only currently
+using for testing purposes only. Not working properly due to SMTP Server issues.</i>
++ Added ability to update the jar file. <b><i>Still extremely buggy. Use with care, as it may erase the file
+permanently. Entry in ``debug mode`` only.</i></b>
+
 **Version 0.5.10**
 
 + Removed the extra GUIFunctions classes and put them into a single file inside ``nefra.db``

@@ -177,10 +177,10 @@ public class Game implements Serializable {
         else
             gameFees = main + (2 * ar) + extraReferees;
 
-        fee = gameFees / 2;
         this.adminFee = gameFees * 0.10;
-        this.homeClubFee = fee + adminFee / 2;
-        this.awayClubFee = fee + adminFee / 2;
+        fee = gameFees + adminFee / 2;
+        this.homeClubFee = fee;
+        this.awayClubFee = fee;
         this.home.addToWeeklyFee(fee);
         this.away.addToWeeklyFee(fee);
         this.totalFee = gameFees + adminFee;
